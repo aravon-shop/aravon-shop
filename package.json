@@ -1,0 +1,23 @@
+{
+  "name": "aravon-shop",
+  "version": "1.0.0",
+  "description": "Aravon Shop - premium online store",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "firebase-admin": "^13.10.0",
+    "stripe": "^18.5.0"
+  }
+}
+
+
