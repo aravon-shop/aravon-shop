@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "aravon-shop-48fdd"
+  },
+  "targets": {
+    "aravon-shop-48fdd": {
+      "hosting": {
+        "aravon-shop": [
+          "aravon-shop"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
+
