@@ -1,0 +1,4020 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin – Send Tracking Number</title>
+
+  <link
+    rel="stylesheet"
+    href="../styles/admin.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../styles/order-view.css"
+  >
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 20px;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .sidebar a:hover {
+      background: #f1f3f4;
+    }
+
+    .sidebar a.active {
+      background: #d2e3fc;
+      color: #174ea6;
+    }
+
+    .badge {
+      background: #ea4335;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .logout-btn {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background: #111;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    .main h2 {
+      margin-top: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      background: #e7f2ff;
+      color: #1769aa;
+      border: 1px solid #bddcff;
+    }
+
+    .message.error {
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+    }
+
+    .message.success {
+      background: #e7f7ed;
+      color: #137333;
+      border: 1px solid #b7e1c3;
+    }
+
+    .order-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .summary-box {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid #eee;
+    }
+
+    .summary-label {
+      display: block;
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: #222;
+      word-break: break-word;
+    }
+
+    .order-id {
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .info-box {
+      background: #f8f8f8;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .info-box p {
+      margin: 7px 0;
+      line-height: 1.5;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #eee;
+      font-weight: 600;
+    }
+
+    tbody tr:hover {
+      background: #fafafa;
+    }
+
+    .product-image {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      display: block;
+    }
+
+    .product-image-fallback {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: #f1f1f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .product-id {
+      font-family: monospace;
+      font-size: 12px;
+      color: #555;
+      word-break: break-all;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: #222;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #174ea6;
+      box-shadow: 0 0 0 2px rgba(23, 78, 166, 0.08);
+    }
+
+    .form-help {
+      color: #777;
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .tracking-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .tracking-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      padding: 11px 18px;
+      background: #174ea6;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: #0f3c85;
+    }
+
+    .btn:disabled {
+      background: #9aa0a6;
+      cursor: not-allowed;
+    }
+
+    .btn-grey {
+      padding: 11px 18px;
+      background: #6c757d;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-grey:hover {
+      background: #555;
+    }
+
+    .btn-grey:disabled {
+      background: #9aa0a6;
+      cursor: not-allowed;
+    }
+
+    .current-tracking {
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .current-tracking p {
+      margin: 7px 0;
+    }
+
+    .current-tracking a {
+      color: #174ea6;
+      word-break: break-all;
+    }
+
+    .demo-warning {
+      display: none;
+      background: #fff7df;
+      border: 1px solid #f0d98c;
+      color: #7a5b00;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .demo-warning.show {
+      display: block;
+    }
+
+    @media (max-width: 800px) {
+
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+      }
+
+      .sidebar a {
+        display: inline-flex;
+        margin: 3px;
+      }
+
+      .logout-btn {
+        max-width: 180px;
+      }
+
+      .main {
+        padding: 20px 15px;
+      }
+
+      .order-summary,
+      .info-grid,
+      .tracking-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tracking-grid .full {
+        grid-column: auto;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <div class="sidebar">
+
+    <h2>Admin Panel</h2>
+
+    <a href="../dashboard/admin-dashboard.html">
+      <span>Dashboard</span>
+    </a>
+
+    <a
+      href="admin-orders.html"
+      class="active"
+    >
+      <span>Orders</span>
+
+      <span
+        id="orderCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../users/users-list.html">
+
+      <span>Users</span>
+
+      <span
+        id="usersCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../inventory/admin-inventory.html">
+
+      <span>Inventory</span>
+
+      <span
+        id="productCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../website-builder/product-page-editor.html">
+      <span>Website Builder</span>
+    </a>
+
+    <a href="../settings/admin-settings.html">
+      <span>Settings</span>
+    </a>
+
+    <a href="../payment/payment-setting.html">
+
+      <span>Payment</span>
+
+      <span
+        id="paymentCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../messages/admin-messages.html">
+
+      <span>Messages</span>
+
+      <span
+        id="messageCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <button
+      class="logout-btn"
+      id="logoutBtn"
+      type="button"
+    >
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main">
+
+
+    <div
+      id="messageBox"
+      class="message"
+    ></div>
+
+
+    <div
+      id="demoWarning"
+      class="demo-warning"
+    >
+      This is one of the three demo orders created for
+      testing. The order can be viewed and tracking can be
+      tested without changing the page layout.
+    </div>
+
+
+    <!-- HEADER -->
+
+    <div class="card">
+
+      <h2>Send Tracking Number</h2>
+
+      <p>
+        Enter the shipping information below and save it
+        directly to the Firestore order.
+      </p>
+
+    </div>
+
+
+    <!-- ORDER INFORMATION -->
+
+    <div class="card">
+
+      <h3>Order Information</h3>
+
+      <div class="order-summary">
+
+        <div class="summary-box">
+
+          <span class="summary-label">
+            Order ID
+          </span>
+
+          <span
+            id="orderID"
+            class="summary-value order-id"
+          >
+            Loading...
+          </span>
+
+        </div>
+
+
+        <div class="summary-box">
+
+          <span class="summary-label">
+            Status
+          </span>
+
+          <span
+            id="orderStatus"
+            class="summary-value"
+          >
+            Loading...
+          </span>
+
+        </div>
+
+
+        <div class="summary-box">
+
+          <span class="summary-label">
+            Total
+          </span>
+
+          <span
+            id="orderTotal"
+            class="summary-value"
+          >
+            €0.00
+          </span>
+
+        </div>
+
+
+        <div class="summary-box">
+
+          <span class="summary-label">
+            Created
+          </span>
+
+          <span
+            id="orderCreated"
+            class="summary-value"
+          >
+            Loading...
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CUSTOMER INFORMATION -->
+
+    <div class="card">
+
+      <h3>Customer Information</h3>
+
+      <div class="info-grid">
+
+        <div class="info-box">
+
+          <p>
+            <strong>Name:</strong>
+            <span id="userName">—</span>
+          </p>
+
+          <p>
+            <strong>Email:</strong>
+            <span id="userEmail">—</span>
+          </p>
+
+          <p>
+            <strong>Phone:</strong>
+            <span id="userPhone">—</span>
+          </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <p>
+            <strong>Street:</strong>
+            <span id="shipStreet">—</span>
+          </p>
+
+          <p>
+            <strong>House Number:</strong>
+            <span id="shipHouse">—</span>
+          </p>
+
+          <p>
+            <strong>Postal Code:</strong>
+            <span id="shipPostal">—</span>
+          </p>
+
+          <p>
+            <strong>City:</strong>
+            <span id="shipCity">—</span>
+          </p>
+
+          <p>
+            <strong>Country:</strong>
+            <span id="shipCountry">—</span>
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ORDER ITEMS -->
+
+    <div class="card">
+
+      <h3>Order Items</h3>
+
+      <div class="table-wrapper">
+
+        <table id="itemsTable">
+
+          <thead>
+
+            <tr>
+
+              <th>Image</th>
+              <th>Product ID</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Subtotal</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- CURRENT TRACKING -->
+
+    <div
+      id="currentTrackingCard"
+      class="card"
+      style="display:none;"
+    >
+
+      <h3>Current Tracking Information</h3>
+
+      <div class="current-tracking">
+
+        <p>
+          <strong>Tracking Number:</strong>
+          <span id="currentTrackingNumber">—</span>
+        </p>
+
+        <p>
+          <strong>Carrier:</strong>
+          <span id="currentTrackingCarrier">—</span>
+        </p>
+
+        <p>
+          <strong>Tracking Link:</strong>
+          <span id="currentTrackingLink">—</span>
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- SHIPPING / TRACKING -->
+
+    <div class="card">
+
+      <h3>Shipping & Tracking</h3>
+
+      <form id="trackingForm">
+
+        <div class="tracking-grid">
+
+          <div class="form-group">
+
+            <label for="trackingNumber">
+              Tracking Number *
+            </label>
+
+            <input
+              type="text"
+              id="trackingNumber"
+              name="trackingNumber"
+              placeholder="Enter tracking number"
+              autocomplete="off"
+              required
+            >
+
+            <div class="form-help">
+              Enter the tracking number provided by the
+              shipping carrier.
+            </div>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="carrier">
+              Carrier *
+            </label>
+
+            <select
+              id="carrier"
+              name="carrier"
+              required
+            >
+
+              <option value="">
+                Select carrier
+              </option>
+
+              <option value="PostNL">
+                PostNL
+              </option>
+
+              <option value="DHL">
+                DHL
+              </option>
+
+              <option value="DPD">
+                DPD
+              </option>
+
+              <option value="UPS">
+                UPS
+              </option>
+
+              <option value="FedEx">
+                FedEx
+              </option>
+
+              <option value="GLS">
+                GLS
+              </option>
+
+              <option value="Amazon Logistics">
+                Amazon Logistics
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label for="trackingLink">
+              Tracking URL
+            </label>
+
+            <input
+              type="url"
+              id="trackingLink"
+              name="trackingLink"
+              placeholder="https://..."
+              autocomplete="off"
+            >
+
+            <div class="form-help">
+              Optional. A carrier tracking URL will be
+              generated automatically when supported.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn"
+            id="saveTrackingBtn"
+            type="submit"
+          >
+            Send Tracking & Mark Shipped
+          </button>
+
+          <button
+            class="btn-grey"
+            id="backBtn"
+            type="button"
+          >
+            Back to Order
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================================================
+       FIREBASE / APPLICATION
+  ====================================================== -->
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getAuth,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      getDocs,
+      collection,
+      updateDoc,
+      runTransaction,
+      serverTimestamp,
+      setDoc
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+    /* =====================================================
+       FIREBASE
+    ====================================================== */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyAs2n_FyLyH7GmVmJ_GcyYF9UaAQxg9QnY",
+
+      authDomain:
+        "aravon-shop-48fdd.firebaseapp.com",
+
+      projectId:
+        "aravon-shop-48fdd",
+
+      storageBucket:
+        "aravon-shop-48fdd.firebasestorage.app",
+
+      messagingSenderId:
+        "436832537701",
+
+      appId:
+        "1:436832537701:web:0047524bb50e9942390a8c"
+
+    };
+
+
+    const ENABLE_DEMO_ORDER_BOOTSTRAP =
+      true;
+
+
+    const DEMO_ORDER_IDS = [
+
+      "order_1721670000001",
+      "order_1721670000002",
+      "order_1721670000003"
+
+    ];
+
+
+    let app = null;
+    let auth = null;
+    let db = null;
+
+
+    try {
+
+      app =
+        initializeApp(
+          firebaseConfig
+        );
+
+      auth =
+        getAuth(app);
+
+      db =
+        getFirestore(app);
+
+    } catch (error) {
+
+      console.error(
+        "Firebase initialization failed:",
+        error
+      );
+
+    }
+
+
+    /* =====================================================
+       ELEMENTS
+    ====================================================== */
+
+    const messageBox =
+      document.getElementById(
+        "messageBox"
+      );
+
+    const demoWarning =
+      document.getElementById(
+        "demoWarning"
+      );
+
+    const orderIDElement =
+      document.getElementById(
+        "orderID"
+      );
+
+    const orderStatusElement =
+      document.getElementById(
+        "orderStatus"
+      );
+
+    const orderTotalElement =
+      document.getElementById(
+        "orderTotal"
+      );
+
+    const orderCreatedElement =
+      document.getElementById(
+        "orderCreated"
+      );
+
+    const userNameElement =
+      document.getElementById(
+        "userName"
+      );
+
+    const userEmailElement =
+      document.getElementById(
+        "userEmail"
+      );
+
+    const userPhoneElement =
+      document.getElementById(
+        "userPhone"
+      );
+
+    const shipStreetElement =
+      document.getElementById(
+        "shipStreet"
+      );
+
+    const shipHouseElement =
+      document.getElementById(
+        "shipHouse"
+      );
+
+    const shipPostalElement =
+      document.getElementById(
+        "shipPostal"
+      );
+
+    const shipCityElement =
+      document.getElementById(
+        "shipCity"
+      );
+
+    const shipCountryElement =
+      document.getElementById(
+        "shipCountry"
+      );
+
+    const itemsTableBody =
+      document.querySelector(
+        "#itemsTable tbody"
+      );
+
+    const trackingForm =
+      document.getElementById(
+        "trackingForm"
+      );
+
+    const trackingNumberInput =
+      document.getElementById(
+        "trackingNumber"
+      );
+
+    const carrierInput =
+      document.getElementById(
+        "carrier"
+      );
+
+    const trackingLinkInput =
+      document.getElementById(
+        "trackingLink"
+      );
+
+    const saveTrackingBtn =
+      document.getElementById(
+        "saveTrackingBtn"
+      );
+
+    const backBtn =
+      document.getElementById(
+        "backBtn"
+      );
+
+    const logoutBtn =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+    const currentTrackingCard =
+      document.getElementById(
+        "currentTrackingCard"
+      );
+
+    const currentTrackingNumber =
+      document.getElementById(
+        "currentTrackingNumber"
+      );
+
+    const currentTrackingCarrier =
+      document.getElementById(
+        "currentTrackingCarrier"
+      );
+
+    const currentTrackingLink =
+      document.getElementById(
+        "currentTrackingLink"
+      );
+
+
+    /* =====================================================
+       ORDER ID
+    ====================================================== */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    let orderID =
+      (
+        params.get("orderID") ||
+        params.get("orderId") ||
+        params.get("order_id") ||
+        params.get("id") ||
+        params.get("order") ||
+        ""
+      ).trim();
+
+
+    if (!orderID) {
+
+      try {
+
+        const storedOrderID =
+          localStorage.getItem(
+            "selectedOrderID"
+          );
+
+        if (storedOrderID) {
+
+          orderID =
+            storedOrderID.trim();
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "Unable to read selectedOrderID:",
+          error
+        );
+
+      }
+
+    }
+
+
+    orderIDElement.textContent =
+      orderID ||
+      "Missing Order ID";
+
+
+    /* =====================================================
+       HELPERS
+    ====================================================== */
+
+    function safeValue(
+      value,
+      fallback = "Unavailable"
+    ) {
+
+      if (
+        value === undefined ||
+        value === null ||
+        String(value).trim() === ""
+      ) {
+
+        return fallback;
+
+      }
+
+      return String(value);
+
+    }
+
+
+    function showMessage(
+      text,
+      type = "info"
+    ) {
+
+      messageBox.textContent =
+        text;
+
+      messageBox.className =
+        "message show " + type;
+
+    }
+
+
+    function clearMessage() {
+
+      messageBox.textContent =
+        "";
+
+      messageBox.className =
+        "message";
+
+    }
+
+
+    function formatDate(value) {
+
+      if (!value) {
+
+        return "Unavailable";
+
+      }
+
+      try {
+
+        if (
+          value &&
+          typeof value.toDate === "function"
+        ) {
+
+          return value
+            .toDate()
+            .toLocaleString(
+              undefined,
+              {
+                dateStyle: "medium",
+                timeStyle: "short"
+              }
+            );
+
+        }
+
+        const date =
+          value instanceof Date
+            ? value
+            : new Date(value);
+
+        if (
+          !Number.isNaN(
+            date.getTime()
+          )
+        ) {
+
+          return date.toLocaleString(
+            undefined,
+            {
+              dateStyle: "medium",
+              timeStyle: "short"
+            }
+          );
+
+        }
+
+        return String(value);
+
+      } catch {
+
+        return "Unavailable";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       CUSTOMER INFORMATION
+    ====================================================== */
+
+    function getUserInfo(order) {
+
+      const nestedUser =
+        order.customer ||
+        order.customerInfo ||
+        order.USERINFO ||
+        order.userInfo ||
+        order.user ||
+        null;
+
+
+      if (
+        nestedUser &&
+        typeof nestedUser === "object"
+      ) {
+
+        return {
+
+          ...order,
+          ...nestedUser
+
+        };
+
+      }
+
+
+      return order;
+
+    }
+
+
+    /* =====================================================
+       SHIPPING ADDRESS
+    ====================================================== */
+
+    function getShippingAddress(order) {
+
+      return (
+
+        order.shippingAddress ||
+        order.shipping ||
+        order.address ||
+        order.SHIPPINGADDRESS ||
+        order.deliveryAddress ||
+        {}
+
+      );
+
+    }
+
+
+    /* =====================================================
+       ORDER ITEMS
+    ====================================================== */
+
+    function getItems(order) {
+
+      if (
+        Array.isArray(order.items)
+      ) {
+
+        return order.items;
+
+      }
+
+      if (
+        Array.isArray(order.products)
+      ) {
+
+        return order.products;
+
+      }
+
+      if (
+        Array.isArray(order.cartItems)
+      ) {
+
+        return order.cartItems;
+
+      }
+
+      if (
+        Array.isArray(order.orderItems)
+      ) {
+
+        return order.orderItems;
+
+      }
+
+      return [];
+
+    }
+
+
+    /* =====================================================
+       ORDER TOTAL
+    ====================================================== */
+
+    function getOrderTotal(
+      order,
+      items
+    ) {
+
+      const possibleTotals = [
+
+        order.total,
+        order.totalAmount,
+        order.amount,
+        order.grandTotal,
+        order.orderTotal,
+        order.price
+
+      ];
+
+
+      for (
+        const value of possibleTotals
+      ) {
+
+        const number =
+          Number(value);
+
+        if (
+          Number.isFinite(number)
+        ) {
+
+          return number;
+
+        }
+
+      }
+
+
+      return items.reduce(
+        (
+          total,
+          item
+        ) => {
+
+          const price =
+            Number(
+              item.price ||
+              item.unitPrice ||
+              item.amount ||
+              item.productPrice ||
+              0
+            );
+
+
+          const quantity =
+            Number(
+              item.quantity ||
+              item.qty ||
+              1
+            );
+
+
+          return (
+            total +
+            price * quantity
+          );
+
+        },
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       PRODUCT ID
+    ====================================================== */
+
+    function getProductID(item) {
+
+      return (
+
+        item.productID ||
+        item.productId ||
+        item.product_id ||
+        item.id ||
+        (
+          item.product &&
+          item.product.id
+        ) ||
+        (
+          item.product &&
+          item.product.productID
+        ) ||
+        (
+          item.product &&
+          item.product.productId
+        ) ||
+        ""
+
+      );
+
+    }
+
+
+    /* =====================================================
+       PRODUCT NAME
+    ====================================================== */
+
+    function getProductName(item) {
+
+      return (
+
+        item.productName ||
+        item.name ||
+        item.title ||
+        item.productTitle ||
+        (
+          item.product &&
+          typeof item.product === "object"
+            ? (
+                item.product.name ||
+                item.product.title
+              )
+            : ""
+        ) ||
+        "Unknown Product"
+
+      );
+
+    }
+
+
+    /* =====================================================
+       PRODUCT IMAGE
+    ====================================================== */
+
+    function getProductImage(item) {
+
+      let image =
+
+        item.image ||
+        item.imageUrl ||
+        item.imageURL ||
+        item.productImage ||
+        item.productImageUrl ||
+        item.thumbnail ||
+        item.thumbnailUrl ||
+        item.photo ||
+        item.photoUrl ||
+        item.img ||
+        item.url ||
+        "";
+
+
+      if (
+        !image &&
+        item.product &&
+        typeof item.product === "object"
+      ) {
+
+        image =
+
+          item.product.image ||
+          item.product.imageUrl ||
+          item.product.imageURL ||
+          item.product.productImage ||
+          item.product.thumbnail ||
+          "";
+
+      }
+
+
+      if (
+        Array.isArray(item.images) &&
+        item.images.length
+      ) {
+
+        image =
+          image ||
+          item.images[0];
+
+      }
+
+
+      return image || "";
+
+    }
+
+
+    function createProductImage(
+      imageUrl
+    ) {
+
+      if (!imageUrl) {
+
+        const fallback =
+          document.createElement(
+            "div"
+          );
+
+        fallback.className =
+          "product-image-fallback";
+
+        fallback.textContent =
+          "No Image";
+
+        return fallback;
+
+      }
+
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      image.className =
+        "product-image";
+
+      image.src =
+        imageUrl;
+
+      image.alt =
+        "Product";
+
+      image.loading =
+        "lazy";
+
+
+      image.onerror =
+        () => {
+
+          const fallback =
+            document.createElement(
+              "div"
+            );
+
+          fallback.className =
+            "product-image-fallback";
+
+          fallback.textContent =
+            "No Image";
+
+          image.replaceWith(
+            fallback
+          );
+
+        };
+
+
+      return image;
+
+    }
+
+
+    /* =====================================================
+       TRACKING
+    ====================================================== */
+
+    function getTracking(order) {
+
+      return (
+        order.tracking &&
+        typeof order.tracking === "object"
+      )
+        ? order.tracking
+        : {};
+
+    }
+
+
+    function displayCurrentTracking(
+      order
+    ) {
+
+      const tracking =
+        getTracking(order);
+
+
+      const number =
+        tracking.number ||
+        tracking.trackingNumber ||
+        order.trackingNumber ||
+        order.tracking_number ||
+        "";
+
+
+      const carrier =
+        tracking.carrier ||
+        order.carrier ||
+        order.shippingCarrier ||
+        "";
+
+
+      const link =
+        tracking.trackingLink ||
+        tracking.url ||
+        order.trackingLink ||
+        "";
+
+
+      if (
+        number ||
+        carrier ||
+        link
+      ) {
+
+        currentTrackingCard.style.display =
+          "block";
+
+
+        currentTrackingNumber.textContent =
+          safeValue(
+            number,
+            "Not available"
+          );
+
+
+        currentTrackingCarrier.textContent =
+          safeValue(
+            carrier,
+            "Not available"
+          );
+
+
+        currentTrackingLink.innerHTML =
+          "";
+
+
+        if (link) {
+
+          const anchor =
+            document.createElement(
+              "a"
+            );
+
+          anchor.href =
+            link;
+
+          anchor.target =
+            "_blank";
+
+          anchor.rel =
+            "noopener noreferrer";
+
+          anchor.textContent =
+            link;
+
+          currentTrackingLink.appendChild(
+            anchor
+          );
+
+        } else {
+
+          currentTrackingLink.textContent =
+            "Not available";
+
+        }
+
+      } else {
+
+        currentTrackingCard.style.display =
+          "none";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       FILL TRACKING FORM
+    ====================================================== */
+
+    function fillTrackingForm(
+      order
+    ) {
+
+      const tracking =
+        getTracking(order);
+
+
+      const number =
+        tracking.number ||
+        tracking.trackingNumber ||
+        order.trackingNumber ||
+        "";
+
+
+      const carrier =
+        tracking.carrier ||
+        order.carrier ||
+        order.shippingCarrier ||
+        "";
+
+
+      const link =
+        tracking.trackingLink ||
+        tracking.url ||
+        order.trackingLink ||
+        "";
+
+
+      trackingNumberInput.value =
+        number;
+
+
+      trackingLinkInput.value =
+        link;
+
+
+      carrierInput.value =
+        "";
+
+
+      if (carrier) {
+
+        const matchingOption =
+          Array.from(
+            carrierInput.options
+          ).find(
+            option =>
+              option.value.toLowerCase() ===
+              String(carrier).toLowerCase()
+          );
+
+
+        carrierInput.value =
+          matchingOption
+            ? matchingOption.value
+            : "Other";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       DISPLAY ORDER
+    ====================================================== */
+
+    function displayOrder(
+      order
+    ) {
+
+      const user =
+        getUserInfo(order);
+
+
+      const shipping =
+        getShippingAddress(order);
+
+
+      const items =
+        getItems(order);
+
+
+      const total =
+        getOrderTotal(
+          order,
+          items
+        );
+
+
+      orderIDElement.textContent =
+        orderID;
+
+
+      orderStatusElement.textContent =
+        safeValue(
+          order.status ||
+          order.orderStatus ||
+          order.fulfillmentStatus
+        );
+
+
+      orderTotalElement.textContent =
+        "€" +
+        total.toFixed(2);
+
+
+      orderCreatedElement.textContent =
+        formatDate(
+          order.createdAt ||
+          order.created ||
+          order.date ||
+          order.timestamp ||
+          order.orderDate
+        );
+
+
+      /* CUSTOMER */
+
+      const fullName =
+        user.name ||
+        user.fullName ||
+        [
+          user.firstName,
+          user.lastName
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+
+      userNameElement.textContent =
+        safeValue(
+          fullName
+        );
+
+
+      userEmailElement.textContent =
+        safeValue(
+          user.email ||
+          user.emailAddress ||
+          user.userEmail
+        );
+
+
+      userPhoneElement.textContent =
+        safeValue(
+          user.phone ||
+          user.phoneNumber ||
+          user.mobile
+        );
+
+
+      /* SHIPPING */
+
+      shipStreetElement.textContent =
+        safeValue(
+          shipping.street ||
+          shipping.address ||
+          shipping.streetName
+        );
+
+
+      shipHouseElement.textContent =
+        safeValue(
+          shipping.houseNumber ||
+          shipping.house ||
+          shipping.number
+        );
+
+
+      shipPostalElement.textContent =
+        safeValue(
+          shipping.postalCode ||
+          shipping.postcode ||
+          shipping.zip ||
+          shipping.zipCode
+        );
+
+
+      shipCityElement.textContent =
+        safeValue(
+          shipping.city ||
+          shipping.town
+        );
+
+
+      shipCountryElement.textContent =
+        safeValue(
+          shipping.country ||
+          shipping.countryName
+        );
+
+
+      /* ORDER ITEMS */
+
+      itemsTableBody.innerHTML =
+        "";
+
+
+      if (!items.length) {
+
+        itemsTableBody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              No products found in this order.
+            </td>
+          </tr>
+        `;
+
+      } else {
+
+        items.forEach(
+          item => {
+
+            const row =
+              document.createElement(
+                "tr"
+              );
+
+
+            const imageCell =
+              document.createElement(
+                "td"
+              );
+
+
+            imageCell.appendChild(
+              createProductImage(
+                getProductImage(item)
+              )
+            );
+
+
+            const productIDCell =
+              document.createElement(
+                "td"
+              );
+
+
+            const productID =
+              document.createElement(
+                "span"
+              );
+
+
+            productID.className =
+              "product-id";
+
+
+            productID.textContent =
+              safeValue(
+                getProductID(item)
+              );
+
+
+            productIDCell.appendChild(
+              productID
+            );
+
+
+            const nameCell =
+              document.createElement(
+                "td"
+              );
+
+
+            const productName =
+              document.createElement(
+                "span"
+              );
+
+
+            productName.className =
+              "product-name";
+
+
+            productName.textContent =
+              getProductName(item);
+
+
+            nameCell.appendChild(
+              productName
+            );
+
+
+            const price =
+              Number(
+                item.price ||
+                item.unitPrice ||
+                item.amount ||
+                item.productPrice ||
+                0
+              );
+
+
+            const quantity =
+              Number(
+                item.quantity ||
+                item.qty ||
+                1
+              );
+
+
+            const subtotal =
+              price *
+              quantity;
+
+
+            const priceCell =
+              document.createElement(
+                "td"
+              );
+
+
+            priceCell.textContent =
+              "€" +
+              price.toFixed(2);
+
+
+            const quantityCell =
+              document.createElement(
+                "td"
+              );
+
+
+            quantityCell.textContent =
+              quantity;
+
+
+            const subtotalCell =
+              document.createElement(
+                "td"
+              );
+
+
+            subtotalCell.textContent =
+              "€" +
+              subtotal.toFixed(2);
+
+
+            row.appendChild(
+              imageCell
+            );
+
+            row.appendChild(
+              productIDCell
+            );
+
+            row.appendChild(
+              nameCell
+            );
+
+            row.appendChild(
+              priceCell
+            );
+
+            row.appendChild(
+              quantityCell
+            );
+
+            row.appendChild(
+              subtotalCell
+            );
+
+
+            itemsTableBody.appendChild(
+              row
+            );
+
+          }
+        );
+
+      }
+
+
+      displayCurrentTracking(
+        order
+      );
+
+
+      fillTrackingForm(
+        order
+      );
+
+    }
+
+
+    /* =====================================================
+       DEMO ORDERS
+    ====================================================== */
+
+    const demoOrders = {
+
+      "order_1721670000001": {
+
+        orderID:
+          "order_1721670000001",
+
+        demoOrder:
+          true,
+
+        demoOrderNumber:
+          1,
+
+        status:
+          "Delivered",
+
+        fulfillmentStatus:
+          "Delivered",
+
+        paymentStatus:
+          "paid",
+
+        currency:
+          "EUR",
+
+        total:
+          49,
+
+        subtotal:
+          49,
+
+        shipping:
+          0,
+
+        customer: {
+
+          name:
+            "Molly Barbie",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          phone:
+            "31698765432"
+
+        },
+
+        USERINFO: {
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          phone:
+            "31698765432"
+
+        },
+
+        shippingAddress: {
+
+          street:
+            "Klarden",
+
+          houseNumber:
+            "88",
+
+          postalCode:
+            "2589 CH",
+
+          city:
+            "Arnhem",
+
+          country:
+            "Netherlands"
+
+        },
+
+        items: [
+
+          {
+
+            productID:
+              "B9lfflcrEtvqqY6KgQ0v",
+
+            productName:
+              "Slim Fit Blue Jeans",
+
+            name:
+              "Slim Fit Blue Jeans",
+
+            price:
+              49,
+
+            unitPrice:
+              49,
+
+            quantity:
+              1,
+
+            qty:
+              1,
+
+            subtotal:
+              49,
+
+            image:
+              "https://picsum.photos/300/300?random=101"
+
+          }
+
+        ],
+
+        tracking: {
+
+          number:
+            "DEMO-TRACK-001",
+
+          trackingNumber:
+            "DEMO-TRACK-001",
+
+          carrier:
+            "PostNL",
+
+          trackingLink:
+            "https://www.postnl.nl/track-and-trace/"
+
+        }
+
+      },
+
+
+      "order_1721670000002": {
+
+        orderID:
+          "order_1721670000002",
+
+        demoOrder:
+          true,
+
+        demoOrderNumber:
+          2,
+
+        status:
+          "Delivered",
+
+        fulfillmentStatus:
+          "Delivered",
+
+        paymentStatus:
+          "paid",
+
+        currency:
+          "EUR",
+
+        total:
+          45,
+
+        subtotal:
+          45,
+
+        shipping:
+          0,
+
+        customer: {
+
+          name:
+            "Molly Barbie",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          phone:
+            "31698765432"
+
+        },
+
+        USERINFO: {
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          phone:
+            "31698765432"
+
+        },
+
+        shippingAddress: {
+
+          street:
+            "Klarden",
+
+          houseNumber:
+            "88",
+
+          postalCode:
+            "2589 CH",
+
+          city:
+            "Arnhem",
+
+          country:
+            "Netherlands"
+
+        },
+
+        items: [
+
+          {
+
+            productID:
+              "B9lfflcrEtvqqY6KgQ0v",
+
+            productName:
+              "Classic White T-Shirt",
+
+            name:
+              "Classic White T-Shirt",
+
+            price:
+              45,
+
+            unitPrice:
+              45,
+
+            quantity:
+              1,
+
+            qty:
+              1,
+
+            subtotal:
+              45,
+
+            image:
+              "https://picsum.photos/300/300?random=102"
+
+          }
+
+        ],
+
+        tracking: {
+
+          number:
+            "DEMO-TRACK-002",
+
+          trackingNumber:
+            "DEMO-TRACK-002",
+
+          carrier:
+            "DHL",
+
+          trackingLink:
+            "https://www.dhl.com/"
+
+        }
+
+      },
+
+
+      "order_1721670000003": {
+
+        orderID:
+          "order_1721670000003",
+
+        demoOrder:
+          true,
+
+        demoOrderNumber:
+          3,
+
+        status:
+          "Processing",
+
+        fulfillmentStatus:
+          "Processing",
+
+        paymentStatus:
+          "paid",
+
+        currency:
+          "EUR",
+
+        total:
+          39,
+
+        subtotal:
+          39,
+
+        shipping:
+          0,
+
+        customer: {
+
+          name:
+            "Molly Barbie",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          phone:
+            "31698765432"
+
+        },
+
+        USERINFO: {
+
+          email:
+            "ti.a.eduardo24@gmail.com",
+
+          firstName:
+            "Molly",
+
+          lastName:
+            "Barbie",
+
+          phone:
+            "31698765432"
+
+        },
+
+        shippingAddress: {
+
+          street:
+            "Klarden",
+
+          houseNumber:
+            "88",
+
+          postalCode:
+            "2589 CH",
+
+          city:
+            "Arnhem",
+
+          country:
+            "Netherlands"
+
+        },
+
+        items: [
+
+          {
+
+            productID:
+              "HOODIE-BLK-001",
+
+            productName:
+              "Black Oversized Hoodie",
+
+            name:
+              "Black Oversized Hoodie",
+
+            price:
+              39,
+
+            unitPrice:
+              39,
+
+            quantity:
+              1,
+
+            qty:
+              1,
+
+            subtotal:
+              39,
+
+            image:
+              "https://picsum.photos/300/300?random=103"
+
+          }
+
+        ],
+
+        tracking: {
+
+          number:
+            "",
+
+          trackingNumber:
+            "",
+
+          carrier:
+            "",
+
+          trackingLink:
+            ""
+
+        }
+
+      }
+
+    };
+
+
+    /* =====================================================
+       DEMO BOOTSTRAP
+    ====================================================== */
+
+    async function ensureDemoOrdersExist() {
+
+      if (
+        !ENABLE_DEMO_ORDER_BOOTSTRAP ||
+        !db
+      ) {
+
+        return;
+
+      }
+
+
+      const setupRef =
+        doc(
+          db,
+          "_adminSetup",
+          "demoOrdersV1"
+        );
+
+
+      await runTransaction(
+        db,
+        async transaction => {
+
+          const setupSnapshot =
+            await transaction.get(
+              setupRef
+            );
+
+
+          /*
+            IMPORTANT:
+            Do not stop only because the setup document
+            already exists.
+
+            We always verify the three demo orders so the
+            Orders badge can correctly show 3.
+          */
+
+          const orderSnapshots = {};
+
+
+          for (
+            const id of DEMO_ORDER_IDS
+          ) {
+
+            const orderRef =
+              doc(
+                db,
+                "orders",
+                id
+              );
+
+
+            orderSnapshots[id] =
+              await transaction.get(
+                orderRef
+              );
+
+          }
+
+
+          for (
+            const id of DEMO_ORDER_IDS
+          ) {
+
+            const demo =
+              demoOrders[id];
+
+
+            if (!demo) {
+
+              continue;
+
+            }
+
+
+            if (
+              !orderSnapshots[id].exists()
+            ) {
+
+              const orderRef =
+                doc(
+                  db,
+                  "orders",
+                  id
+                );
+
+
+              transaction.set(
+                orderRef,
+                {
+
+                  ...demo,
+
+                  demoOrder:
+                    true,
+
+                  demoOrderVersion:
+                    "v1",
+
+                  demoOrderNumber:
+                    demo.demoOrderNumber,
+
+                  createdAt:
+                    serverTimestamp(),
+
+                  updatedAt:
+                    serverTimestamp()
+
+                }
+              );
+
+            }
+
+          }
+
+
+          if (
+            !setupSnapshot.exists()
+          ) {
+
+            transaction.set(
+              setupRef,
+              {
+
+                type:
+                  "demo-order-bootstrap",
+
+                version:
+                  "v1",
+
+                orderIDs:
+                  DEMO_ORDER_IDS,
+
+                createdAt:
+                  serverTimestamp(),
+
+                completed:
+                  true
+
+              }
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       LOAD ORDER
+    ====================================================== */
+
+    async function loadOrder() {
+
+      if (!orderID) {
+
+        showOrderNotFound();
+
+        showMessage(
+          "No Order ID was supplied. Open this page from an order using the Send Tracking Number button.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!db) {
+
+        showOrderNotFound();
+
+        showMessage(
+          "Firebase is not available.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      showMessage(
+        "Loading order information...",
+        "info"
+      );
+
+
+      try {
+
+        let snapshot =
+          await getDoc(
+            doc(
+              db,
+              "orders",
+              orderID
+            )
+          );
+
+
+        if (
+          !snapshot.exists() &&
+          ENABLE_DEMO_ORDER_BOOTSTRAP &&
+          DEMO_ORDER_IDS.includes(orderID)
+        ) {
+
+          await ensureDemoOrdersExist();
+
+
+          snapshot =
+            await getDoc(
+              doc(
+                db,
+                "orders",
+                orderID
+              )
+            );
+
+        }
+
+
+        if (
+          snapshot.exists()
+        ) {
+
+          const order =
+            snapshot.data();
+
+
+          order.orderID =
+            orderID;
+
+
+          displayOrder(
+            order
+          );
+
+
+          if (
+            order.demoOrder === true
+          ) {
+
+            demoWarning.classList.add(
+              "show"
+            );
+
+          }
+
+
+          clearMessage();
+
+          return;
+
+        }
+
+
+        showOrderNotFound();
+
+
+        showMessage(
+          "This order could not be found in Firestore.\n\nCollection: orders\nDocument ID: " +
+          orderID,
+          "error"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Load order error:",
+          error
+        );
+
+
+        showOrderNotFound();
+
+
+        showMessage(
+          "Unable to load the order.\n\n" +
+          error.message,
+          "error"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       ORDER NOT FOUND
+    ====================================================== */
+
+    function showOrderNotFound() {
+
+      orderIDElement.textContent =
+        orderID ||
+        "Missing Order ID";
+
+
+      orderStatusElement.textContent =
+        "Unavailable";
+
+
+      orderTotalElement.textContent =
+        "€0.00";
+
+
+      orderCreatedElement.textContent =
+        "Unavailable";
+
+
+      userNameElement.textContent =
+        "Unavailable";
+
+
+      userEmailElement.textContent =
+        "Unavailable";
+
+
+      userPhoneElement.textContent =
+        "Unavailable";
+
+
+      shipStreetElement.textContent =
+        "Unavailable";
+
+
+      shipHouseElement.textContent =
+        "Unavailable";
+
+
+      shipPostalElement.textContent =
+        "Unavailable";
+
+
+      shipCityElement.textContent =
+        "Unavailable";
+
+
+      shipCountryElement.textContent =
+        "Unavailable";
+
+
+      itemsTableBody.innerHTML = `
+        <tr>
+          <td colspan="6">
+            Order not found.
+          </td>
+        </tr>
+      `;
+
+
+      saveTrackingBtn.disabled =
+        true;
+
+
+      currentTrackingCard.style.display =
+        "none";
+
+    }
+
+
+    /* =====================================================
+       TRACKING URL GENERATOR
+    ====================================================== */
+
+    function generateTrackingUrl(
+      carrier,
+      trackingNumber
+    ) {
+
+      const number =
+        encodeURIComponent(
+          trackingNumber
+        );
+
+
+      const normalized =
+        String(carrier)
+          .trim()
+          .toLowerCase();
+
+
+      if (
+        normalized === "postnl"
+      ) {
+
+        return (
+          "https://www.postnl.nl/track-and-trace/?B-Track=" +
+          number
+        );
+
+      }
+
+
+      if (
+        normalized === "dhl"
+      ) {
+
+        return (
+          "https://www.dhl.com/global-en/home/tracking.html?tracking-id=" +
+          number
+        );
+
+      }
+
+
+      if (
+        normalized === "dpd"
+      ) {
+
+        return (
+          "https://tracking.dpd.de/status/en_US/parcel/" +
+          number
+        );
+
+      }
+
+
+      if (
+        normalized === "ups"
+      ) {
+
+        return (
+          "https://www.ups.com/track?loc=en_US&tracknum=" +
+          number
+        );
+
+      }
+
+
+      if (
+        normalized === "fedex"
+      ) {
+
+        return (
+          "https://www.fedex.com/fedextrack/?trknbr=" +
+          number
+        );
+
+      }
+
+
+      if (
+        normalized === "gls"
+      ) {
+
+        return (
+          "https://gls-group.com/GROUP/en/parcel-tracking/"
+        );
+
+      }
+
+
+      return "";
+
+    }
+
+
+    /* =====================================================
+       CUSTOMER TRACKING NOTIFICATION
+    ====================================================== */
+
+    async function createTrackingNotification(
+      existingOrder,
+      trackingNumber,
+      carrier,
+      trackingLink
+    ) {
+
+      const user =
+        getUserInfo(
+          existingOrder
+        );
+
+
+      const email =
+        String(
+          user.email ||
+          user.emailAddress ||
+          existingOrder.email ||
+          existingOrder.userEmail ||
+          ""
+        )
+          .trim()
+          .toLowerCase();
+
+
+      const userId =
+        existingOrder.userId ||
+        existingOrder.uid ||
+        existingOrder.userID ||
+        existingOrder.customerId ||
+        existingOrder.customerID ||
+        user.uid ||
+        user.userId ||
+        user.userID ||
+        "";
+
+
+      const notificationID =
+        "tracking_" +
+        orderID;
+
+
+      const notificationRef =
+        doc(
+          db,
+          "notifications",
+          notificationID
+        );
+
+
+      await setDoc(
+        notificationRef,
+        {
+
+          type:
+            "tracking_update",
+
+          notificationType:
+            "tracking",
+
+          title:
+            "Your order has shipped",
+
+          message:
+            "Your order " +
+            orderID +
+            " has been shipped with " +
+            carrier +
+            ". Tracking number: " +
+            trackingNumber,
+
+          orderID:
+            orderID,
+
+          trackingNumber:
+            trackingNumber,
+
+          carrier:
+            carrier,
+
+          trackingLink:
+            trackingLink,
+
+          status:
+            "unread",
+
+          read:
+            false,
+
+          unread:
+            true,
+
+          isRead:
+            false,
+
+          userId:
+            userId || null,
+
+          uid:
+            userId || null,
+
+          userID:
+            userId || null,
+
+          userEmail:
+            email || null,
+
+          recipientEmail:
+            email || null,
+
+          recipientId:
+            userId || null,
+
+          createdAt:
+            serverTimestamp(),
+
+          updatedAt:
+            serverTimestamp()
+
+        },
+        {
+          merge:
+            true
+        }
+      );
+
+
+      return notificationID;
+
+    }
+
+
+    /* =====================================================
+       SAVE TRACKING
+    ====================================================== */
+
+    async function saveTracking(
+      event
+    ) {
+
+      if (event) {
+
+        event.preventDefault();
+
+      }
+
+
+      if (!orderID) {
+
+        showMessage(
+          "No Order ID was found.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!db) {
+
+        showMessage(
+          "Firebase is not available.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const trackingNumber =
+        trackingNumberInput.value.trim();
+
+
+      const carrier =
+        carrierInput.value.trim();
+
+
+      let trackingLink =
+        trackingLinkInput.value.trim();
+
+
+      if (!trackingNumber) {
+
+        showMessage(
+          "Please enter the tracking number.",
+          "error"
+        );
+
+        trackingNumberInput.focus();
+
+        return;
+
+      }
+
+
+      if (!carrier) {
+
+        showMessage(
+          "Please select the shipping carrier.",
+          "error"
+        );
+
+        carrierInput.focus();
+
+        return;
+
+      }
+
+
+      if (!trackingLink) {
+
+        const generated =
+          generateTrackingUrl(
+            carrier,
+            trackingNumber
+          );
+
+
+        if (generated) {
+
+          trackingLink =
+            generated;
+
+
+          trackingLinkInput.value =
+            generated;
+
+        }
+
+      }
+
+
+      if (trackingLink) {
+
+        try {
+
+          const parsedURL =
+            new URL(
+              trackingLink
+            );
+
+
+          if (
+            parsedURL.protocol !==
+            "https:"
+          ) {
+
+            throw new Error();
+
+          }
+
+        } catch {
+
+          showMessage(
+            "Please enter a valid HTTPS tracking URL.",
+            "error"
+          );
+
+          trackingLinkInput.focus();
+
+          return;
+
+        }
+
+      }
+
+
+      saveTrackingBtn.disabled =
+        true;
+
+
+      backBtn.disabled =
+        true;
+
+
+      showMessage(
+        "Saving tracking information...",
+        "info"
+      );
+
+
+      try {
+
+        const orderRef =
+          doc(
+            db,
+            "orders",
+            orderID
+          );
+
+
+        const orderSnapshot =
+          await getDoc(
+            orderRef
+          );
+
+
+        if (
+          !orderSnapshot.exists()
+        ) {
+
+          throw new Error(
+            "Order does not exist in Firestore."
+          );
+
+        }
+
+
+        const existingOrder =
+          orderSnapshot.data();
+
+
+        const trackingData = {
+
+          number:
+            trackingNumber,
+
+          trackingNumber:
+            trackingNumber,
+
+          carrier:
+            carrier,
+
+          trackingLink:
+            trackingLink
+
+        };
+
+
+        await updateDoc(
+          orderRef,
+          {
+
+            tracking:
+              trackingData,
+
+            trackingNumber:
+              trackingNumber,
+
+            carrier:
+              carrier,
+
+            shippingCarrier:
+              carrier,
+
+            trackingLink:
+              trackingLink,
+
+            status:
+              "Shipped",
+
+            fulfillmentStatus:
+              "Shipped",
+
+            updatedAt:
+              serverTimestamp(),
+
+            shippedAt:
+              serverTimestamp(),
+
+            trackingSentAt:
+              serverTimestamp(),
+
+            trackingNotificationSent:
+              false
+
+          }
+        );
+
+
+        let notificationID =
+          null;
+
+
+        try {
+
+          notificationID =
+            await createTrackingNotification(
+              existingOrder,
+              trackingNumber,
+              carrier,
+              trackingLink
+            );
+
+
+          await updateDoc(
+            orderRef,
+            {
+
+              trackingNotificationSent:
+                true,
+
+              notificationID:
+                notificationID,
+
+              updatedAt:
+                serverTimestamp()
+
+            }
+          );
+
+
+        } catch (
+          notificationError
+        ) {
+
+          console.error(
+            "Notification creation failed:",
+            notificationError
+          );
+
+        }
+
+
+        try {
+
+          localStorage.setItem(
+            "selectedOrderID",
+            orderID
+          );
+
+        } catch {
+
+          // Ignore localStorage errors.
+
+        }
+
+
+        window.location.replace(
+          "admin-orders-view.html?orderID=" +
+          encodeURIComponent(
+            orderID
+          )
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Save tracking error:",
+          error
+        );
+
+
+        saveTrackingBtn.disabled =
+          false;
+
+
+        backBtn.disabled =
+          false;
+
+
+        let errorMessage =
+          "Unable to save tracking information.";
+
+
+        if (
+          error &&
+          error.code ===
+          "permission-denied"
+        ) {
+
+          errorMessage =
+            "Firestore permission denied. Your Firebase Security Rules do not allow this admin account to update this order.";
+
+        } else if (
+          error &&
+          error.code ===
+          "not-found"
+        ) {
+
+          errorMessage =
+            "This order does not exist in the Firestore orders collection.";
+
+        } else if (
+          error &&
+          error.message
+        ) {
+
+          errorMessage +=
+            "\n\n" +
+            error.message;
+
+        }
+
+
+        showMessage(
+          errorMessage,
+          "error"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       COMPATIBILITY FUNCTION
+    ====================================================== */
+
+    async function saveTrackingForOrder(
+      event
+    ) {
+
+      return saveTracking(
+        event
+      );
+
+    }
+
+
+    /* =====================================================
+       BACK TO ORDER
+    ====================================================== */
+
+    function goBack() {
+
+      if (!orderID) {
+
+        window.location.replace(
+          "admin-orders.html"
+        );
+
+        return;
+
+      }
+
+
+      window.location.replace(
+        "admin-orders-view.html?orderID=" +
+        encodeURIComponent(
+          orderID
+        )
+      );
+
+    }
+
+
+    /* =====================================================
+       LOGOUT
+    ====================================================== */
+
+    async function logoutAdmin() {
+
+      try {
+
+        if (auth) {
+
+          await signOut(
+            auth
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+      }
+
+
+      window.location.replace(
+        "../auth/admin-login.html"
+      );
+
+    }
+
+
+    /* =====================================================
+       LOCAL STORAGE
+    ====================================================== */
+
+    function loadLocalData(
+      key,
+      fallback = []
+    ) {
+
+      try {
+
+        const value =
+          localStorage.getItem(
+            key
+          );
+
+
+        if (!value) {
+
+          return fallback;
+
+        }
+
+
+        return (
+          JSON.parse(value) ??
+          fallback
+        );
+
+      } catch {
+
+        return fallback;
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SIDEBAR COUNTS
+    ====================================================== */
+
+    async function updateSidebarCounts() {
+
+      const products =
+        loadLocalData(
+          "inventoryProducts",
+          null
+        );
+
+
+      const payments =
+        loadLocalData(
+          "adminPayments",
+          null
+        );
+
+
+      const messages =
+        loadLocalData(
+          "adminMessages",
+          null
+        );
+
+
+      const users =
+        loadLocalData(
+          "adminUsers",
+          null
+        );
+
+
+      const productBadge =
+        document.getElementById(
+          "productCountBadge"
+        );
+
+
+      const orderBadge =
+        document.getElementById(
+          "orderCountBadge"
+        );
+
+
+      const paymentBadge =
+        document.getElementById(
+          "paymentCountBadge"
+        );
+
+
+      const messageBadge =
+        document.getElementById(
+          "messageCountBadge"
+        );
+
+
+      const usersBadge =
+        document.getElementById(
+          "usersCountBadge"
+        );
+
+
+      /* ===================================================
+         PRODUCTS
+      =================================================== */
+
+      if (
+        productBadge &&
+        Array.isArray(products)
+      ) {
+
+        productBadge.textContent =
+          products.length;
+
+      }
+
+
+      /* ===================================================
+         PAYMENTS
+      =================================================== */
+
+      if (
+        paymentBadge &&
+        Array.isArray(payments)
+      ) {
+
+        paymentBadge.textContent =
+          payments.length;
+
+      }
+
+
+      /* ===================================================
+         MESSAGES
+      =================================================== */
+
+      if (
+        messageBadge &&
+        Array.isArray(messages)
+      ) {
+
+        messageBadge.textContent =
+          messages.length;
+
+      }
+
+
+      /* ===================================================
+         USERS
+      =================================================== */
+
+      if (
+        usersBadge &&
+        Array.isArray(users)
+      ) {
+
+        usersBadge.textContent =
+          users.length;
+
+      }
+
+
+      /* ===================================================
+         ORDERS — FIRESTORE
+         
+         IMPORTANT FIX:
+         The old code read "adminOrders" from localStorage.
+         Your actual orders are stored in Firestore.
+
+         We now:
+         1. Make sure the 3 demo orders exist.
+         2. Read the Firestore "orders" collection.
+         3. Set the Orders badge to the actual document count.
+      =================================================== */
+
+      if (
+        orderBadge &&
+        db
+      ) {
+
+        try {
+
+          /*
+            Make sure the three demo orders exist first.
+          */
+
+          await ensureDemoOrdersExist();
+
+
+          /*
+            Read all orders directly from Firestore.
+          */
+
+          const ordersSnapshot =
+            await getDocs(
+              collection(
+                db,
+                "orders"
+              )
+            );
+
+
+          /*
+            This will be 3 when the three demo orders
+            are the only orders in Firestore.
+          */
+
+          orderBadge.textContent =
+            ordersSnapshot.size;
+
+
+          console.log(
+            "Firestore orders count:",
+            ordersSnapshot.size
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Unable to load Firestore order count:",
+            error
+          );
+
+
+          /*
+            Fallback only if Firestore cannot be read.
+            The normal value comes from Firestore.
+          */
+
+          const localOrders =
+            loadLocalData(
+              "adminOrders",
+              []
+            );
+
+
+          if (
+            Array.isArray(localOrders)
+          ) {
+
+            orderBadge.textContent =
+              localOrders.length;
+
+          } else {
+
+            orderBadge.textContent =
+              "0";
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    /* =====================================================
+       AUTOMATIC TRACKING URL
+    ====================================================== */
+
+    carrierInput.addEventListener(
+      "change",
+      () => {
+
+        const trackingNumber =
+          trackingNumberInput.value.trim();
+
+
+        const carrier =
+          carrierInput.value.trim();
+
+
+        if (
+          trackingNumber &&
+          carrier &&
+          !trackingLinkInput.value.trim()
+        ) {
+
+          const generated =
+            generateTrackingUrl(
+              carrier,
+              trackingNumber
+            );
+
+
+          if (generated) {
+
+            trackingLinkInput.value =
+              generated;
+
+          }
+
+        }
+
+      }
+    );
+
+
+    trackingNumberInput.addEventListener(
+      "input",
+      () => {
+
+        const trackingNumber =
+          trackingNumberInput.value.trim();
+
+
+        const carrier =
+          carrierInput.value.trim();
+
+
+        if (
+          trackingNumber &&
+          carrier &&
+          !trackingLinkInput.value.trim()
+        ) {
+
+          const generated =
+            generateTrackingUrl(
+              carrier,
+              trackingNumber
+            );
+
+
+          if (generated) {
+
+            trackingLinkInput.value =
+              generated;
+
+          }
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       EVENTS
+    ====================================================== */
+
+    trackingForm.addEventListener(
+      "submit",
+      saveTrackingForOrder
+    );
+
+
+    backBtn.addEventListener(
+      "click",
+      goBack
+    );
+
+
+    logoutBtn.addEventListener(
+      "click",
+      logoutAdmin
+    );
+
+
+    /* =====================================================
+       START
+    ====================================================== */
+
+    updateSidebarCounts();
+
+    loadOrder();
+
+  </script>
+
+</body>
+
+</html>
+```

@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Payment confirmation and order status for Aravon Shop."
+    >
+
+    <title>Payment Successful | Aravon Shop</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: "Inter", sans-serif;
+
+            background: #f5f7fb;
+            color: #1f2933;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, .08);
+        }
+
+        .top-header {
+            max-width: 1400px;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 15px 30px;
+        }
+
+
+        /* =========================================================
+           LOGO
+        ========================================================= */
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+
+            color: #111111;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+
+            user-select: none;
+        }
+
+        .logo:hover {
+            opacity: .85;
+        }
+
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        .search-bar {
+            flex: 1;
+
+            display: flex;
+
+            max-width: 700px;
+        }
+
+        .search-bar input {
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 13px 15px;
+
+            border: 2px solid #ff4747;
+            border-right: none;
+
+            border-radius:
+                8px 0 0 8px;
+
+            outline: none;
+
+            font-family: inherit;
+            font-size: 15px;
+
+            background: #ffffff;
+        }
+
+        .search-bar input:focus {
+            box-shadow:
+                0 0 0 2px
+                rgba(255, 71, 71, .12);
+        }
+
+        .search-bar button {
+            padding: 0 24px;
+
+            background: #ff4747;
+
+            color: #ffffff;
+
+            border: none;
+
+            border-radius:
+                0 8px 8px 0;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-weight: 600;
+
+            transition:
+                background .2s ease,
+                opacity .2s ease;
+        }
+
+        .search-bar button:hover {
+            background: #e43b3b;
+        }
+
+
+        /* =========================================================
+           HEADER ICONS
+        ========================================================= */
+
+        .header-icons {
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+        }
+
+        .header-icons a {
+            color: #222222;
+
+            text-decoration: none;
+
+            font-size: 24px;
+        }
+
+        .header-icons a:hover {
+            opacity: .7;
+        }
+
+
+        /* =========================================================
+           CART ICON
+        ========================================================= */
+
+        .cart-icon {
+            position: relative;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 32px;
+            height: 32px;
+
+            font-size: 24px;
+
+            line-height: 1;
+
+            cursor: pointer;
+
+            user-select: none;
+        }
+
+        .cart-icon:focus-visible {
+            outline:
+                2px solid #111111;
+
+            outline-offset: 3px;
+
+            border-radius: 6px;
+        }
+
+        .cart-badge {
+            position: absolute;
+
+            top: -8px;
+            right: -10px;
+
+            min-width: 22px;
+            height: 22px;
+
+            padding: 0 5px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #ff4747;
+
+            color: #ffffff;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           MOBILE MENU
+        ========================================================= */
+
+        .menu-toggle {
+            display: none;
+
+            background: none;
+
+            border: none;
+
+            color: #222222;
+
+            cursor: pointer;
+
+            font-size: 32px;
+
+            line-height: 1;
+        }
+
+        .menu-toggle:focus-visible {
+            outline:
+                2px solid #111111;
+
+            outline-offset: 3px;
+
+            border-radius: 6px;
+        }
+
+
+        /* =========================================================
+           MOBILE NAVIGATION
+        ========================================================= */
+
+        .mobile-navigation {
+            display: none;
+
+            background: #ffffff;
+
+            border-top:
+                1px solid #eeeeee;
+
+            box-shadow:
+                0 4px 10px rgba(0, 0, 0, .06);
+        }
+
+        .mobile-navigation.active {
+            display: block;
+        }
+
+        .mobile-navigation a {
+            display: block;
+
+            padding: 14px 20px;
+
+            color: #222222;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+        .mobile-navigation a:hover {
+            background: #f7f7f7;
+        }
+
+
+        /* =========================================================
+           SUCCESS CARD
+        ========================================================= */
+
+        .success-card {
+            width: calc(100% - 30px);
+
+            max-width: 560px;
+
+            margin:
+                70px auto 40px;
+
+            padding:
+                45px 35px;
+
+            background: #ffffff;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, .08);
+        }
+
+
+        /* =========================================================
+           SUCCESS ICON
+        ========================================================= */
+
+        .success-icon {
+            width: 76px;
+            height: 76px;
+
+            margin:
+                0 auto 22px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #e8f7e8;
+
+            color: #168316;
+
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .success-icon.pending {
+            background: #fff4e5;
+            color: #8a5200;
+        }
+
+        .success-icon.error {
+            background: #ffe5e5;
+            color: #b00000;
+        }
+
+
+        /* =========================================================
+           TITLE
+        ========================================================= */
+
+        .success-card h1 {
+            margin:
+                0 0 12px;
+
+            color: #111111;
+
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .success-card p {
+            margin:
+                0 0 12px;
+
+            color: #6b7280;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           ORDER STATUS
+        ========================================================= */
+
+        .order-status {
+            margin-top: 20px;
+
+            padding: 14px;
+
+            border-radius: 8px;
+
+            background: #f5f7fb;
+
+            color: #555555;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .order-status.success {
+            background: #e8f7e8;
+
+            color: #176b17;
+        }
+
+        .order-status.warning {
+            background: #fff4e5;
+
+            color: #8a5200;
+        }
+
+        .order-status.error {
+            background: #ffe5e5;
+
+            color: #b00000;
+        }
+
+
+        /* =========================================================
+           PAYMENT REFERENCE
+        ========================================================= */
+
+        .order-id {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            background: #fafafa;
+
+            border:
+                1px solid #eeeeee;
+
+            border-radius: 8px;
+
+            color: #444444;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            word-break: break-word;
+        }
+
+        .order-id-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #777777;
+
+            font-size: 12px;
+
+            font-weight: 500;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .button-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+
+            width: 100%;
+
+            padding: 13px 20px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                opacity .2s ease,
+                background .2s ease;
+        }
+
+        .btn:focus-visible {
+            outline:
+                2px solid #111111;
+
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: #ff4747;
+
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            opacity: .9;
+        }
+
+        .btn-secondary {
+            background: #eeeeee;
+
+            color: #222222;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e2e2;
+        }
+
+
+        /* =========================================================
+           FEATURED INFORMATION
+        ========================================================= */
+
+        .featured-section {
+            max-width: 1100px;
+
+            margin:
+                20px auto;
+
+            padding:
+                0 20px;
+        }
+
+        .featured-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 25px;
+
+            padding: 30px;
+
+            background: #ffffff;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, .08);
+        }
+
+        .featured-grid h3 {
+            margin:
+                0 0 10px;
+
+            font-size: 17px;
+        }
+
+        .featured-grid p {
+            margin: 0;
+
+            color: #000000;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            margin-top: 50px;
+
+            padding:
+                30px 20px;
+
+            background: #222222;
+
+            color: #ffffff;
+
+            text-align: center;
+        }
+
+        footer p {
+            margin:
+                10px 0;
+        }
+
+        footer a {
+            color: #ffffff;
+
+            text-decoration: none;
+
+            margin:
+                0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .top-header {
+                padding:
+                    14px 20px;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .header-icons {
+                gap: 18px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .top-header {
+                padding:
+                    12px 15px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .header-icons {
+                gap: 15px;
+            }
+
+            .header-icons a {
+                font-size: 21px;
+            }
+
+            .menu-toggle {
+                font-size: 29px;
+            }
+
+            .success-card {
+                width:
+                    calc(100% - 30px);
+
+                margin:
+                    30px 15px 40px;
+
+                padding:
+                    32px 20px;
+            }
+
+            .success-icon {
+                width: 68px;
+                height: 68px;
+
+                font-size: 34px;
+            }
+
+            .success-card h1 {
+                font-size: 25px;
+            }
+
+            .featured-section {
+                padding:
+                    0 15px;
+            }
+
+            .featured-grid {
+                padding:
+                    25px 20px;
+            }
+
+            footer a {
+                display: inline-block;
+
+                margin:
+                    5px 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="top-header">
+
+
+        <!-- LOGO -->
+
+        <div
+            class="logo"
+            id="shopLogo"
+            role="button"
+            tabindex="0"
+            aria-label="Go to Aravon Shop homepage"
+        >
+            Aravon Shop
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <button
+            id="menuToggle"
+            class="menu-toggle"
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded="false"
+            aria-controls="mobileNavigation"
+        >
+            ☰
+        </button>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-bar">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search products..."
+                aria-label="Search products"
+                autocomplete="off"
+            >
+
+            <button
+                id="searchBtn"
+                type="button"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- HEADER ICONS -->
+
+        <div class="header-icons">
+
+            <a
+                href="../users/auth/login.html"
+                title="Account"
+                aria-label="Account"
+            >
+                👤
+            </a>
+
+
+            <div
+                class="cart-icon"
+                id="cartIcon"
+                role="button"
+                tabindex="0"
+                title="Shopping Cart"
+                aria-label="Shopping Cart"
+            >
+
+                🛒
+
+                <span
+                    id="cartCount"
+                    class="cart-badge"
+                >
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MOBILE NAVIGATION -->
+
+    <nav
+        id="mobileNavigation"
+        class="mobile-navigation"
+        aria-label="Mobile navigation"
+    >
+
+        <a href="../index.html">
+            Home
+        </a>
+
+        <a href="../about.html">
+            About
+        </a>
+
+        <a href="../contact.html">
+            Contact
+        </a>
+
+        <a href="../privacy.html">
+            Privacy Policy
+        </a>
+
+        <a href="../terms.html">
+            Terms &amp; Conditions
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================================
+     PAYMENT SUCCESS / STATUS CARD
+========================================================= -->
+
+<main
+    class="success-card"
+    aria-labelledby="successTitle"
+>
+
+
+    <div
+        id="successIcon"
+        class="success-icon pending"
+        aria-hidden="true"
+    >
+        …
+    </div>
+
+
+    <h1 id="successTitle">
+        Confirming Payment
+    </h1>
+
+
+    <p id="successMessage">
+        Thank you for your order. We are securely confirming your
+        payment. Please wait while we verify your transaction.
+    </p>
+
+
+    <div
+        id="orderStatus"
+        class="order-status warning"
+        role="status"
+        aria-live="polite"
+    >
+        Waiting for secure payment confirmation...
+    </div>
+
+
+    <div
+        id="orderId"
+        class="order-id"
+        aria-live="polite"
+    ></div>
+
+
+    <div class="button-group">
+
+        <a
+            id="orderDetailsButton"
+            class="btn btn-primary"
+            href="../index.html"
+        >
+            Return to Shop
+        </a>
+
+
+        <a
+            id="continueShoppingButton"
+            class="btn btn-secondary"
+            href="../index.html"
+        >
+            Continue Shopping
+        </a>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     FEATURED INFORMATION
+========================================================= -->
+
+<section
+    class="featured-section"
+    aria-label="Aravon Shop benefits"
+>
+
+    <div class="featured-grid">
+
+
+        <div>
+
+            <h3>
+                🚚 Fast Delivery
+            </h3>
+
+            <p>
+                Reliable shipping with tracking
+                on eligible orders.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>
+                🔒 Secure Payments
+            </h3>
+
+            <p>
+                Payments are processed securely
+                through our payment provider.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>
+                💬 Customer Support
+            </h3>
+
+            <p>
+                If you need assistance with your
+                order, our support team is here to help.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>
+                ⭐ Quality Products
+            </h3>
+
+            <p>
+                Carefully selected products
+                at competitive prices.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <p>
+        <strong>
+            Aravon Shop
+        </strong>
+    </p>
+
+
+    <p>
+
+        <a href="../about.html">
+            About
+        </a>
+
+        |
+
+        <a href="../contact.html">
+            Contact
+        </a>
+
+        |
+
+        <a href="../privacy.html">
+            Privacy Policy
+        </a>
+
+        |
+
+        <a href="../terms.html">
+            Terms &amp; Conditions
+        </a>
+
+    </p>
+
+
+    <p>
+        &copy; 2026 Aravon Shop.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+<!-- =========================================================
+     UNIVERSAL CART CONTROLLER
+=========================================================
+
+     success.html is inside:
+
+     public/cart/success.html
+
+     Therefore the shared cart controller is:
+
+     public/cart/shared/cart.js
+
+========================================================= -->
+
+<script src="./shared/cart.js"></script>
+
+
+<!-- =========================================================
+     SUCCESS PAGE JAVASCRIPT
+========================================================= -->
+
+<script>
+
+"use strict";
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const orderStatus =
+            document.getElementById(
+                "orderStatus"
+            );
+
+        const orderIdElement =
+            document.getElementById(
+                "orderId"
+            );
+
+        const orderDetailsButton =
+            document.getElementById(
+                "orderDetailsButton"
+            );
+
+        const continueShoppingButton =
+            document.getElementById(
+                "continueShoppingButton"
+            );
+
+        const cartCount =
+            document.getElementById(
+                "cartCount"
+            );
+
+        const cartIcon =
+            document.getElementById(
+                "cartIcon"
+            );
+
+        const shopLogo =
+            document.getElementById(
+                "shopLogo"
+            );
+
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+        const searchBtn =
+            document.getElementById(
+                "searchBtn"
+            );
+
+        const menuToggle =
+            document.getElementById(
+                "menuToggle"
+            );
+
+        const mobileNavigation =
+            document.getElementById(
+                "mobileNavigation"
+            );
+
+        const successIcon =
+            document.getElementById(
+                "successIcon"
+            );
+
+        const successTitle =
+            document.getElementById(
+                "successTitle"
+            );
+
+        const successMessage =
+            document.getElementById(
+                "successMessage"
+            );
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        function goHome() {
+
+            window.location.href =
+                "../index.html";
+
+        }
+
+
+        function goToCheckout() {
+
+            window.location.href =
+                "./checkout.html";
+
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        if (shopLogo) {
+
+            shopLogo.addEventListener(
+                "click",
+                goHome
+            );
+
+
+            shopLogo.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        goHome();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           CART ICON
+        ===================================================== */
+
+        if (cartIcon) {
+
+            cartIcon.addEventListener(
+                "click",
+                goToCheckout
+            );
+
+
+            cartIcon.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        goToCheckout();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           MOBILE MENU
+        ===================================================== */
+
+        if (
+            menuToggle &&
+            mobileNavigation
+        ) {
+
+            menuToggle.addEventListener(
+                "click",
+                () => {
+
+                    const isOpen =
+                        menuToggle.getAttribute(
+                            "aria-expanded"
+                        ) === "true";
+
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        String(!isOpen)
+                    );
+
+
+                    menuToggle.setAttribute(
+                        "aria-label",
+                        isOpen
+                            ? "Open navigation"
+                            : "Close navigation"
+                    );
+
+
+                    mobileNavigation.classList.toggle(
+                        "active",
+                        !isOpen
+                    );
+
+                }
+            );
+
+
+            mobileNavigation
+                .querySelectorAll("a")
+                .forEach(link => {
+
+                    link.addEventListener(
+                        "click",
+                        () => {
+
+                            menuToggle.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+
+                            menuToggle.setAttribute(
+                                "aria-label",
+                                "Open navigation"
+                            );
+
+                            mobileNavigation.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+                });
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        function runSearch() {
+
+            if (!searchInput) {
+                return;
+            }
+
+
+            const query =
+                String(
+                    searchInput.value || ""
+                ).trim();
+
+
+            if (!query) {
+                return;
+            }
+
+
+            window.location.href =
+                `../index.html?search=${encodeURIComponent(
+                    query
+                )}`;
+
+        }
+
+
+        if (searchBtn) {
+
+            searchBtn.addEventListener(
+                "click",
+                runSearch
+            );
+
+        }
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        runSearch();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           URL PARAMETERS
+        ===================================================== */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const sessionId =
+            urlParams.get(
+                "session_id"
+            );
+
+
+        const suppliedOrderId =
+            urlParams.get(
+                "order_id"
+            );
+
+
+        /* =====================================================
+           PAYMENT STATE
+        ===================================================== */
+
+        let cartCleared =
+            false;
+
+        let paymentConfirmed =
+            false;
+
+        let pollingStopped =
+            false;
+
+        let attempts =
+            0;
+
+
+        const maxAttempts =
+            20;
+
+        const pollingDelay =
+            1500;
+
+
+        /* =====================================================
+           SAFE TEXT HELPER
+        ===================================================== */
+
+        function setText(
+            element,
+            value
+        ) {
+
+            if (!element) {
+                return;
+            }
+
+            element.textContent =
+                String(value || "");
+
+        }
+
+
+        /* =====================================================
+           DISPLAY PAYMENT REFERENCE
+        ===================================================== */
+
+        function displayPaymentReference() {
+
+            if (
+                !orderIdElement ||
+                !sessionId
+            ) {
+
+                return;
+
+            }
+
+
+            orderIdElement.style.display =
+                "block";
+
+
+            orderIdElement.innerHTML =
+                "";
+
+
+            const label =
+                document.createElement(
+                    "span"
+                );
+
+
+            label.className =
+                "order-id-label";
+
+
+            label.textContent =
+                "Payment Reference";
+
+
+            const reference =
+                document.createElement(
+                    "span"
+                );
+
+
+            reference.textContent =
+                sessionId;
+
+
+            orderIdElement.appendChild(
+                label
+            );
+
+
+            orderIdElement.appendChild(
+                reference
+            );
+
+        }
+
+
+        /* =====================================================
+           CLEAR CART
+        =====================================================
+
+           IMPORTANT:
+
+           The cart is cleared ONLY after:
+
+               result.success === true
+
+           AND:
+
+               result.confirmed === true
+
+           Reaching success.html is NOT enough.
+
+        ===================================================== */
+
+        function clearCartAfterConfirmedPayment() {
+
+            if (cartCleared) {
+                return true;
+            }
+
+
+            let clearedSuccessfully =
+                false;
+
+
+            /* =================================================
+               PRIMARY CART CONTROLLER
+            ================================================= */
+
+            if (
+                window.AravonCart &&
+                typeof window.AravonCart.clearCart ===
+                    "function"
+            ) {
+
+                try {
+
+                    const result =
+                        window.AravonCart.clearCart();
+
+
+                    if (result !== false) {
+
+                        clearedSuccessfully =
+                            true;
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Aravon Shop: AravonCart.clearCart() failed:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* =================================================
+               FALLBACK LOCAL STORAGE CLEAR
+            =================================================
+
+               This fallback is only reached after the backend
+               has already confirmed payment.
+
+            ================================================= */
+
+            if (!clearedSuccessfully) {
+
+                try {
+
+                    localStorage.removeItem(
+                        "cart"
+                    );
+
+                    clearedSuccessfully =
+                        true;
+
+                } catch (error) {
+
+                    console.error(
+                        "Aravon Shop: fallback cart clearing failed:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* =================================================
+               UPDATE CART BADGE
+            ================================================= */
+
+            if (clearedSuccessfully) {
+
+                cartCleared =
+                    true;
+
+
+                if (cartCount) {
+
+                    cartCount.textContent =
+                        "0";
+
+                }
+
+
+                if (
+                    typeof window.updateCartCount ===
+                    "function"
+                ) {
+
+                    try {
+
+                        window.updateCartCount();
+
+                    } catch (error) {
+
+                        console.error(
+                            "Aravon Shop: updateCartCount failed:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                return true;
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /* =====================================================
+           SHOW CONFIRMED PAYMENT
+        ===================================================== */
+
+        function showConfirmedPayment(
+            orderId
+        ) {
+
+            paymentConfirmed =
+                true;
+
+            pollingStopped =
+                true;
+
+
+            if (successIcon) {
+
+                successIcon.className =
+                    "success-icon";
+
+                successIcon.textContent =
+                    "✓";
+
+            }
+
+
+            if (successTitle) {
+
+                successTitle.textContent =
+                    "Payment Successful";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "Thank you for your order. Your payment has been confirmed and your order has been received. We will now begin processing your order.";
+
+            }
+
+
+            if (orderStatus) {
+
+                orderStatus.className =
+                    "order-status success";
+
+                orderStatus.textContent =
+                    "Payment confirmed successfully. Your order has been received.";
+
+            }
+
+
+            /* =================================================
+               INTERNAL ORDER NUMBER
+            ================================================= */
+
+            if (
+                orderIdElement &&
+                orderId
+            ) {
+
+                orderIdElement.style.display =
+                    "block";
+
+
+                orderIdElement.innerHTML =
+                    "";
+
+
+                const label =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                label.className =
+                    "order-id-label";
+
+
+                label.textContent =
+                    "Order Number";
+
+
+                const reference =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                reference.textContent =
+                    orderId;
+
+
+                orderIdElement.appendChild(
+                    label
+                );
+
+
+                orderIdElement.appendChild(
+                    reference
+                );
+
+            }
+
+
+            /* =================================================
+               ORDER DETAILS BUTTON
+            ================================================= */
+
+            if (
+                orderDetailsButton &&
+                orderId
+            ) {
+
+                orderDetailsButton.href =
+                    `../users/order/order-details.html?order_id=${encodeURIComponent(
+                        orderId
+                    )}`;
+
+
+                orderDetailsButton.textContent =
+                    "View Order";
+
+            } else if (orderDetailsButton) {
+
+                orderDetailsButton.href =
+                    "../index.html";
+
+
+                orderDetailsButton.textContent =
+                    "Return to Shop";
+
+            }
+
+
+            /* =================================================
+               CLEAR CART
+
+               ONLY AFTER CONFIRMED PAYMENT.
+            ================================================= */
+
+            const cleared =
+                clearCartAfterConfirmedPayment();
+
+
+            if (
+                !cleared &&
+                orderStatus
+            ) {
+
+                orderStatus.className =
+                    "order-status warning";
+
+                orderStatus.textContent =
+                    "Payment confirmed successfully. Your order has been received, but your cart could not be cleared automatically. Please contact support if the items still appear in your cart.";
+
+            }
+
+
+            if (continueShoppingButton) {
+
+                continueShoppingButton.href =
+                    "../index.html";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SHOW PAYMENT PENDING
+        ===================================================== */
+
+        function showPaymentPending(
+            message
+        ) {
+
+            if (successIcon) {
+
+                successIcon.className =
+                    "success-icon pending";
+
+                successIcon.textContent =
+                    "…";
+
+            }
+
+
+            if (successTitle) {
+
+                successTitle.textContent =
+                    "Payment Processing";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "Your payment is still being securely confirmed. Please do not place the order again while we complete the verification.";
+
+            }
+
+
+            if (orderStatus) {
+
+                orderStatus.className =
+                    "order-status warning";
+
+                orderStatus.textContent =
+                    message ||
+                    "Your payment is being processed. Your cart has been kept until payment is confirmed.";
+
+            }
+
+
+            if (orderDetailsButton) {
+
+                orderDetailsButton.href =
+                    "../index.html";
+
+                orderDetailsButton.textContent =
+                    "Return to Shop";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SHOW PAYMENT FAILURE
+        ===================================================== */
+
+        function showPaymentFailure(
+            message
+        ) {
+
+            pollingStopped =
+                true;
+
+
+            if (successIcon) {
+
+                successIcon.className =
+                    "success-icon error";
+
+                successIcon.textContent =
+                    "!";
+
+            }
+
+
+            if (successTitle) {
+
+                successTitle.textContent =
+                    "Payment Not Confirmed";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "Your payment was not completed or could not be confirmed. Your cart has been kept so you can safely try again.";
+
+            }
+
+
+            if (orderStatus) {
+
+                orderStatus.className =
+                    "order-status error";
+
+                orderStatus.textContent =
+                    message ||
+                    "The payment was not completed.";
+
+            }
+
+
+            if (orderDetailsButton) {
+
+                orderDetailsButton.href =
+                    "./checkout.html";
+
+                orderDetailsButton.textContent =
+                    "Return to Checkout";
+
+            }
+
+
+            if (continueShoppingButton) {
+
+                continueShoppingButton.href =
+                    "../index.html";
+
+            }
+
+
+            /* =================================================
+               IMPORTANT
+
+               NEVER CLEAR THE CART HERE.
+            ================================================= */
+
+        }
+
+
+        /* =====================================================
+           SHOW SERVER / NETWORK ERROR
+        ===================================================== */
+
+        function showConfirmationError() {
+
+            if (successIcon) {
+
+                successIcon.className =
+                    "success-icon pending";
+
+                successIcon.textContent =
+                    "…";
+
+            }
+
+
+            if (successTitle) {
+
+                successTitle.textContent =
+                    "Confirmation Still Processing";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "We have not yet received final confirmation from the secure payment system. Please do not place the order again.";
+
+            }
+
+
+            if (orderStatus) {
+
+                orderStatus.className =
+                    "order-status warning";
+
+                orderStatus.textContent =
+                    "Payment confirmation is temporarily unavailable. Your cart has NOT been cleared.";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           NO SESSION ID
+        ===================================================== */
+
+        if (!sessionId) {
+
+            if (successIcon) {
+
+                successIcon.className =
+                    "success-icon error";
+
+                successIcon.textContent =
+                    "!";
+
+            }
+
+
+            if (successTitle) {
+
+                successTitle.textContent =
+                    "Payment Reference Missing";
+
+            }
+
+
+            if (successMessage) {
+
+                successMessage.textContent =
+                    "We could not find the Stripe payment reference required to verify this payment.";
+
+            }
+
+
+            if (orderStatus) {
+
+                orderStatus.className =
+                    "order-status error";
+
+                orderStatus.textContent =
+                    "No payment session was provided. If you completed a payment, please contact customer support before attempting another payment.";
+
+            }
+
+
+            if (orderDetailsButton) {
+
+                orderDetailsButton.href =
+                    "../index.html";
+
+                orderDetailsButton.textContent =
+                    "Return to Shop";
+
+            }
+
+
+            if (continueShoppingButton) {
+
+                continueShoppingButton.href =
+                    "../index.html";
+
+            }
+
+
+            /*
+             * CRITICAL:
+             *
+             * No session ID means there is no payment
+             * verification request.
+             *
+             * Therefore the cart is NOT cleared.
+             */
+
+            return;
+
+        }
+
+
+        /* =====================================================
+           DISPLAY PAYMENT REFERENCE
+        ===================================================== */
+
+        displayPaymentReference();
+
+
+        /* =====================================================
+           INITIAL STATE
+        ===================================================== */
+
+        showPaymentPending(
+            "Confirming your payment securely. Please wait..."
+        );
+
+
+        /* =====================================================
+           CHECK PAYMENT STATUS
+        =====================================================
+
+           Backend endpoint:
+
+           GET
+           /api/checkout-status?session_id=...
+
+           Expected confirmed response:
+
+           {
+               "success": true,
+               "confirmed": true,
+               "orderId": "..."
+           }
+
+           IMPORTANT:
+
+           The browser redirect itself is NOT considered
+           proof of payment.
+
+           The backend must verify the Stripe session.
+        ===================================================== */
+
+        async function checkPaymentStatus() {
+
+            if (
+                pollingStopped ||
+                paymentConfirmed
+            ) {
+
+                return "stopped";
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/checkout-status?session_id=${encodeURIComponent(
+                            sessionId
+                        )}`,
+                        {
+                            method:
+                                "GET",
+
+                            headers: {
+                                "Accept":
+                                    "application/json"
+                            },
+
+                            cache:
+                                "no-store"
+                        }
+                    );
+
+
+                let result =
+                    null;
+
+
+                try {
+
+                    result =
+                        await response.json();
+
+                } catch (error) {
+
+                    console.error(
+                        "Aravon Shop: invalid checkout-status JSON:",
+                        error
+                    );
+
+                }
+
+
+                /* =============================================
+                   SERVER ERROR
+                ============================================= */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result?.error ||
+                        `Payment confirmation server returned HTTP ${response.status}.`
+                    );
+
+                }
+
+
+                /* =============================================
+                   INVALID RESPONSE
+                ============================================= */
+
+                if (
+                    !result ||
+                    result.success !== true
+                ) {
+
+                    throw new Error(
+                        result?.error ||
+                        "Payment confirmation failed."
+                    );
+
+                }
+
+
+                /* =============================================
+                   CONFIRMED
+                ============================================= */
+
+                if (
+                    result.confirmed === true
+                ) {
+
+                    showConfirmedPayment(
+                        result.orderId ||
+                        suppliedOrderId ||
+                        ""
+                    );
+
+
+                    return "confirmed";
+
+                }
+
+
+                /* =============================================
+                   FAILED / CANCELLED / EXPIRED
+                ============================================= */
+
+                const paymentStatus =
+                    String(
+                        result.paymentStatus ||
+                        ""
+                    ).toLowerCase();
+
+
+                const orderStatusValue =
+                    String(
+                        result.orderStatus ||
+                        ""
+                    ).toLowerCase();
+
+
+                if (
+                    paymentStatus === "failed" ||
+                    paymentStatus === "expired" ||
+                    paymentStatus === "canceled" ||
+                    paymentStatus === "cancelled" ||
+                    orderStatusValue === "payment_failed" ||
+                    orderStatusValue === "cancelled" ||
+                    orderStatusValue === "canceled"
+                ) {
+
+                    showPaymentFailure(
+                        "The payment was not completed. Your cart has been kept so you can try again."
+                    );
+
+
+                    return "failed";
+
+                }
+
+
+                /* =============================================
+                   STILL PENDING
+                ============================================= */
+
+                showPaymentPending(
+                    "Your payment is still being confirmed. Your cart has NOT been cleared."
+                );
+
+
+                return "pending";
+
+            } catch (error) {
+
+                console.error(
+                    "Aravon Shop: payment confirmation error:",
+                    error
+                );
+
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * Network errors are NOT treated as successful
+                 * payments.
+                 *
+                 * Therefore the cart remains untouched.
+                 */
+
+                showConfirmationError();
+
+
+                return "error";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PAYMENT POLLING
+        ===================================================== */
+
+        async function confirmPaymentWithPolling() {
+
+            if (
+                paymentConfirmed ||
+                pollingStopped
+            ) {
+
+                return;
+
+            }
+
+
+            attempts += 1;
+
+
+            const status =
+                await checkPaymentStatus();
+
+
+            /* =============================================
+               CONFIRMED
+            ============================================= */
+
+            if (
+                status === "confirmed"
+            ) {
+
+                paymentConfirmed =
+                    true;
+
+                return;
+
+            }
+
+
+            /* =============================================
+               FAILED
+            ============================================= */
+
+            if (
+                status === "failed"
+            ) {
+
+                return;
+
+            }
+
+
+            /* =============================================
+               STOPPED
+            ============================================= */
+
+            if (
+                status === "stopped"
+            ) {
+
+                return;
+
+            }
+
+
+            /* =============================================
+               CONTINUE POLLING
+            ============================================= */
+
+            if (
+                attempts <
+                maxAttempts
+            ) {
+
+                window.setTimeout(
+                    confirmPaymentWithPolling,
+                    pollingDelay
+                );
+
+                return;
+
+            }
+
+
+            /* =============================================
+               WEBHOOK / SERVER MAY STILL BE PROCESSING
+            ============================================= */
+
+            showPaymentPending(
+                "Your payment is taking a little longer to confirm. Your cart has NOT been cleared. Please check your order again shortly."
+            );
+
+        }
+
+
+        /* =====================================================
+           INITIAL CART COUNT
+        ===================================================== */
+
+        if (
+            typeof window.updateCartCount ===
+            "function"
+        ) {
+
+            try {
+
+                window.updateCartCount();
+
+            } catch (error) {
+
+                console.error(
+                    "Aravon Shop: initial cart count update failed:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           START PAYMENT CONFIRMATION
+        ===================================================== */
+
+        confirmPaymentWithPolling();
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>

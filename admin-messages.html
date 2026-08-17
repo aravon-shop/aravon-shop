@@ -1,0 +1,3404 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin – Inbox Messages</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* ================================
+       SIDEBAR
+    ================================= */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 20px;
+      transition: .2s;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover {
+      background: #f1f3f4;
+    }
+
+    .sidebar a.active {
+      background: #d2e3fc;
+      color: #174ea6;
+    }
+
+    .badge {
+      background: #ea4335;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      min-width: 12px;
+      text-align: center;
+    }
+
+    .badge.hidden {
+      display: none;
+    }
+
+    .logout-btn {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background: #111;
+    }
+
+    /* ================================
+       MAIN
+    ================================= */
+
+    .inbox-container {
+      flex: 1;
+      display: flex;
+      height: 100vh;
+      min-width: 0;
+    }
+
+    /* ================================
+       MESSAGE LIST
+    ================================= */
+
+    .message-list {
+      width: 380px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+      padding: 20px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    #searchBar {
+      width: 90%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      margin-bottom: 20px;
+    }
+
+    .filter-row button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-right: 6px;
+      margin-bottom: 8px;
+      background: #eee;
+      font-size: 13px;
+    }
+
+    .filter-row button.active {
+      background: #174ea6;
+      color: #fff;
+    }
+
+    .message-item {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      transition: .2s;
+      position: relative;
+      padding-right: 100px;
+    }
+
+    .message-item:hover {
+      background: #f2f2f2;
+    }
+
+    .message-item.selected {
+      background: #e8f0fe;
+    }
+
+    .message-item.unread {
+      background: #f0f6ff;
+      border-left: 4px solid #174ea6;
+    }
+
+    .message-item.unread h4 {
+      font-weight: 700;
+    }
+
+    .message-item h4 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      padding-right: 10px;
+    }
+
+    .message-item small {
+      display: block;
+      color: #777;
+      margin-top: 4px;
+    }
+
+    .unread-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #174ea6;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .read-status {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #777;
+    }
+
+    .resolved-badge {
+      display: inline-block;
+      background: green;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    /* ================================
+       MESSAGE ACTIONS
+    ================================= */
+
+    .message-actions {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    .delete-btn,
+    .unread-btn {
+      color: #fff;
+      padding: 5px 8px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .delete-btn {
+      background: #ea4335;
+    }
+
+    .delete-btn:hover {
+      background: #c62828;
+    }
+
+    .unread-btn {
+      background: #174ea6;
+    }
+
+    .unread-btn:hover {
+      background: #0f3c85;
+    }
+
+    .unread-btn.mark-read {
+      background: #777;
+    }
+
+    .unread-btn.mark-read:hover {
+      background: #555;
+    }
+
+    /* ================================
+       PREVIEW
+    ================================= */
+
+    .preview-panel {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    .preview-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .reply-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      resize: none;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    /* ================================
+       BUTTONS
+    ================================= */
+
+    .send-btn {
+      background: #174ea6;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .send-btn:hover {
+      background: #0f3c85;
+    }
+
+    .reply-btn {
+      background: #174ea6;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .resolve-btn {
+      background: green;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    /* ================================
+       HISTORY
+    ================================= */
+
+    .history-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      margin-top: 20px;
+    }
+
+    .history-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+
+    /* ================================
+       TEMPLATES
+    ================================= */
+
+    .template-buttons {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .template-buttons h4 {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .template-buttons button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .template-buttons button:hover {
+      background: #174ea6;
+      color: #fff;
+    }
+
+    /* ================================
+       TRASH
+    ================================= */
+
+    .trash-box {
+      margin-top: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .trash-box h3 {
+      margin-top: 0;
+    }
+
+    .trash-item {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: #fafafa;
+    }
+
+    .trash-info {
+      min-width: 0;
+    }
+
+    .trash-info strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .trash-info small {
+      color: #777;
+      display: block;
+      margin-top: 3px;
+    }
+
+    .undo-btn {
+      background: #174ea6;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .undo-btn:hover {
+      background: #0f3c85;
+    }
+
+    /* ================================
+       EMPTY
+    ================================= */
+
+    .empty-state {
+      padding: 30px 15px;
+      text-align: center;
+      color: #777;
+    }
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 900px) {
+
+      .sidebar {
+        width: 190px;
+      }
+
+      .message-list {
+        width: 320px;
+      }
+
+      .preview-panel {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      body {
+        display: block;
+        height: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .inbox-container {
+        display: block;
+        height: auto;
+      }
+
+      .message-list {
+        width: 100%;
+        max-height: 500px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .preview-panel {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .trash-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <div class="sidebar">
+
+```
+<h2>Admin Panel</h2>
+
+<a href="../dashboard/admin-dashboard.html">
+  <span>Dashboard</span>
+</a>
+
+<a href="../orders/admin-orders.html">
+  <span>Orders</span>
+  <span class="badge">5</span>
+</a>
+
+<a href="../users/users-list.html">
+  <span>Users</span>
+  <span class="badge">5000</span>
+</a>
+
+<a href="../inventory/admin-inventory.html">
+  <span>Inventory</span>
+  <span class="badge">5</span>
+</a>
+
+<a href="../website-builder/product-page-editor.html">
+  <span>Website Builder</span>
+</a>
+
+<a href="../settings/admin-settings.html">
+  <span>Settings</span>
+</a>
+
+<a href="../payment/payment-setting.html">
+  <span>Payment</span>
+  <span class="badge">5</span>
+</a>
+
+<a href="inbox.html" class="active">
+  <span>Messages</span>
+  <span class="badge hidden" id="messageCountBadge">0</span>
+</a>
+
+<button class="logout-btn" id="logoutBtn" type="button">
+  Logout
+</button>
+```
+
+  </div>
+
+  <!-- =====================================================
+       MAIN INBOX
+  ====================================================== -->
+
+  <div class="inbox-container">
+
+```
+<!-- ===================================================
+     MESSAGE LIST
+==================================================== -->
+
+<div class="message-list">
+
+  <input
+    id="searchBar"
+    placeholder="Search messages..."
+    autocomplete="off"
+  >
+
+  <div class="filter-row">
+
+    <button
+      type="button"
+      id="filter-all"
+      class="active"
+    >
+      All
+    </button>
+
+    <button
+      type="button"
+      id="filter-unread"
+    >
+      Unread
+    </button>
+
+    <button
+      type="button"
+      id="filter-refund"
+    >
+      Refund
+    </button>
+
+    <button
+      type="button"
+      id="filter-cancel"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      id="filter-support"
+    >
+      Support
+    </button>
+
+    <button
+      type="button"
+      id="filter-order"
+    >
+      Order
+    </button>
+
+  </div>
+
+  <div id="messageItems"></div>
+
+</div>
+
+
+<!-- ===================================================
+     PREVIEW
+==================================================== -->
+
+<div class="preview-panel">
+
+  <div id="previewCard" class="preview-card">
+
+    <h2>Select a message</h2>
+
+    <p>
+      Click a message from the left to view details.
+    </p>
+
+  </div>
+
+
+  <!-- =================================================
+       REPLY
+  ================================================== -->
+
+  <div
+    id="replyBox"
+    class="reply-box"
+    style="display:none;"
+  >
+
+    <h3>
+      Reply to
+      <span id="replyName"></span>
+    </h3>
+
+    <textarea
+      id="replyText"
+      placeholder="Write your reply..."
+    ></textarea>
+
+    <div class="template-buttons">
+
+      <h4>Quick Reply Templates</h4>
+
+      <button type="button" data-template="refund_approved">
+        Refund Approved
+      </button>
+
+      <button type="button" data-template="refund_info">
+        Request Refund Information
+      </button>
+
+      <button type="button" data-template="refund_denied">
+        Refund Denied
+      </button>
+
+      <button type="button" data-template="cancel_ok">
+        Cancellation Approved
+      </button>
+
+      <button type="button" data-template="cancel_late">
+        Cancellation Too Late
+      </button>
+
+      <button type="button" data-template="support_general">
+        General Support
+      </button>
+
+      <button type="button" data-template="support_technical">
+        Technical Support
+      </button>
+
+      <button type="button" data-template="order_update">
+        Order Update
+      </button>
+
+      <button type="button" data-template="order_delay">
+        Order Delay
+      </button>
+
+    </div>
+
+    <button
+      class="send-btn"
+      id="sendReplyBtn"
+      type="button"
+    >
+      Send Reply
+    </button>
+
+  </div>
+
+
+  <!-- =================================================
+       HISTORY
+  ================================================== -->
+
+  <div
+    id="historyBox"
+    class="history-box"
+    style="display:none;"
+  >
+
+    <h3>Reply History</h3>
+
+    <div id="historyItems"></div>
+
+  </div>
+
+
+  <!-- =================================================
+       TRASH BIN
+  ================================================== -->
+
+  <div
+    id="trashBox"
+    class="trash-box"
+    style="display:none;"
+  >
+
+    <h3>🗑️ Trash Bin</h3>
+
+    <p>
+      Deleted messages are stored here.
+      You can restore them with Undo Delete.
+    </p>
+
+    <div id="trashItems"></div>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script type="module">
+
+    /* =====================================================
+       FIREBASE AUTH ONLY
+       
+       Firestore is NOT used yet.
+       Messages are currently stored in localStorage.
+    ====================================================== */
+
+    import {
+      initializeApp
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getAuth,
+      signOut
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+    /* =====================================================
+       FIREBASE CONFIG
+    ===================================================== */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyAs2n_FyLyH7GmVmJ_GcyYF9UaAQxg9QnY",
+
+      authDomain:
+        "aravon-shop-48fdd.firebaseapp.com",
+
+      projectId:
+        "aravon-shop-48fdd",
+
+      storageBucket:
+        "aravon-shop-48fdd.appspot.com",
+
+      messagingSenderId:
+        "436832537701",
+
+      appId:
+        "1:436832537701:web:0047524bb50e9942390a8c"
+
+    };
+
+
+    const app =
+      initializeApp(firebaseConfig);
+
+
+    const auth =
+      getAuth(app);
+
+
+    /* =====================================================
+       DOM
+    ===================================================== */
+
+    const messageItems =
+      document.getElementById("messageItems");
+
+    const previewCard =
+      document.getElementById("previewCard");
+
+    const replyBox =
+      document.getElementById("replyBox");
+
+    const historyBox =
+      document.getElementById("historyBox");
+
+    const historyItems =
+      document.getElementById("historyItems");
+
+    const trashBox =
+      document.getElementById("trashBox");
+
+    const trashItems =
+      document.getElementById("trashItems");
+
+    const searchBar =
+      document.getElementById("searchBar");
+
+    const replyText =
+      document.getElementById("replyText");
+
+    const replyName =
+      document.getElementById("replyName");
+
+    const messageCountBadge =
+      document.getElementById("messageCountBadge");
+
+
+    /* =====================================================
+       STORAGE KEYS
+
+       IMPORTANT:
+       inbox.html MUST use the same key:
+       
+       adminMessages
+
+       This is what connects Inbox → Admin Messages.
+    ===================================================== */
+
+    const MESSAGE_STORAGE_KEY =
+      "adminMessages";
+
+    const TRASH_STORAGE_KEY =
+      "adminMessagesTrash";
+
+    const REPLY_STORAGE_KEY =
+      "adminReplies";
+
+
+    /* =====================================================
+       MESSAGE STORAGE
+    ===================================================== */
+
+    let allMessages =
+      loadMessages();
+
+    let trashMessages =
+      loadTrash();
+
+    let replyHistory =
+      loadReplies();
+
+
+    /* =====================================================
+       LOAD MESSAGES
+    ===================================================== */
+
+    function loadMessages() {
+
+      try {
+
+        const raw =
+          localStorage.getItem(
+            MESSAGE_STORAGE_KEY
+          );
+
+        if (!raw) {
+          return [];
+        }
+
+        const parsed =
+          JSON.parse(raw);
+
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+
+        return normalizeMessages(parsed);
+
+      } catch (error) {
+
+        console.error(
+          "Could not load messages:",
+          error
+        );
+
+        return [];
+
+      }
+
+    }
+
+
+    /* =====================================================
+       LOAD TRASH
+    ===================================================== */
+
+    function loadTrash() {
+
+      try {
+
+        const raw =
+          localStorage.getItem(
+            TRASH_STORAGE_KEY
+          );
+
+        if (!raw) {
+          return [];
+        }
+
+        const parsed =
+          JSON.parse(raw);
+
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+
+      } catch (error) {
+
+        console.error(
+          "Could not load trash:",
+          error
+        );
+
+        return [];
+
+      }
+
+    }
+
+
+    /* =====================================================
+       LOAD REPLIES
+    ===================================================== */
+
+    function loadReplies() {
+
+      try {
+
+        const raw =
+          localStorage.getItem(
+            REPLY_STORAGE_KEY
+          );
+
+        if (!raw) {
+          return [];
+        }
+
+        const parsed =
+          JSON.parse(raw);
+
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+
+      } catch (error) {
+
+        console.error(
+          "Could not load replies:",
+          error
+        );
+
+        return [];
+
+      }
+
+    }
+
+
+    /* =====================================================
+       NORMALIZE INCOMING MESSAGES
+
+       This makes the admin page more tolerant of messages
+       coming from different versions of inbox.html.
+    ===================================================== */
+
+    function normalizeMessages(messages) {
+
+      return messages.map(
+        (message, index) => {
+
+          const normalized = {
+            ...message
+          };
+
+
+          /* ID */
+
+          if (
+            normalized.id === undefined ||
+            normalized.id === null ||
+            normalized.id === ""
+          ) {
+
+            normalized.id =
+              createMessageId();
+
+          }
+
+
+          /* NAME */
+
+          if (
+            !normalized.name
+          ) {
+
+            normalized.name =
+              normalized.userName ||
+              normalized.customerName ||
+              normalized.senderName ||
+              normalized.customer ||
+              "Unknown User";
+
+          }
+
+
+          /* EMAIL */
+
+          if (
+            !normalized.email
+          ) {
+
+            normalized.email =
+              normalized.userEmail ||
+              normalized.senderEmail ||
+              "";
+
+          }
+
+
+          /* SUBJECT */
+
+          if (
+            !normalized.subject
+          ) {
+
+            normalized.subject =
+              normalized.title ||
+              normalized.topic ||
+              "New Message";
+
+          }
+
+
+          /* MESSAGE TEXT */
+
+          if (
+            !normalized.text
+          ) {
+
+            normalized.text =
+              normalized.message ||
+              normalized.body ||
+              normalized.content ||
+              "";
+
+          }
+
+
+          /* TYPE */
+
+          if (
+            !normalized.type
+          ) {
+
+            normalized.type =
+              normalized.category ||
+              normalized.department ||
+              "support";
+
+          }
+
+          normalized.type =
+            String(normalized.type)
+              .toLowerCase();
+
+
+          /* DATE */
+
+          if (
+            !normalized.date
+          ) {
+
+            normalized.date =
+              normalized.createdAt ||
+              normalized.timestamp ||
+              new Date().toISOString();
+
+          }
+
+
+          /* UNREAD */
+
+          if (
+            typeof normalized.unread !==
+            "boolean"
+          ) {
+
+            normalized.unread =
+              true;
+
+          }
+
+
+          /* RESOLVED */
+
+          if (
+            typeof normalized.resolved !==
+            "boolean"
+          ) {
+
+            normalized.resolved =
+              false;
+
+          }
+
+
+          return normalized;
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       CREATE MESSAGE ID
+    ===================================================== */
+
+    function createMessageId() {
+
+      return (
+        "msg_" +
+        Date.now() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .substring(2, 9)
+      );
+
+    }
+
+
+    /* =====================================================
+       SAVE MESSAGES
+    ===================================================== */
+
+    function saveMessages() {
+
+      try {
+
+        localStorage.setItem(
+          MESSAGE_STORAGE_KEY,
+          JSON.stringify(allMessages)
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not save messages:",
+          error
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SAVE TRASH
+    ===================================================== */
+
+    function saveTrash() {
+
+      try {
+
+        localStorage.setItem(
+          TRASH_STORAGE_KEY,
+          JSON.stringify(trashMessages)
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not save trash:",
+          error
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SAVE REPLIES
+    ===================================================== */
+
+    function saveReplies() {
+
+      try {
+
+        localStorage.setItem(
+          REPLY_STORAGE_KEY,
+          JSON.stringify(replyHistory)
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not save replies:",
+          error
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       SORT
+    ===================================================== */
+
+    function sortMessages() {
+
+      allMessages.sort(
+        (a, b) => {
+
+          const dateA =
+            new Date(
+              a.date || 0
+            );
+
+          const dateB =
+            new Date(
+              b.date || 0
+            );
+
+          return dateB - dateA;
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       UNREAD COUNT
+    ===================================================== */
+
+    function getUnreadCount() {
+
+      return allMessages.filter(
+        message =>
+          message.unread === true
+      ).length;
+
+    }
+
+
+    /* =====================================================
+       UPDATE NOTIFICATION NUMBER
+    ===================================================== */
+
+    function updateMessageCount() {
+
+      const unreadCount =
+        getUnreadCount();
+
+
+      messageCountBadge.textContent =
+        unreadCount;
+
+
+      if (
+        unreadCount === 0
+      ) {
+
+        messageCountBadge.classList.add(
+          "hidden"
+        );
+
+      } else {
+
+        messageCountBadge.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       MARK READ
+    ===================================================== */
+
+    function markMessageRead(id) {
+
+      const message =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(id)
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      message.unread =
+        false;
+
+
+      saveMessages();
+
+      updateMessageCount();
+
+      displayMessages();
+
+    }
+
+
+    /* =====================================================
+       MARK UNREAD
+    ===================================================== */
+
+    function markMessageUnread(id) {
+
+      const message =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(id)
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      message.unread =
+        true;
+
+
+      saveMessages();
+
+      updateMessageCount();
+
+      displayMessages();
+
+    }
+
+
+    /* =====================================================
+       TOGGLE READ / UNREAD
+    ===================================================== */
+
+    function toggleUnread(id) {
+
+      const message =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(id)
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      message.unread =
+        !Boolean(message.unread);
+
+
+      saveMessages();
+
+      updateMessageCount();
+
+      displayMessages();
+
+
+      if (
+        selectedMessage &&
+        String(selectedMessage.id) ===
+        String(id)
+      ) {
+
+        selectedMessage =
+          message;
+
+        openMessage(
+          message
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
+
+    let currentFilter =
+      "all";
+
+    let selectedMessage =
+      null;
+
+
+    /* =====================================================
+       FILTERED MESSAGES
+    ===================================================== */
+
+    function getFilteredMessages() {
+
+      let messages =
+        allMessages.filter(
+          message => {
+
+            if (
+              currentFilter ===
+              "all"
+            ) {
+
+              return true;
+
+            }
+
+
+            if (
+              currentFilter ===
+              "unread"
+            ) {
+
+              return (
+                message.unread === true
+              );
+
+            }
+
+
+            return (
+              String(
+                message.type || ""
+              ).toLowerCase() ===
+              currentFilter
+            );
+
+          }
+        );
+
+
+      const query =
+        searchBar.value
+          .trim()
+          .toLowerCase();
+
+
+      if (query) {
+
+        messages =
+          messages.filter(
+            message => {
+
+              const text = [
+
+                message.subject || "",
+
+                message.name || "",
+
+                message.email || "",
+
+                message.type || "",
+
+                message.text || "",
+
+                message.orderId || ""
+
+              ]
+                .join(" ")
+                .toLowerCase();
+
+
+              return text.includes(
+                query
+              );
+
+            }
+          );
+
+      }
+
+
+      return messages;
+
+    }
+
+
+    /* =====================================================
+       DISPLAY MESSAGES
+    ===================================================== */
+
+    function displayMessages() {
+
+      messageItems.innerHTML =
+        "";
+
+
+      const messages =
+        getFilteredMessages();
+
+
+      if (
+        messages.length === 0
+      ) {
+
+        messageItems.innerHTML = `
+
+          <div class="empty-state">
+
+            <p>
+              No messages found.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      messages.forEach(
+        message => {
+
+          const item =
+            document.createElement(
+              "div"
+            );
+
+
+          item.className =
+            "message-item";
+
+
+          if (
+            message.unread === true
+          ) {
+
+            item.classList.add(
+              "unread"
+            );
+
+          }
+
+
+          if (
+            selectedMessage &&
+            String(selectedMessage.id) ===
+            String(message.id)
+          ) {
+
+            item.classList.add(
+              "selected"
+            );
+
+          }
+
+
+          const resolved =
+            message.resolved
+              ? `
+
+                <span class="resolved-badge">
+                  Resolved
+                </span>
+
+              `
+              : "";
+
+
+          const unreadIndicator =
+            message.unread
+              ? `
+
+                <span class="unread-dot"></span>
+                Unread
+
+              `
+              : "Read";
+
+
+          const order =
+            message.orderId
+              ? `
+
+                <small>
+                  Order ID:
+                  ${escapeHTML(
+                    message.orderId
+                  )}
+                </small>
+
+              `
+              : "";
+
+
+          const buttonText =
+            message.unread
+              ? "Mark Read"
+              : "Mark Unread";
+
+
+          const buttonClass =
+            message.unread
+              ? "unread-btn mark-read"
+              : "unread-btn";
+
+
+          item.innerHTML = `
+
+            <h4>
+
+              ${escapeHTML(
+                message.subject ||
+                "Message"
+              )}
+
+            </h4>
+
+
+            <small>
+
+              ${escapeHTML(
+                message.name ||
+                "Unknown User"
+              )}
+
+              •
+
+              ${escapeHTML(
+                message.type ||
+                "support"
+              )}
+
+            </small>
+
+
+            <small>
+
+              ${escapeHTML(
+                message.email ||
+                ""
+              )}
+
+            </small>
+
+
+            ${order}
+
+
+            ${resolved}
+
+
+            <span class="read-status">
+
+              ${unreadIndicator}
+
+            </span>
+
+
+            <div class="message-actions">
+
+              <button
+                class="${buttonClass}"
+                type="button"
+                data-id="${escapeHTML(
+                  String(message.id)
+                )}"
+              >
+                ${buttonText}
+              </button>
+
+
+              <button
+                class="delete-btn"
+                type="button"
+                data-id="${escapeHTML(
+                  String(message.id)
+                )}"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          `;
+
+
+          /* OPEN MESSAGE */
+
+          item.addEventListener(
+            "click",
+            event => {
+
+              if (
+                event.target.closest(
+                  ".delete-btn"
+                )
+              ) {
+
+                return;
+
+              }
+
+
+              if (
+                event.target.closest(
+                  ".unread-btn"
+                )
+              ) {
+
+                return;
+
+              }
+
+
+              openMessage(
+                message
+              );
+
+            }
+          );
+
+
+          /* READ / UNREAD */
+
+          const unreadButton =
+            item.querySelector(
+              ".unread-btn"
+            );
+
+
+          unreadButton.addEventListener(
+            "click",
+            event => {
+
+              event.preventDefault();
+
+              event.stopPropagation();
+
+
+              toggleUnread(
+                unreadButton.dataset.id
+              );
+
+            }
+          );
+
+
+          /* DELETE */
+
+          const deleteButton =
+            item.querySelector(
+              ".delete-btn"
+            );
+
+
+          deleteButton.addEventListener(
+            "click",
+            event => {
+
+              event.preventDefault();
+
+              event.stopPropagation();
+
+
+              deleteMessage(
+                deleteButton.dataset.id
+              );
+
+            }
+          );
+
+
+          messageItems.appendChild(
+            item
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       DELETE → TRASH
+    ===================================================== */
+
+    function deleteMessage(id) {
+
+      const index =
+        allMessages.findIndex(
+          message =>
+            String(message.id) ===
+            String(id)
+        );
+
+
+      if (
+        index === -1
+      ) {
+
+        return;
+
+      }
+
+
+      const message =
+        allMessages[index];
+
+
+      const confirmed =
+        confirm(
+          "Move this message to Trash?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      const alreadyDeleted =
+        trashMessages.some(
+          item =>
+            String(item.id) ===
+            String(id)
+        );
+
+
+      if (
+        !alreadyDeleted
+      ) {
+
+        trashMessages.push(
+          message
+        );
+
+      }
+
+
+      allMessages.splice(
+        index,
+        1
+      );
+
+
+      saveMessages();
+
+      saveTrash();
+
+
+      if (
+        selectedMessage &&
+        String(selectedMessage.id) ===
+        String(id)
+      ) {
+
+        selectedMessage =
+          null;
+
+
+        resetPreview();
+
+      }
+
+
+      updateMessageCount();
+
+      displayMessages();
+
+      displayTrash();
+
+    }
+
+
+    /* =====================================================
+       RESET PREVIEW
+    ===================================================== */
+
+    function resetPreview() {
+
+      previewCard.innerHTML = `
+
+        <h2>
+          Select a message
+        </h2>
+
+        <p>
+          Click a message from the left
+          to view details.
+        </p>
+
+      `;
+
+
+      replyBox.style.display =
+        "none";
+
+
+      historyBox.style.display =
+        "none";
+
+    }
+
+
+    /* =====================================================
+       DISPLAY TRASH
+    ===================================================== */
+
+    function displayTrash() {
+
+      trashItems.innerHTML =
+        "";
+
+
+      if (
+        trashMessages.length === 0
+      ) {
+
+        trashBox.style.display =
+          "none";
+
+        return;
+
+      }
+
+
+      trashBox.style.display =
+        "block";
+
+
+      trashMessages
+        .slice()
+        .reverse()
+        .forEach(
+          message => {
+
+            const item =
+              document.createElement(
+                "div"
+              );
+
+
+            item.className =
+              "trash-item";
+
+
+            item.innerHTML = `
+
+              <div class="trash-info">
+
+                <strong>
+
+                  ${escapeHTML(
+                    message.subject ||
+                    "Message"
+                  )}
+
+                </strong>
+
+
+                <small>
+
+                  From:
+                  ${escapeHTML(
+                    message.name ||
+                    "Unknown User"
+                  )}
+
+                </small>
+
+
+                <small>
+
+                  ${escapeHTML(
+                    message.email ||
+                    ""
+                  )}
+
+                </small>
+
+
+                <small>
+
+                  ${escapeHTML(
+                    message.date ||
+                    ""
+                  )}
+
+                </small>
+
+              </div>
+
+
+              <button
+                class="undo-btn"
+                type="button"
+                data-id="${escapeHTML(
+                  String(message.id)
+                )}"
+              >
+                Undo Delete
+              </button>
+
+            `;
+
+
+            const undoButton =
+              item.querySelector(
+                ".undo-btn"
+              );
+
+
+            undoButton.addEventListener(
+              "click",
+              event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                undoDelete(
+                  undoButton.dataset.id
+                );
+
+              }
+            );
+
+
+            trashItems.appendChild(
+              item
+            );
+
+          }
+        );
+
+    }
+
+
+    /* =====================================================
+       UNDO DELETE
+    ===================================================== */
+
+    function undoDelete(id) {
+
+      const index =
+        trashMessages.findIndex(
+          message =>
+            String(message.id) ===
+            String(id)
+        );
+
+
+      if (
+        index === -1
+      ) {
+
+        return;
+
+      }
+
+
+      const message =
+        trashMessages[index];
+
+
+      const alreadyExists =
+        allMessages.some(
+          existing =>
+            String(existing.id) ===
+            String(id)
+        );
+
+
+      if (
+        !alreadyExists
+      ) {
+
+        allMessages.push(
+          message
+        );
+
+      }
+
+
+      trashMessages.splice(
+        index,
+        1
+      );
+
+
+      sortMessages();
+
+      saveMessages();
+
+      saveTrash();
+
+      updateMessageCount();
+
+      displayMessages();
+
+      displayTrash();
+
+
+      const restored =
+        allMessages.find(
+          message =>
+            String(message.id) ===
+            String(id)
+        );
+
+
+      if (restored) {
+
+        openMessage(
+          restored
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       OPEN MESSAGE
+    ===================================================== */
+
+    function openMessage(message) {
+
+      const actualMessage =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(message.id)
+        );
+
+
+      if (!actualMessage) {
+        return;
+      }
+
+
+      actualMessage.unread =
+        false;
+
+
+      selectedMessage =
+        actualMessage;
+
+
+      saveMessages();
+
+      updateMessageCount();
+
+
+      const imageHTML =
+        actualMessage.image
+          ? `
+
+            <br>
+
+            <img
+              src="${escapeHTML(
+                actualMessage.image
+              )}"
+              alt="Attachment"
+              style="
+                width:150px;
+                max-width:100%;
+                border-radius:8px;
+                margin-top:10px;
+              "
+            >
+
+          `
+          : "";
+
+
+      const orderHTML =
+        actualMessage.orderId
+          ? `
+
+            <p>
+
+              <strong>
+                Order ID:
+              </strong>
+
+              ${escapeHTML(
+                actualMessage.orderId
+              )}
+
+            </p>
+
+          `
+          : "";
+
+
+      previewCard.innerHTML = `
+
+        <h2>
+
+          ${escapeHTML(
+            actualMessage.subject ||
+            "Message"
+          )}
+
+        </h2>
+
+
+        <p>
+
+          <strong>
+            From:
+          </strong>
+
+          ${escapeHTML(
+            actualMessage.name ||
+            "Unknown User"
+          )}
+
+          (
+
+          ${escapeHTML(
+            actualMessage.email ||
+            ""
+          )}
+
+          )
+
+        </p>
+
+
+        <p>
+
+          <strong>
+            Type:
+          </strong>
+
+          ${escapeHTML(
+            actualMessage.type ||
+            "support"
+          )}
+
+        </p>
+
+
+        ${orderHTML}
+
+
+        <p>
+
+          <strong>
+            Date:
+          </strong>
+
+          ${escapeHTML(
+            actualMessage.date ||
+            ""
+          )}
+
+        </p>
+
+
+        <p>
+
+          <strong>
+            Status:
+          </strong>
+
+          ${actualMessage.unread
+            ? "Unread"
+            : "Read"}
+
+        </p>
+
+
+        <hr>
+
+
+        <p>
+
+          ${escapeHTML(
+            actualMessage.text ||
+            ""
+          ).replace(
+            /\n/g,
+            "<br>"
+          )}
+
+        </p>
+
+
+        ${imageHTML}
+
+
+        <br>
+
+
+        <button
+          class="reply-btn"
+          id="previewReplyBtn"
+          type="button"
+        >
+          Reply
+        </button>
+
+
+        ${
+          actualMessage.resolved
+
+          ? `
+
+            <button
+              class="resolve-btn"
+              id="markOpenBtn"
+              type="button"
+              style="background:#777;"
+            >
+              Mark as Open
+            </button>
+
+          `
+
+          : `
+
+            <button
+              class="resolve-btn"
+              id="markResolvedBtn"
+              type="button"
+            >
+              Mark as Resolved
+            </button>
+
+          `
+        }
+
+
+        <button
+          class="resolve-btn"
+          id="previewUnreadBtn"
+          type="button"
+          style="
+            background:#174ea6;
+            margin-left:10px;
+          "
+        >
+          Mark Unread
+        </button>
+
+      `;
+
+
+      document
+        .getElementById(
+          "previewReplyBtn"
+        )
+        .addEventListener(
+          "click",
+          showReplyBox
+        );
+
+
+      const resolveButton =
+        document.getElementById(
+          "markResolvedBtn"
+        );
+
+
+      if (resolveButton) {
+
+        resolveButton.addEventListener(
+          "click",
+          markResolved
+        );
+
+      }
+
+
+      const openButton =
+        document.getElementById(
+          "markOpenBtn"
+        );
+
+
+      if (openButton) {
+
+        openButton.addEventListener(
+          "click",
+          markOpen
+        );
+
+      }
+
+
+      const previewUnreadButton =
+        document.getElementById(
+          "previewUnreadBtn"
+        );
+
+
+      if (previewUnreadButton) {
+
+        previewUnreadButton.addEventListener(
+          "click",
+          () => {
+
+            markMessageUnread(
+              actualMessage.id
+            );
+
+
+            const updated =
+              allMessages.find(
+                item =>
+                  String(item.id) ===
+                  String(actualMessage.id)
+              );
+
+
+            if (updated) {
+
+              selectedMessage =
+                updated;
+
+              openMessage(
+                updated
+              );
+
+            }
+
+          }
+        );
+
+      }
+
+
+      replyBox.style.display =
+        "none";
+
+
+      loadReplyHistory();
+
+      displayMessages();
+
+    }
+
+
+    /* =====================================================
+       SHOW REPLY BOX
+    ===================================================== */
+
+    function showReplyBox() {
+
+      if (!selectedMessage) {
+        return;
+      }
+
+
+      replyName.textContent =
+        selectedMessage.name ||
+        "Customer";
+
+
+      replyBox.style.display =
+        "block";
+
+
+      replyText.focus();
+
+    }
+
+
+    /* =====================================================
+       MARK RESOLVED
+    ===================================================== */
+
+    function markResolved() {
+
+      if (!selectedMessage) {
+        return;
+      }
+
+
+      const message =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(selectedMessage.id)
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      message.resolved =
+        true;
+
+
+      selectedMessage =
+        message;
+
+
+      saveMessages();
+
+      displayMessages();
+
+      openMessage(
+        message
+      );
+
+    }
+
+
+    /* =====================================================
+       MARK OPEN
+    ===================================================== */
+
+    function markOpen() {
+
+      if (!selectedMessage) {
+        return;
+      }
+
+
+      const message =
+        allMessages.find(
+          item =>
+            String(item.id) ===
+            String(selectedMessage.id)
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      message.resolved =
+        false;
+
+
+      selectedMessage =
+        message;
+
+
+      saveMessages();
+
+      displayMessages();
+
+      openMessage(
+        message
+      );
+
+    }
+
+
+    /* =====================================================
+       SEND REPLY
+
+       For now the reply is stored locally.
+
+       Later this can be changed to Firestore.
+    ===================================================== */
+
+    function sendReply() {
+
+      if (!selectedMessage) {
+
+        alert(
+          "Please select a message first."
+        );
+
+        return;
+
+      }
+
+
+      const reply =
+        replyText.value.trim();
+
+
+      if (!reply) {
+
+        alert(
+          "Please write a reply."
+        );
+
+        return;
+
+      }
+
+
+      const newReply = {
+
+        id:
+          "reply_" +
+          Date.now() +
+          "_" +
+          Math.random()
+            .toString(36)
+            .substring(2, 8),
+
+        messageId:
+          selectedMessage.id,
+
+        email:
+          selectedMessage.email ||
+          "",
+
+        reply:
+          reply,
+
+        date:
+          new Date().toLocaleString()
+
+      };
+
+
+      replyHistory.push(
+        newReply
+      );
+
+
+      saveReplies();
+
+
+      replyText.value =
+        "";
+
+
+      replyBox.style.display =
+        "none";
+
+
+      loadReplyHistory();
+
+
+      alert(
+        "Reply saved successfully."
+      );
+
+    }
+
+
+    /* =====================================================
+       LOAD REPLY HISTORY
+    ===================================================== */
+
+    function loadReplyHistory() {
+
+      if (!selectedMessage) {
+
+        historyBox.style.display =
+          "none";
+
+        return;
+
+      }
+
+
+      historyBox.style.display =
+        "block";
+
+
+      historyItems.innerHTML =
+        "";
+
+
+      const matchingReplies =
+        replyHistory.filter(
+          reply => {
+
+            return (
+
+              String(
+                reply.messageId
+              ) ===
+              String(
+                selectedMessage.id
+              )
+
+              ||
+
+              (
+                reply.email &&
+                selectedMessage.email &&
+                reply.email ===
+                selectedMessage.email
+              )
+
+            );
+
+          }
+        );
+
+
+      if (
+        matchingReplies.length === 0
+      ) {
+
+        historyItems.innerHTML =
+          "<p>No replies yet.</p>";
+
+        return;
+
+      }
+
+
+      matchingReplies.forEach(
+        reply => {
+
+          const item =
+            document.createElement(
+              "div"
+            );
+
+
+          item.className =
+            "history-item";
+
+
+          item.innerHTML = `
+
+            <p>
+
+              <strong>
+                Customer Service:
+              </strong>
+
+              ${escapeHTML(
+                reply.reply ||
+                ""
+              ).replace(
+                /\n/g,
+                "<br>"
+              )}
+
+            </p>
+
+
+            <small>
+
+              ${escapeHTML(
+                reply.date ||
+                ""
+              )}
+
+            </small>
+
+          `;
+
+
+          historyItems.appendChild(
+            item
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       TEMPLATES
+    ===================================================== */
+
+    function applyTemplate(type) {
+
+      if (!selectedMessage) {
+        return;
+      }
+
+
+      const name =
+        selectedMessage.name ||
+        "Customer";
+
+
+      const orderId =
+        selectedMessage.orderId ||
+        "[Order ID]";
+
+
+      const templates = {
+
+        refund_approved:
+`Hi ${name},
+
+Your refund has been approved. It will be processed within 3–5 business days.
+
+Let me know if you need anything else.`,
+
+
+        refund_info:
+`Hi ${name},
+
+Before I can process your refund, I need:
+
+- Order ID
+- Reason for refund
+- Photo of the item if applicable
+
+Thanks!`,
+
+
+        refund_denied:
+`Hi ${name},
+
+After reviewing your request, we're unable to approve the refund because:
+
+{{reason}}
+
+If you believe this is incorrect, please reply here.`,
+
+
+        cancel_ok:
+`Hi ${name},
+
+Your order has been successfully cancelled.
+
+A refund will be processed shortly if payment was made.`,
+
+
+        cancel_late:
+`Hi ${name},
+
+Your order has already shipped and cannot be cancelled.
+
+You can still return it once it arrives.`,
+
+
+        support_general:
+`Hi ${name},
+
+Thanks for contacting support.
+
+Here's what you need to know:
+
+{{explanation}}
+
+Let me know if you need more help.`,
+
+
+        support_technical:
+`Hi ${name},
+
+Thanks for reporting this issue.
+
+Our technical team is reviewing it. Try refreshing the page or logging out and back in.
+
+Let me know if it continues.`,
+
+
+        order_update:
+`Hi ${name},
+
+Here's the latest update for your order ${orderId}:
+
+{{orderStatus}}
+
+Let me know if you need anything else.`,
+
+
+        order_delay:
+`Hi ${name},
+
+Your order is delayed due to {{reason}}.
+
+New estimated delivery date: {{newDate}}.
+
+Sorry for the inconvenience.`
+
+      };
+
+
+      replyText.value =
+        templates[type] ||
+        "";
+
+    }
+
+
+    /* =====================================================
+       FILTER
+    ===================================================== */
+
+    function setFilter(type) {
+
+      currentFilter =
+        type;
+
+
+      document
+        .querySelectorAll(
+          ".filter-row button"
+        )
+        .forEach(
+          button => {
+
+            button.classList.remove(
+              "active"
+            );
+
+          }
+        );
+
+
+      const active =
+        document.getElementById(
+          `filter-${type}`
+        );
+
+
+      if (active) {
+
+        active.classList.add(
+          "active"
+        );
+
+      }
+
+
+      displayMessages();
+
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    searchBar.addEventListener(
+      "input",
+      displayMessages
+    );
+
+
+    /* =====================================================
+       FILTER BUTTONS
+    ===================================================== */
+
+    document
+      .getElementById(
+        "filter-all"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("all")
+      );
+
+
+    document
+      .getElementById(
+        "filter-unread"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("unread")
+      );
+
+
+    document
+      .getElementById(
+        "filter-refund"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("refund")
+      );
+
+
+    document
+      .getElementById(
+        "filter-cancel"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("cancel")
+      );
+
+
+    document
+      .getElementById(
+        "filter-support"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("support")
+      );
+
+
+    document
+      .getElementById(
+        "filter-order"
+      )
+      .addEventListener(
+        "click",
+        () => setFilter("order")
+      );
+
+
+    /* =====================================================
+       SEND REPLY
+    ===================================================== */
+
+    document
+      .getElementById(
+        "sendReplyBtn"
+      )
+      .addEventListener(
+        "click",
+        sendReply
+      );
+
+
+    /* =====================================================
+       TEMPLATE BUTTONS
+    ===================================================== */
+
+    document
+      .querySelectorAll(
+        "[data-template]"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              applyTemplate(
+                button.dataset.template
+              );
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+    document
+      .getElementById(
+        "logoutBtn"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          try {
+
+            await signOut(
+              auth
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Logout error:",
+              error
+            );
+
+          }
+
+
+          window.location.href =
+            "../auth/admin-login.html";
+
+        }
+      );
+
+
+    /* =====================================================
+       REAL-TIME LOCAL STORAGE SYNC
+       
+       When inbox.html adds a message in another browser
+       tab/window, this page receives the storage event.
+    ===================================================== */
+
+    window.addEventListener(
+      "storage",
+      event => {
+
+        if (
+          event.key ===
+          MESSAGE_STORAGE_KEY
+        ) {
+
+          allMessages =
+            loadMessages();
+
+
+          sortMessages();
+
+          updateMessageCount();
+
+          displayMessages();
+
+
+          if (selectedMessage) {
+
+            const updated =
+              allMessages.find(
+                message =>
+                  String(message.id) ===
+                  String(selectedMessage.id)
+              );
+
+
+            if (updated) {
+
+              selectedMessage =
+                updated;
+
+            } else {
+
+              selectedMessage =
+                null;
+
+              resetPreview();
+
+            }
+
+          }
+
+        }
+
+
+        if (
+          event.key ===
+          TRASH_STORAGE_KEY
+        ) {
+
+          trashMessages =
+            loadTrash();
+
+          displayTrash();
+
+        }
+
+
+        if (
+          event.key ===
+          REPLY_STORAGE_KEY
+        ) {
+
+          replyHistory =
+            loadReplies();
+
+          loadReplyHistory();
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       EXTRA REAL-TIME SAFETY REFRESH
+       
+       This also catches changes if both pages are running
+       in environments where the storage event behaves
+       differently.
+    ===================================================== */
+
+    setInterval(
+      () => {
+
+        const latestMessages =
+          loadMessages();
+
+
+        const currentIds =
+          allMessages
+            .map(
+              message =>
+                String(message.id)
+            )
+            .join("|");
+
+
+        const latestIds =
+          latestMessages
+            .map(
+              message =>
+                String(message.id)
+            )
+            .join("|");
+
+
+        const unreadChanged =
+          latestMessages.filter(
+            message =>
+              message.unread === true
+          ).length
+          !==
+          allMessages.filter(
+            message =>
+              message.unread === true
+          ).length;
+
+
+        if (
+          currentIds !== latestIds ||
+          unreadChanged
+        ) {
+
+          allMessages =
+            latestMessages;
+
+
+          sortMessages();
+
+          updateMessageCount();
+
+          displayMessages();
+
+        }
+
+      },
+      1000
+    );
+
+
+    /* =====================================================
+       HTML ESCAPE
+    ===================================================== */
+
+    function escapeHTML(value) {
+
+      return String(
+        value ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    /* =====================================================
+       GLOBAL FUNCTIONS
+    ===================================================== */
+
+    window.deleteMessage =
+      deleteMessage;
+
+    window.undoDelete =
+      undoDelete;
+
+    window.showReplyBox =
+      showReplyBox;
+
+    window.sendReply =
+      sendReply;
+
+    window.markResolved =
+      markResolved;
+
+    window.markOpen =
+      markOpen;
+
+    window.applyTemplate =
+      applyTemplate;
+
+    window.setFilter =
+      setFilter;
+
+    window.markMessageRead =
+      markMessageRead;
+
+    window.markMessageUnread =
+      markMessageUnread;
+
+    window.toggleUnread =
+      toggleUnread;
+
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
+
+    allMessages =
+      loadMessages();
+
+    trashMessages =
+      loadTrash();
+
+    replyHistory =
+      loadReplies();
+
+
+    sortMessages();
+
+    saveMessages();
+
+    displayMessages();
+
+    displayTrash();
+
+    updateMessageCount();
+
+  </script>
+
+</body>
+</html>

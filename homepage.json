@@ -1,0 +1,252 @@
+{
+  "site": {
+    "name": "Aravon Shop",
+    "currency": "EUR",
+    "currencySymbol": "€"
+  },
+
+  "banner": {
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1600&q=80",
+    "alt": "Fashion collection banner"
+  },
+
+  "categories": [
+    {
+      "name": "Fashion",
+      "slug": "fashion",
+      "url": "product-pages/fashion.html"
+    },
+    {
+      "name": "Sports",
+      "slug": "sports",
+      "url": "product-pages/sports.html"
+    },
+    {
+      "name": "Toys",
+      "slug": "toys",
+      "url": "product-pages/toys.html"
+    },
+    {
+      "name": "Accessories",
+      "slug": "accessories",
+      "url": "product-pages/accessories.html"
+    },
+    {
+      "name": "Automotive",
+      "slug": "automotive",
+      "url": "product-pages/automotive.html"
+    },
+    {
+      "name": "Electronics",
+      "slug": "electronics",
+      "url": "product-pages/electronics.html"
+    },
+    {
+      "name": "Appliances",
+      "slug": "appliances",
+      "url": "product-pages/appliances.html"
+    },
+    {
+      "name": "Trending",
+      "slug": "trending",
+      "url": "product-pages/trending.html"
+    },
+    {
+      "name": "Best Seller",
+      "slug": "bestseller",
+      "url": "product-pages/bestseller.html"
+    }
+  ],
+
+  "products": [
+    {
+      "id": "B9lfflcrEtvqqY6KgQ0v",
+      "name": "Classic White T-Shirt",
+      "price": 45,
+      "brand": "Aravon",
+      "category": "Fashion",
+      "gender": "adults",
+      "description": "A premium cotton white t-shirt designed for comfort and style.",
+      "images": [
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "dzKMrLKP7PuF6KQkE0Hx",
+      "name": "Black Oversized Hoodie",
+      "price": 39,
+      "brand": "Aravon",
+      "category": "Fashion",
+      "gender": "adults",
+      "description": "A warm oversized hoodie perfect for cold days.",
+      "images": [
+        "https://picsum.photos/seed/hoodie1/800/600",
+        "https://picsum.photos/seed/hoodie1/800/600",
+        "https://picsum.photos/seed/hoodie2/800/600"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "dS8x2EONo6GswrWP7f7j",
+      "name": "Slim Fit Blue Jeans",
+      "price": 49,
+      "brand": "Aravon",
+      "category": "Fashion",
+      "gender": "adults",
+      "description": "High-quality slim fit jeans with stretch comfort.",
+      "images": [
+        "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80",
+        "https://picsum.photos/seed/jeans1/800/600",
+        "https://picsum.photos/seed/jeans2/800/600"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "wflJPiAgvEizvZGIXHq7",
+      "name": "Pink Crop Top",
+      "price": 22,
+      "brand": "Aravon",
+      "category": "Fashion",
+      "gender": "kids",
+      "description": "A trendy crop top designed for comfort and fashion.",
+      "images": [
+        "https://picsum.photos/800/600",
+        "https://picsum.photos/seed/crop1/800/600",
+        "https://picsum.photos/seed/crop2/800/600"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "dg5QeaJyOWlpLsL6SUJX",
+      "name": "Yoga Mat Pro",
+      "price": 29,
+      "brand": "Aravon",
+      "category": "Sports",
+      "gender": "adults",
+      "description": "A durable yoga mat with extra grip and comfort.",
+      "images": [
+        "https://picsum.photos/seed/example/800/600",
+        "https://picsum.photos/seed/yoga1/800/600",
+        "https://picsum.photos/seed/yoga2/800/600"
+      ],
+      "sizes": [
+        "Standard"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "dxuw6gQS8QXIvQCzP4X5",
+      "name": "Adjustable Dumbbell Set",
+      "price": 89,
+      "brand": "Aravon",
+      "category": "Sports",
+      "gender": "adults",
+      "description": "Adjustable dumbbells perfect for home workouts.",
+      "images": [
+        "https://images.unsplash.com/photo-1517832207067-4db24a2ae47c",
+        "https://picsum.photos/seed/dumb1/800/600",
+        "https://picsum.photos/seed/dumb2/800/600"
+      ],
+      "sizes": [
+        "10kg",
+        "20kg",
+        "30kg"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "dg5QeaJyOWlpLsL6SUJX2",
+      "name": "Resistance Band Set",
+      "price": 19,
+      "brand": "Aravon",
+      "category": "Sports",
+      "gender": "adults",
+      "description": "A durable resistance band set for home workouts and fitness training.",
+      "images": [
+        "https://picsum.photos/seed/resistance-band/800/600",
+        "https://picsum.photos/seed/resistance-band-2/800/600",
+        "https://picsum.photos/seed/resistance-band-3/800/600"
+      ],
+      "sizes": [
+        "Light",
+        "Medium",
+        "Heavy"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    },
+
+    {
+      "id": "ciaXxGcs7qVEXKsSgEqV",
+      "name": "Wooden Building Blocks",
+      "price": 59,
+      "brand": "Aravon",
+      "category": "Toys",
+      "gender": "kids",
+      "description": "Safe and durable wooden blocks for creative play.",
+      "images": [
+        "https://loremflickr.com/800/600/cat",
+        "https://picsum.photos/seed/block1/800/600",
+        "https://picsum.photos/seed/block2/800/600"
+      ],
+      "sizes": [
+        "Kids"
+      ],
+      "stripePaymentLink": "https://buy.stripe.com/test_universal_checkout"
+    }
+  ],
+
+  "featuredInfo": [
+    {
+      "icon": "🚚",
+      "title": "Fast Delivery",
+      "description": "Reliable shipping with tracking on every order."
+    },
+    {
+      "icon": "🔒",
+      "title": "Secure Payments",
+      "description": "Shop safely with encrypted checkout."
+    },
+    {
+      "icon": "💬",
+      "title": "Customer Support",
+      "description": "Friendly support whenever you need help."
+    },
+    {
+      "icon": "⭐",
+      "title": "Quality Products",
+      "description": "Carefully selected products at competitive prices."
+    }
+  ]
+}

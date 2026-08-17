@@ -1,0 +1,2051 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin – Orders</title>
+
+
+  <style>
+
+    /* =========================================================
+       BODY
+    ========================================================= */
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      height: 100vh;
+    }
+
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+
+    .sidebar h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+
+    .sidebar a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 20px;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+
+    .sidebar a:hover {
+      background: #f1f3f4;
+    }
+
+
+    .sidebar a.active {
+      background: #d2e3fc;
+      color: #174ea6;
+    }
+
+
+    /* =========================================================
+       BADGES
+    ========================================================= */
+
+    .badge {
+      background: #ea4335;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      min-width: 20px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    .logout-btn {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+    }
+
+
+    .logout-btn:hover {
+      background: #111;
+    }
+
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+
+    .main h2 {
+      margin-top: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+
+    /* =========================================================
+       CARD
+    ========================================================= */
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+
+    /* =========================================================
+       MESSAGE
+    ========================================================= */
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+
+    .message.show {
+      display: block;
+    }
+
+
+    .message.info {
+      background: #e7f2ff;
+      color: #1769aa;
+      border: 1px solid #bddcff;
+    }
+
+
+    .message.error {
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+    }
+
+
+    .message.success {
+      background: #e6f4ea;
+      color: #137333;
+      border: 1px solid #b7dfc1;
+    }
+
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+
+    table {
+      width: 100%;
+      background: #fff;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 760px;
+    }
+
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+
+    th {
+      background: #eee;
+      font-weight: 600;
+    }
+
+
+    tbody tr.order-row {
+      transition: 0.15s;
+      cursor: pointer;
+    }
+
+
+    tbody tr.order-row:hover {
+      background: #f1f3f4;
+    }
+
+
+    /* =========================================================
+       ORDER ID
+    ========================================================= */
+
+    .order-id {
+      font-weight: 600;
+      color: #174ea6;
+      word-break: break-word;
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+
+    .status-processing {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+
+    .status-shipped {
+      background: #dbeafe;
+      color: #174ea6;
+    }
+
+
+    .status-delivered {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+
+    .status-pending {
+      background: #eee;
+      color: #555;
+    }
+
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+
+    /* =========================================================
+       ACTIONS
+    ========================================================= */
+
+    .actions {
+      white-space: nowrap;
+    }
+
+
+    .view-btn,
+    .delete-btn {
+      padding: 8px 13px;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-right: 5px;
+    }
+
+
+    .view-btn {
+      background: #174ea6;
+      color: #fff;
+    }
+
+
+    .view-btn:hover {
+      background: #0f3c85;
+    }
+
+
+    .delete-btn {
+      background: #ea4335;
+      color: #fff;
+    }
+
+
+    .delete-btn:hover {
+      background: #c5221f;
+    }
+
+
+    /* =========================================================
+       LOADING
+    ========================================================= */
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+      body {
+        display: block;
+        height: auto;
+        min-height: 100vh;
+      }
+
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+      }
+
+
+      .sidebar a {
+        display: inline-flex;
+        margin: 3px;
+      }
+
+
+      .logout-btn {
+        max-width: 180px;
+      }
+
+
+      .main {
+        padding: 20px 15px;
+      }
+
+
+      .card {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =======================================================
+       SIDEBAR
+  ======================================================== -->
+
+  <div class="sidebar">
+
+    <h2>
+      Admin Panel
+    </h2>
+
+
+    <a href="../Dashboard/admin-dashboard.html">
+
+      <span>
+        Dashboard
+      </span>
+
+    </a>
+
+
+    <a
+      href="admin-orders.html"
+      class="active"
+    >
+
+      <span>
+        Orders
+      </span>
+
+      <span
+        id="orderCountBadge"
+        class="badge"
+      >
+        3
+      </span>
+
+    </a>
+
+
+    <a href="../users/users-list.html">
+
+      <span>
+        Users
+      </span>
+
+      <span
+        id="usersCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../inventory/admin-invenorty.html">
+
+      <span>
+        Inventory
+      </span>
+
+      <span
+        id="productCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../website-builder/product-page-editor.html">
+
+      <span>
+        Website Builder
+      </span>
+
+    </a>
+
+
+    <a href="../settings/admin-settings.html">
+
+      <span>
+        Settings
+      </span>
+
+    </a>
+
+
+    <a href="../payment/payment-setting.html">
+
+      <span>
+        Payment
+      </span>
+
+      <span
+        id="paymentCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../messages/admin-messages.html">
+
+      <span>
+        Messages
+      </span>
+
+      <span
+        id="messageCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <button
+      class="logout-btn"
+      id="logoutBtn"
+      type="button"
+    >
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <div class="main">
+
+    <h2>
+      Orders
+    </h2>
+
+
+    <div
+      id="messageBox"
+      class="message"
+    ></div>
+
+
+    <div class="card">
+
+      <div class="table-wrapper">
+
+        <table id="ordersTable">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Order ID
+              </th>
+
+              <th>
+                User
+              </th>
+
+              <th>
+                Total
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Created
+              </th>
+
+              <th>
+                Actions
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="ordersBody">
+
+
+            <!-- =================================================
+                 DEMO ORDER 1
+            ================================================== -->
+
+            <tr
+              class="order-row demo-order"
+              data-order-id="order_1721670000001"
+            >
+
+              <td class="order-id">
+                order_1721670000001
+              </td>
+
+              <td>
+                Slim Fit Blue Jeans
+              </td>
+
+              <td>
+                €49.00
+              </td>
+
+              <td>
+
+                <span class="status status-delivered">
+                  Delivered
+                </span>
+
+              </td>
+
+              <td>
+                2024-07-22 10:00
+              </td>
+
+              <td class="actions">
+
+                <button
+                  type="button"
+                  class="view-btn"
+                  data-action="view"
+                  data-order-id="order_1721670000001"
+                >
+                  View
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  data-action="delete"
+                  data-order-id="order_1721670000001"
+                >
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+
+            <!-- =================================================
+                 DEMO ORDER 2
+            ================================================== -->
+
+            <tr
+              class="order-row demo-order"
+              data-order-id="order_1721670000002"
+            >
+
+              <td class="order-id">
+                order_1721670000002
+              </td>
+
+              <td>
+                Classic White T-Shirt
+              </td>
+
+              <td>
+                €45.00
+              </td>
+
+              <td>
+
+                <span class="status status-shipped">
+                  Shipped
+                </span>
+
+              </td>
+
+              <td>
+                2024-07-22 10:15
+              </td>
+
+              <td class="actions">
+
+                <button
+                  type="button"
+                  class="view-btn"
+                  data-action="view"
+                  data-order-id="order_1721670000002"
+                >
+                  View
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  data-action="delete"
+                  data-order-id="order_1721670000002"
+                >
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+
+            <!-- =================================================
+                 DEMO ORDER 3
+            ================================================== -->
+
+            <tr
+              class="order-row demo-order"
+              data-order-id="order_1721670000003"
+            >
+
+              <td class="order-id">
+                order_1721670000003
+              </td>
+
+              <td>
+                Black Oversized Hoodie
+              </td>
+
+              <td>
+                €39.00
+              </td>
+
+              <td>
+
+                <span class="status status-processing">
+                  Processing
+                </span>
+
+              </td>
+
+              <td>
+                2024-07-22 10:30
+              </td>
+
+              <td class="actions">
+
+                <button
+                  type="button"
+                  class="view-btn"
+                  data-action="view"
+                  data-order-id="order_1721670000003"
+                >
+                  View
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  data-action="delete"
+                  data-order-id="order_1721670000003"
+                >
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       FIREBASE + PAGE CONNECTION
+  ======================================================== -->
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+    import {
+      getAuth,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      deleteDoc,
+      doc
+    } from
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+    /* =======================================================
+       FIREBASE CONFIG
+    ======================================================== */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyAs2n_FyLyH7GmVmJ_GcyYF9UaAQxg9QnY",
+
+      authDomain:
+        "aravon-shop-48fdd.firebaseapp.com",
+
+      projectId:
+        "aravon-shop-48fdd",
+
+      storageBucket:
+        "aravon-shop-48fdd.firebasestorage.app",
+
+      messagingSenderId:
+        "436832537701",
+
+      appId:
+        "1:436832537701:web:0047524bb50e9942390a8c"
+
+    };
+
+
+    const app =
+      initializeApp(
+        firebaseConfig
+      );
+
+
+    const auth =
+      getAuth(
+        app
+      );
+
+
+    const db =
+      getFirestore(
+        app
+      );
+
+
+    /* =======================================================
+       CONSTANTS
+    ======================================================== */
+
+    const DEMO_ORDER_IDS = [
+
+      "order_1721670000001",
+
+      "order_1721670000002",
+
+      "order_1721670000003"
+
+    ];
+
+
+    /* =======================================================
+       ELEMENTS
+    ======================================================== */
+
+    const ordersBody =
+      document.getElementById(
+        "ordersBody"
+      );
+
+
+    const orderCountBadge =
+      document.getElementById(
+        "orderCountBadge"
+      );
+
+
+    const messageBox =
+      document.getElementById(
+        "messageBox"
+      );
+
+
+    /* =======================================================
+       MESSAGE
+    ======================================================== */
+
+    function showMessage(
+      text,
+      type = "info"
+    ) {
+
+      if (!messageBox) {
+        return;
+      }
+
+
+      messageBox.textContent =
+        text;
+
+
+      messageBox.className =
+        `message show ${type}`;
+
+
+    }
+
+
+    function hideMessage() {
+
+      if (!messageBox) {
+        return;
+      }
+
+
+      messageBox.textContent =
+        "";
+
+
+      messageBox.className =
+        "message";
+
+    }
+
+
+    /* =======================================================
+       FORMAT PRICE
+    ======================================================== */
+
+    function formatPrice(value) {
+
+      const number =
+        Number(value);
+
+
+      if (!Number.isFinite(number)) {
+
+        return "€0.00";
+
+      }
+
+
+      return new Intl.NumberFormat(
+        "en-IE",
+        {
+          style: "currency",
+          currency: "EUR"
+        }
+      ).format(number);
+
+    }
+
+
+    /* =======================================================
+       FORMAT DATE
+    ======================================================== */
+
+    function formatDate(value) {
+
+      if (!value) {
+
+        return "—";
+
+      }
+
+
+      try {
+
+        let date;
+
+
+        if (
+          typeof value === "object" &&
+          value !== null &&
+          typeof value.toDate === "function"
+        ) {
+
+          date =
+            value.toDate();
+
+        } else if (
+          typeof value === "object" &&
+          value !== null &&
+          typeof value.seconds === "number"
+        ) {
+
+          date =
+            new Date(
+              value.seconds * 1000
+            );
+
+        } else {
+
+          date =
+            new Date(value);
+
+        }
+
+
+        if (
+          Number.isNaN(
+            date.getTime()
+          )
+        ) {
+
+          return "—";
+
+        }
+
+
+        const year =
+          date.getFullYear();
+
+
+        const month =
+          String(
+            date.getMonth() + 1
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        const day =
+          String(
+            date.getDate()
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        const hours =
+          String(
+            date.getHours()
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        const minutes =
+          String(
+            date.getMinutes()
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+
+      } catch (error) {
+
+        return "—";
+
+      }
+
+    }
+
+
+    /* =======================================================
+       NORMALIZE STATUS
+    ======================================================== */
+
+    function normalizeStatus(
+      status
+    ) {
+
+      const value =
+        String(
+          status || "pending"
+        )
+        .trim()
+        .toLowerCase();
+
+
+      if (
+        value === "processing"
+      ) {
+
+        return "processing";
+
+      }
+
+
+      if (
+        value === "shipped"
+      ) {
+
+        return "shipped";
+
+      }
+
+
+      if (
+        value === "delivered"
+      ) {
+
+        return "delivered";
+
+      }
+
+
+      if (
+        value === "cancelled" ||
+        value === "canceled"
+      ) {
+
+        return "cancelled";
+
+      }
+
+
+      return "pending";
+
+    }
+
+
+    /* =======================================================
+       GET ORDER TOTAL
+    ======================================================== */
+
+    function getOrderTotal(
+      order
+    ) {
+
+      const possibleTotals = [
+
+        order.total,
+
+        order.orderTotal,
+
+        order.amount,
+
+        order.totalAmount,
+
+        order.subtotal
+
+      ];
+
+
+      for (
+        const value of possibleTotals
+      ) {
+
+        const number =
+          Number(value);
+
+
+        if (
+          Number.isFinite(number)
+        ) {
+
+          return number;
+
+        }
+
+      }
+
+
+      return 0;
+
+    }
+
+
+    /* =======================================================
+       GET ORDER USER
+    ======================================================== */
+
+    function getOrderUser(
+      order
+    ) {
+
+      return (
+        order.userName ||
+        order.customerName ||
+        order.name ||
+        order.email ||
+        order.userEmail ||
+        order.userId ||
+        "Customer"
+      );
+
+    }
+
+
+    /* =======================================================
+       GET ORDER CREATED DATE
+    ======================================================== */
+
+    function getOrderCreated(
+      order
+    ) {
+
+      return (
+        order.createdAt ||
+        order.created ||
+        order.date ||
+        order.timestamp ||
+        order.created_at ||
+        null
+      );
+
+    }
+
+
+    /* =======================================================
+       GET ORDER STATUS
+    ======================================================== */
+
+    function getOrderStatus(
+      order
+    ) {
+
+      return normalizeStatus(
+        order.status
+      );
+
+    }
+
+
+    /* =======================================================
+       OPEN ORDER VIEW
+    ======================================================== */
+
+    function openOrderView(
+      orderID
+    ) {
+
+      const cleanOrderID =
+        String(
+          orderID || ""
+        ).trim();
+
+
+      if (!cleanOrderID) {
+
+        console.error(
+          "Cannot open order view: missing Order ID."
+        );
+
+        return;
+
+      }
+
+
+      const targetURL =
+        `admin-orders-view.html?orderID=${encodeURIComponent(
+          cleanOrderID
+        )}`;
+
+
+      console.log(
+        "Opening order:",
+        cleanOrderID
+      );
+
+
+      window.location.href =
+        targetURL;
+
+    }
+
+
+    /* =======================================================
+       DELETE DEMO ORDER
+    ======================================================== */
+
+    function deleteDemoOrder(
+      orderID,
+      row
+    ) {
+
+      let deletedOrders = [];
+
+
+      try {
+
+        const saved =
+          localStorage.getItem(
+            "deletedDemoOrders"
+          );
+
+
+        if (saved) {
+
+          const parsed =
+            JSON.parse(
+              saved
+            );
+
+
+          if (
+            Array.isArray(
+              parsed
+            )
+          ) {
+
+            deletedOrders =
+              parsed;
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "Could not read deleted demo orders:",
+          error
+        );
+
+      }
+
+
+      if (
+        !deletedOrders.includes(
+          orderID
+        )
+      ) {
+
+        deletedOrders.push(
+          orderID
+        );
+
+      }
+
+
+      localStorage.setItem(
+        "deletedDemoOrders",
+        JSON.stringify(
+          deletedOrders
+        )
+      );
+
+
+      if (row) {
+
+        row.remove();
+
+      }
+
+
+      updateOrderBadge();
+
+
+      showMessage(
+        `Demo order "${orderID}" was deleted.`,
+        "success"
+      );
+
+    }
+
+
+    /* =======================================================
+       DELETE FIRESTORE ORDER
+    ======================================================== */
+
+    async function deleteFirestoreOrder(
+      orderID,
+      row
+    ) {
+
+      try {
+
+        await deleteDoc(
+          doc(
+            db,
+            "orders",
+            orderID
+          )
+        );
+
+
+        if (row) {
+
+          row.remove();
+
+        }
+
+
+        updateOrderBadge();
+
+
+        showMessage(
+          `Order "${orderID}" was deleted.`,
+          "success"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Firestore order delete error:",
+          error
+        );
+
+
+        showMessage(
+          `Could not delete order "${orderID}". Check your Firestore rules and try again.`,
+          "error"
+        );
+
+      }
+
+    }
+
+
+    /* =======================================================
+       DELETE ORDER
+    ======================================================== */
+
+    async function deleteOrder(
+      orderID,
+      row
+    ) {
+
+      if (!orderID) {
+
+        return;
+
+      }
+
+
+      const confirmed =
+        window.confirm(
+          `Are you sure you want to delete order "${orderID}"?`
+        );
+
+
+      if (!confirmed) {
+
+        return;
+
+      }
+
+
+      hideMessage();
+
+
+      /*
+       * Demo orders are intentionally stored
+       * in the HTML and are deleted locally.
+       */
+
+      if (
+        DEMO_ORDER_IDS.includes(
+          orderID
+        )
+      ) {
+
+        deleteDemoOrder(
+          orderID,
+          row
+        );
+
+
+        return;
+
+      }
+
+
+      /*
+       * All other orders are Firestore orders.
+       */
+
+      await deleteFirestoreOrder(
+        orderID,
+        row
+      );
+
+    }
+
+
+    /* =======================================================
+       ADD FIRESTORE ORDER ROW
+    ======================================================== */
+
+    function addFirestoreOrderRow(
+      orderID,
+      order
+    ) {
+
+      if (!ordersBody) {
+
+        return;
+
+      }
+
+
+      /*
+       * Prevent duplicates.
+       */
+
+      if (
+        document.querySelector(
+          `.order-row[data-order-id="${CSS.escape(orderID)}"]`
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      const row =
+        document.createElement(
+          "tr"
+        );
+
+
+      row.className =
+        "order-row firestore-order";
+
+
+      row.dataset.orderId =
+        orderID;
+
+
+      const status =
+        getOrderStatus(
+          order
+        );
+
+
+      const statusClass =
+        `status-${status}`;
+
+
+      const user =
+        getOrderUser(
+          order
+        );
+
+
+      const total =
+        getOrderTotal(
+          order
+        );
+
+
+      const created =
+        formatDate(
+          getOrderCreated(
+            order
+          )
+        );
+
+
+      row.innerHTML = `
+
+        <td class="order-id">
+          ${escapeHTML(orderID)}
+        </td>
+
+        <td>
+          ${escapeHTML(user)}
+        </td>
+
+        <td>
+          ${formatPrice(total)}
+        </td>
+
+        <td>
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(status)}
+          </span>
+
+        </td>
+
+        <td>
+          ${escapeHTML(created)}
+        </td>
+
+        <td class="actions">
+
+          <button
+            type="button"
+            class="view-btn"
+            data-action="view"
+            data-order-id="${escapeHTML(orderID)}"
+          >
+            View
+          </button>
+
+          <button
+            type="button"
+            class="delete-btn"
+            data-action="delete"
+            data-order-id="${escapeHTML(orderID)}"
+          >
+            Delete
+          </button>
+
+        </td>
+
+      `;
+
+
+      ordersBody.appendChild(
+        row
+      );
+
+    }
+
+
+    /* =======================================================
+       ESCAPE HTML
+    ======================================================== */
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value ?? ""
+      )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+    }
+
+
+    /* =======================================================
+       LOAD FIRESTORE ORDERS
+    ======================================================== */
+
+    async function loadFirestoreOrders() {
+
+      try {
+
+        const snapshot =
+          await getDocs(
+            collection(
+              db,
+              "orders"
+            )
+          );
+
+
+        snapshot.forEach(
+          orderDoc => {
+
+            const orderID =
+              orderDoc.id;
+
+
+            /*
+             * Never replace or remove the
+             * three demo orders.
+             */
+
+            if (
+              DEMO_ORDER_IDS.includes(
+                orderID
+              )
+            ) {
+
+              return;
+
+            }
+
+
+            addFirestoreOrderRow(
+              orderID,
+              orderDoc.data()
+            );
+
+          }
+        );
+
+
+        updateOrderBadge();
+
+
+      } catch (error) {
+
+        console.error(
+          "Could not load Firestore orders:",
+          error
+        );
+
+
+        /*
+         * The three demo orders remain visible
+         * even if Firestore is unavailable.
+         */
+
+        showMessage(
+          "The demo orders are available. Firestore orders could not be loaded right now.",
+          "info"
+        );
+
+      }
+
+    }
+
+
+    /* =======================================================
+       EVENT HANDLER
+       
+       Event delegation is used so that:
+       - Demo rows work
+       - Firestore rows work
+       - Dynamically added orders work
+    ======================================================== */
+
+    if (ordersBody) {
+
+      ordersBody.addEventListener(
+        "click",
+        function(event) {
+
+          const button =
+            event.target.closest(
+              "button"
+            );
+
+
+          /*
+           * VIEW BUTTON
+           */
+
+          if (
+            button &&
+            button.matches(
+              '.view-btn[data-action="view"]'
+            )
+          ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            const orderID =
+              button.getAttribute(
+                "data-order-id"
+              );
+
+
+            openOrderView(
+              orderID
+            );
+
+
+            return;
+
+          }
+
+
+          /*
+           * DELETE BUTTON
+           */
+
+          if (
+            button &&
+            button.matches(
+              '.delete-btn[data-action="delete"]'
+            )
+          ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            const orderID =
+              button.getAttribute(
+                "data-order-id"
+              );
+
+
+            const row =
+              button.closest(
+                ".order-row"
+              );
+
+
+            deleteOrder(
+              orderID,
+              row
+            );
+
+
+            return;
+
+          }
+
+
+          /*
+           * CLICK ON ORDER ROW
+           */
+
+          const row =
+            event.target.closest(
+              ".order-row"
+            );
+
+
+          if (!row) {
+
+            return;
+
+          }
+
+
+          const orderID =
+            row.getAttribute(
+              "data-order-id"
+            );
+
+
+          openOrderView(
+            orderID
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =======================================================
+       ORDER BADGE
+    ======================================================== */
+
+    function updateOrderBadge() {
+
+      if (!orderCountBadge) {
+
+        return;
+
+      }
+
+
+      const rows =
+        document.querySelectorAll(
+          ".order-row"
+        );
+
+
+      orderCountBadge.textContent =
+        rows.length;
+
+    }
+
+
+    /* =======================================================
+       HIDE ONLY LOCALLY DELETED DEMO ORDERS
+       
+       IMPORTANT:
+       This does NOT delete or rebuild the demo orders.
+       It only hides a demo order after the admin
+       deliberately clicked Delete.
+    ======================================================== */
+
+    function hideDeletedDemoOrders() {
+
+      let deletedOrders = [];
+
+
+      try {
+
+        const saved =
+          localStorage.getItem(
+            "deletedDemoOrders"
+          );
+
+
+        if (saved) {
+
+          const parsed =
+            JSON.parse(
+              saved
+            );
+
+
+          if (
+            Array.isArray(
+              parsed
+            )
+          ) {
+
+            deletedOrders =
+              parsed;
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "Could not read deleted demo orders:",
+          error
+        );
+
+      }
+
+
+      document
+        .querySelectorAll(
+          ".demo-order"
+        )
+        .forEach(
+          row => {
+
+            const orderID =
+              row.getAttribute(
+                "data-order-id"
+              );
+
+
+            if (
+              deletedOrders.includes(
+                orderID
+              )
+            ) {
+
+              row.remove();
+
+            }
+
+          }
+        );
+
+
+      updateOrderBadge();
+
+    }
+
+
+    /* =======================================================
+       LOGOUT
+    ======================================================== */
+
+    const logoutBtn =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+
+    if (logoutBtn) {
+
+      logoutBtn.addEventListener(
+        "click",
+        async function() {
+
+          try {
+
+            await signOut(
+              auth
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Logout error:",
+              error
+            );
+
+          }
+
+
+          window.location.href =
+            "../auth/admin-login.html";
+
+        }
+      );
+
+    }
+
+
+    /* =======================================================
+       START PAGE
+       
+       1. Keep the three demo orders in the HTML.
+       2. Hide only orders deliberately deleted before.
+       3. Update badge.
+       4. Load additional Firestore orders.
+    ======================================================== */
+
+    hideDeletedDemoOrders();
+
+    updateOrderBadge();
+
+    loadFirestoreOrders();
+
+  </script>
+
+
+  <!-- =======================================================
+       SHARED SIDEBAR COUNTS
+  ======================================================== -->
+
+  <script type="module">
+
+    import {
+      updateSidebarCounts
+    } from "../shared/sidebar.js";
+
+
+    try {
+
+      updateSidebarCounts();
+
+    } catch (error) {
+
+      console.warn(
+        "Sidebar count update failed:",
+        error
+      );
+
+    }
+
+  </script>
+
+
+</body>
+
+</html>
+```

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact Aravon Shop | Customer Support</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+
+    .contact-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 120px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 30px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #222;
+    }
+
+    p,
+    ul {
+      line-height: 1.7;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      margin-left: 20px;
+      padding-left: 15px;
+    }
+
+    li {
+      margin-bottom: 9px;
+    }
+
+    .intro {
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .support-notice {
+      background: #f8f8f8;
+      border: 1px solid #dedede;
+      border-left: 4px solid #222;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 25px 0;
+    }
+
+    .support-notice strong {
+      color: #222;
+    }
+
+    .info-box {
+      background: #fafafa;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+
+    .info-box strong {
+      display: inline-block;
+      margin-bottom: 3px;
+    }
+
+    .email-link {
+      color: #222;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .email-link:hover {
+      text-decoration: underline;
+    }
+
+    /* =========================
+       ACCOUNT SUPPORT BOX
+    ========================= */
+
+    .account-support {
+      background: #fff;
+      border: 1px solid #dedede;
+      border-radius: 10px;
+      padding: 22px;
+      margin: 25px 0;
+    }
+
+    .account-support h3 {
+      margin-bottom: 12px;
+    }
+
+    .account-support p {
+      margin-bottom: 12px;
+    }
+
+    .account-support p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* =========================
+       CONTINUE SHOPPING BUTTON
+    ========================= */
+
+    .shop-button-container {
+      text-align: center;
+      margin: 38px 0 10px;
+    }
+
+    .shop-button {
+      display: inline-block;
+      background: #222;
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 30px;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: 600;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .shop-button:hover {
+      background: #000;
+      transform: translateY(-1px);
+    }
+
+    .shop-button:focus {
+      outline: 2px solid #222;
+      outline-offset: 3px;
+    }
+
+    /* =========================
+       FEATURED INFO
+    ========================= */
+
+    .featured-info {
+      max-width: 1100px;
+      margin: 20px auto 0;
+    }
+
+    .featured-info-inner {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2px;
+      text-align: center;
+    }
+
+    .featured-info-inner p {
+      margin-bottom: 0;
+    }
+     
+    .featured-info-inner h3 {
+  font-size: 16px;     /* smaller title */
+  margin-bottom: 6px;
+}
+
+.featured-info-inner p {
+  font-size: 14px;     /* smaller description */
+  margin-bottom: 0;
+}
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      margin-top: 50px;
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    footer p {
+      margin: 1.9px 0;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+      .contact-container {
+        margin: 20px 15px;
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      p,
+      ul {
+        font-size: 15px;
+      }
+
+      .account-support,
+      .support-notice,
+      .info-box {
+        padding: 17px;
+      }
+
+      .featured-info {
+        margin: 20px 15px 0;
+      }
+
+      .featured-info-inner {
+        padding: 25px 20px;
+        grid-template-columns: 1fr;
+      }
+
+      .shop-button {
+        width: 100%;
+        max-width: 280px;
+      }
+
+      footer {
+        padding: 30px 15px;
+      }
+
+      footer a {
+        display: inline-block;
+        margin: 5px 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       CONTACT CONTENT
+  ========================= -->
+
+  <main class="contact-container">
+
+    <h1>Contact Aravon Shop</h1>
+
+    <p class="intro">
+      Welcome to the Aravon Shop Customer Support page. We are committed to
+      providing a helpful, reliable, and straightforward shopping experience.
+      If you have a question about an order, payment, delivery, product,
+      account, refund, or another part of your shopping experience, our
+      support team is here to assist you.
+    </p>
+
+
+    <!-- =========================
+         PREFERRED SUPPORT METHOD
+    ========================= -->
+
+    <div class="support-notice">
+
+      <strong>Our recommended way to contact Customer Support</strong>
+
+      <p>
+        If you have an Aravon Shop customer account, we recommend contacting
+        our support team through the <strong>Support / Messages</strong> area
+        inside your account.
+      </p>
+
+      <p>
+        Sending your message from your account helps us connect your request
+        with your customer information and, when applicable, your order
+        details. This can make it easier for our support team to understand
+        your request and provide the appropriate assistance.
+      </p>
+
+    </div>
+
+
+    <h2>Contact Us Through Your Account</h2>
+
+    <p>
+      For most customer service questions, please sign in to your Aravon Shop
+      account and use the available <strong>Support</strong> or
+      <strong>Messages</strong> section.
+    </p>
+
+    <p>
+      This is especially useful when you are contacting us about an existing
+      order, delivery, product issue, account question, or another request
+      related to your customer account.
+    </p>
+
+    <div class="account-support">
+
+      <h3>💬 Why use Account Support?</h3>
+
+      <p>
+        Your support conversation can remain connected to your customer
+        account, making it easier for our team to review the relevant
+        information and communicate with you.
+      </p>
+
+      <p>
+        When contacting us about an order, please include your order number
+        whenever possible. This helps us locate the correct order and review
+        the situation more efficiently.
+      </p>
+
+      <p>
+        Please do not include sensitive payment information such as your full
+        card number, security code, or account passwords in a support message.
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         REFUNDS AND IMPORTANT ISSUES
+    ========================= -->
+
+    <h2>Refunds, Payments &amp; Order Assistance</h2>
+
+    <p>
+      Our support team can assist with questions and requests involving
+      refunds, payments, orders, delivery problems, damaged or incorrect
+      products, and other customer service matters.
+    </p>
+
+    <p>
+      If your request concerns a refund or another issue that requires
+      additional review, please provide as much relevant information as
+      possible. Depending on the circumstances, our team may need to review
+      the order details before determining the appropriate next step.
+    </p>
+
+    <p>
+      A refund request does not automatically guarantee that a refund will be
+      issued. Refunds and other resolutions are handled according to the
+      applicable order information and Aravon Shop policies.
+    </p>
+
+
+    <!-- =========================
+         EMAIL SUPPORT
+    ========================= -->
+
+    <h2>Email Support</h2>
+
+    <p>
+      If you are unable to access your customer account or need to contact us
+      by email, you can reach the Aravon Shop support team at the address
+      below.
+    </p>
+
+    <div class="info-box">
+
+      <strong>Customer Support Email</strong><br>
+
+      <a
+        class="email-link"
+        href="mailto:support@aravonshop.com"
+      >
+        support@aravonshop.com
+      </a>
+
+    </div>
+
+    <p>
+      When contacting us by email, please provide enough information for us
+      to understand your request. For order-related questions, including your
+      order ID and the email address associated with your purchase can help us
+      identify the relevant order.
+    </p>
+
+
+    <!-- =========================
+         WHAT TO INCLUDE
+    ========================= -->
+
+    <h2>What to Include in Your Message</h2>
+
+    <p>
+      Providing complete and accurate information helps our support team
+      understand your request and respond more effectively. Where applicable,
+      please include:
+    </p>
+
+    <ul>
+
+      <li>
+        <strong>Your full name</strong>
+      </li>
+
+      <li>
+        <strong>Your order ID</strong>
+        (for example: order_1721670000003)
+      </li>
+
+      <li>
+        <strong>The email address</strong>
+        associated with your Aravon Shop account or order
+      </li>
+
+      <li>
+        <strong>A clear description of the issue or question</strong>
+      </li>
+
+      <li>
+        <strong>Relevant product information</strong>
+        such as the product name or item involved
+      </li>
+
+      <li>
+        <strong>Screenshots or photographs</strong>
+        when they help explain a product or order issue
+      </li>
+
+      <li>
+        <strong>Any relevant tracking information</strong>
+        if your request concerns delivery
+      </li>
+
+    </ul>
+
+
+    <!-- =========================
+         RESPONSE TIME
+    ========================= -->
+
+    <h2>Support Response Time</h2>
+
+    <p>
+      Our team aims to review customer support requests as promptly as
+      possible. Response times may vary depending on the nature and
+      complexity of the request, the information provided, and the volume of
+      support enquiries we are handling.
+    </p>
+
+    <p>
+      During busy periods, weekends, public holidays, or periods of unusually
+      high customer demand, a response may take longer than usual.
+    </p>
+
+    <p>
+      To help avoid unnecessary delays, please avoid sending multiple
+      duplicate requests about the same issue. If you have already contacted
+      us, replying to the existing conversation is usually the best way to
+      keep the information together.
+    </p>
+
+
+    <!-- =========================
+         BUSINESS HOURS
+    ========================= -->
+
+    <h2>Business Hours</h2>
+
+    <div class="info-box">
+
+      <strong>Monday – Friday:</strong> 09:00 – 17:00<br>
+      <strong>Saturday:</strong> 10:00 – 14:00<br>
+      <strong>Sunday:</strong> Closed
+
+    </div>
+
+    <p>
+      Messages received outside our regular business hours will be reviewed
+      when the support team becomes available.
+    </p>
+
+
+    <!-- =========================
+         OUR ADDRESS
+    ========================= -->
+
+    <h2>Our Address</h2>
+
+    <div class="info-box">
+
+      <strong>Aravon Shop</strong><br>
+      Arnhem, Gelderland<br>
+      Netherlands
+
+    </div>
+
+    <p>
+      Please note that customer support requests should normally be submitted
+      through your customer account or by email rather than sent directly to
+      the business address.
+    </p>
+
+
+    <!-- =========================
+         CUSTOMER SERVICE COMMITMENT
+    ========================= -->
+
+    <h2>Our Commitment to You</h2>
+
+    <p>
+      At Aravon Shop, we believe good customer service is an important part of
+      a positive shopping experience. We aim to communicate clearly, treat
+      customer requests respectfully, and provide helpful information when
+      assistance is needed.
+    </p>
+
+    <p>
+      Whether you need help understanding an order, checking delivery
+      information, reporting a problem with a product, asking about a
+      payment, or discussing a refund request, we encourage you to contact
+      us with the relevant details so our team can properly review your
+      request.
+    </p>
+
+    <p>
+      Thank you for choosing Aravon Shop. We appreciate your business and
+      look forward to assisting you.
+    </p>
+
+
+    <!-- =========================
+         CONTINUE TO SHOP
+    ========================= -->
+
+    <div class="shop-button-container">
+
+      <a
+        href="index.html"
+        class="shop-button"
+        aria-label="Continue shopping at Aravon Shop"
+      >
+        Continue to Shop
+      </a>
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================
+       FEATURED INFO
+  ========================= -->
+
+  <section class="featured-info">
+
+    <div class="featured-info-inner">
+
+      <div>
+        <h3>🚚 Fast Delivery</h3>
+
+        <p>
+          Reliable shipping with tracking on every order.
+        </p>
+      </div>
+
+
+      <div>
+        <h3>🔒 Secure Payments</h3>
+
+        <p>
+          Shop safely with encrypted checkout.
+        </p>
+      </div>
+
+
+      <div>
+        <h3>💬 Customer Support</h3>
+
+        <p>
+          Friendly support whenever you need help.
+        </p>
+      </div>
+
+
+      <div>
+        <h3>⭐ Quality Products</h3>
+
+        <p>
+          Carefully selected products at competitive prices.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <p><strong>Aravon Shop</strong></p>
+
+    <p>
+      <a href="about.html">About</a> |
+      <a href="contact.html">Contact</a> |
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="terms.html">Terms &amp; Conditions</a>
+    </p>
+
+    <p>&copy; 2026 Aravon Shop. All rights reserved.</p>
+
+  </footer>
+
+</body>
+</html>
+```

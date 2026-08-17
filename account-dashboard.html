@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Account Dashboard – Aravon Shop</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 25px 20px;
+      border-right: 1px solid #ddd;
+      min-height: 100vh;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 25px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 7px;
+      transition: .2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #ff4747;
+      color: #fff;
+    }
+
+    .badge {
+      background: #ff4747;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+      line-height: normal;
+      font-weight: normal;
+    }
+
+    .sidebar a.active .badge {
+      background: #fff;
+      color: #ff4747;
+    }
+
+    #logoutBtn {
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      min-width: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =====================================================
+       ACCOUNT CARD
+    ===================================================== */
+
+    .card {
+      background: #fff;
+      padding: 45px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+      border: 1px solid #eee;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    /* =====================================================
+       PROFILE PHOTO
+    ===================================================== */
+
+    .profile-section {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .profile-section h3 {
+      margin-bottom: 20px;
+    }
+
+    .profile-photo-area {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .profile-photo-wrapper {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #f0f0f0;
+      border: 3px solid #eee;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #profilePhotoPreview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-placeholder {
+      color: #888;
+      font-size: 14px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .profile-photo-controls {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .profile-photo-controls input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin: 0 0 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .profile-photo-help {
+      display: block;
+      color: #777;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .remove-photo-btn {
+      width: auto;
+      margin-top: 5px;
+      padding: 9px 14px;
+      background: #777;
+    }
+
+    .remove-photo-btn:hover {
+      background: #555;
+    }
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #ff4747;
+    }
+
+    /* =====================================================
+       BUTTON
+    ===================================================== */
+
+    button {
+      padding: 12px;
+      background: #ff4747;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #e63f3f;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* =====================================================
+       SAVE NOTICE
+    ===================================================== */
+
+    #saveNotice {
+      display: none;
+      margin-top: 15px;
+      padding: 10px 12px;
+      background: #e6f7ea;
+      color: #176b2c;
+      border: 1px solid #b8e3c1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* =====================================================
+       ERROR NOTICE
+    ===================================================== */
+
+    #errorNotice {
+      display: none;
+      margin-top: 15px;
+      padding: 10px 12px;
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* =========================
+       FEATURED INFO
+    ========================= */
+
+    .featured-info {
+      margin-top: 30px;
+    }
+
+    .featured-grid {
+      background: #fff;
+      border-radius: 14px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(140px, 1fr)
+      );
+      gap: 12px;
+      text-align: center;
+    }
+
+    .featured-grid h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .featured-grid p {
+      margin: 0;
+      color: #666;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    /* =========================
+       FOOTER
+       SAME LAYOUT AS ORDERS
+    ========================= */
+
+    footer {
+      margin-top: 40px;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+      width: 100%;
+    }
+
+    footer p {
+      margin: 10px 0;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 800px) {
+
+      body {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+      }
+
+      .sidebar h2 {
+        margin-bottom: 15px;
+      }
+
+      .sidebar a {
+        display: inline-block;
+        margin: 3px;
+      }
+
+      .main {
+        padding: 22px 15px;
+      }
+
+      .featured-grid {
+        padding: 22px;
+      }
+
+    }
+
+   @media (max-width: 480px) {
+  .account-form input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .account-form label {
+    font-size: 13px;
+  }
+}
+
+   @media (max-width: 480px) {
+  .featured-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .featured-grid p {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+  </style>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="sidebar">
+
+  <h2>
+    Welcome Back
+  </h2>
+
+  <a
+    href="../dashboard/account-dashboard.html"
+    class="active"
+  >
+    Dashboard
+  </a>
+
+  <a href="../messages/inbox.html">
+
+    Inbox
+
+    <span
+      id="messageCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+  <a href="../orders/orders.html">
+
+    Orders
+
+    <span
+      id="orderCountBadge"
+      class="badge"
+    >
+      3
+    </span>
+
+  </a>
+
+  <a href="../../index.html">
+    Back to Shop
+  </a>
+
+  <a
+    id="logoutBtn"
+    href="#"
+  >
+    Logout
+  </a>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<div class="main">
+
+  <h2>
+    Your Account Dashboard
+  </h2>
+
+  <p>
+    Manage your personal details.
+  </p>
+
+
+  <!-- ===================================================
+       ACCOUNT CARD
+  ==================================================== -->
+
+  <div class="card">
+
+    <!-- ================================================
+         PROFILE PHOTO
+    ================================================= -->
+
+    <div class="profile-section">
+
+      <h3>
+        Profile Photo
+      </h3>
+
+      <div class="profile-photo-area">
+
+        <div class="profile-photo-wrapper">
+
+          <img
+            id="profilePhotoPreview"
+            src=""
+            alt="Profile photo"
+            style="display:none;"
+          >
+
+          <div
+            id="profilePhotoPlaceholder"
+            class="profile-placeholder"
+          >
+            No Photo
+          </div>
+
+        </div>
+
+
+        <div class="profile-photo-controls">
+
+          <input
+            id="profilePhotoInput"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+          >
+
+          <span class="profile-photo-help">
+            Choose a JPG, PNG, WEBP, or GIF image.
+            Maximum recommended size: 2 MB.
+          </span>
+
+          <button
+            id="removePhotoButton"
+            class="remove-photo-btn"
+            type="button"
+          >
+            Remove Photo
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================
+         ACCOUNT DETAILS
+    ================================================= -->
+
+    <h3>
+      Your Details
+    </h3>
+
+
+    <label for="firstName">
+      First Name
+    </label>
+
+    <input
+      id="firstName"
+      type="text"
+      value="Molly"
+      autocomplete="given-name"
+    >
+
+
+    <label for="lastName">
+      Last Name
+    </label>
+
+    <input
+      id="lastName"
+      type="text"
+      value="Barbie"
+      autocomplete="family-name"
+    >
+
+
+    <label for="email">
+      Email
+    </label>
+
+    <input
+      id="email"
+      type="email"
+      value="ti.a.eduardo24@gmail.com"
+      autocomplete="email"
+    >
+
+
+    <label for="phone">
+      Phone Number
+    </label>
+
+    <input
+      id="phone"
+      type="text"
+      value="31698765432"
+      autocomplete="tel"
+    >
+
+
+    <label for="street">
+      Street
+    </label>
+
+    <input
+      id="street"
+      type="text"
+      value="Klarden"
+      autocomplete="street-address"
+    >
+
+
+    <label for="housenumber">
+      House Number
+    </label>
+
+    <input
+      id="housenumber"
+      type="text"
+      value="88"
+    >
+
+
+    <label for="city">
+      City
+    </label>
+
+    <input
+      id="city"
+      type="text"
+      value="Arnhem"
+      autocomplete="address-level2"
+    >
+
+
+    <label for="postalCode">
+      Postal Code
+    </label>
+
+    <input
+      id="postalCode"
+      type="text"
+      value="2589 CH"
+      autocomplete="postal-code"
+    >
+
+
+    <label for="country">
+      Country
+    </label>
+
+    <input
+      id="country"
+      type="text"
+      value="Netherlands"
+      autocomplete="country-name"
+    >
+
+
+    <button
+      id="saveButton"
+      type="button"
+    >
+      Save Changes
+    </button>
+
+
+    <div id="saveNotice">
+      Your details have been saved.
+    </div>
+
+
+    <div id="errorNotice"></div>
+
+  </div>
+
+
+  <!-- =================================================
+       FEATURED INFO
+  ================================================= -->
+
+  <section class="featured-info">
+
+    <div class="featured-grid">
+
+      <div>
+
+        <h3>
+          🚚 Fast Delivery
+        </h3>
+
+        <p>
+          Reliable shipping with tracking
+          on every order.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          🔒 Secure Payments
+        </h3>
+
+        <p>
+          Shop safely with encrypted checkout.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          💬 Customer Support
+        </h3>
+
+        <p>
+          Friendly support whenever
+          you need help.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          ⭐ Quality Products
+        </h3>
+
+        <p>
+          Carefully selected products
+          at competitive prices.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =================================================
+       FOOTER
+       SAME LAYOUT AS orders.html
+  ================================================= -->
+
+  <footer>
+
+    <p>
+      <strong>
+        Aravon Shop
+      </strong>
+    </p>
+
+    <p>
+
+      <a href="../../about.html">
+        About
+      </a>
+
+      |
+
+      <a href="../../contact.html">
+        Contact
+      </a>
+
+      |
+
+      <a href="../../privacy.html">
+        Privacy Policy
+      </a>
+
+      |
+
+      <a href="../../terms.html">
+        Terms &amp; Conditions
+      </a>
+
+    </p>
+
+    <p>
+      &copy; 2026 Aravon Shop.
+      All rights reserved.
+    </p>
+
+  </footer>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const messageCountBadge =
+  document.getElementById(
+    "messageCountBadge"
+  );
+
+const orderCountBadge =
+  document.getElementById(
+    "orderCountBadge"
+  );
+
+const logoutBtn =
+  document.getElementById(
+    "logoutBtn"
+  );
+
+const saveButton =
+  document.getElementById(
+    "saveButton"
+  );
+
+const saveNotice =
+  document.getElementById(
+    "saveNotice"
+  );
+
+const errorNotice =
+  document.getElementById(
+    "errorNotice"
+  );
+
+const profilePhotoInput =
+  document.getElementById(
+    "profilePhotoInput"
+  );
+
+const profilePhotoPreview =
+  document.getElementById(
+    "profilePhotoPreview"
+  );
+
+const profilePhotoPlaceholder =
+  document.getElementById(
+    "profilePhotoPlaceholder"
+  );
+
+const removePhotoButton =
+  document.getElementById(
+    "removePhotoButton"
+  );
+
+
+/* =====================================================
+   EXACT THREE ORDERS
+===================================================== */
+
+const dashboardOrders = [
+
+  {
+    orderId: "order_001"
+  },
+
+  {
+    orderId: "order_002"
+  },
+
+  {
+    orderId: "order_003"
+  }
+
+];
+
+const ORDER_COUNT =
+  dashboardOrders.length;
+
+
+/* =====================================================
+   SAFE LOCAL STORAGE ARRAY READER
+===================================================== */
+
+function getLocalStorageArray(key) {
+
+  try {
+
+    const raw =
+      localStorage.getItem(key);
+
+    if (!raw) {
+      return [];
+    }
+
+    const parsed =
+      JSON.parse(raw);
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read localStorage:",
+      key,
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =====================================================
+   GET UNREAD ADMIN MESSAGES
+===================================================== */
+
+function getUnreadAdminMessages() {
+
+  const messages =
+    getLocalStorageArray(
+      "adminMessages"
+    );
+
+  return messages.filter(
+    function(message) {
+
+      if (!message) {
+        return false;
+      }
+
+      if (
+        message.read === true
+      ) {
+
+        return false;
+
+      }
+
+      if (
+        message.unread === false
+      ) {
+
+        return false;
+
+      }
+
+      const status =
+        String(
+          message.status || ""
+        )
+        .trim()
+        .toLowerCase();
+
+      if (
+        status === "read"
+      ) {
+
+        return false;
+
+      }
+
+      return true;
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   GET UNREAD MESSAGE COUNT
+===================================================== */
+
+function getUnreadMessageCount() {
+
+  return getUnreadAdminMessages().length;
+
+}
+
+
+/* =====================================================
+   UPDATE INBOX BADGE
+===================================================== */
+
+function updateInboxBadge() {
+
+  const unreadCount =
+    getUnreadMessageCount();
+
+  if (!messageCountBadge) {
+    return;
+  }
+
+  messageCountBadge.textContent =
+    String(
+      unreadCount
+    );
+
+  messageCountBadge.style.display =
+    "inline-block";
+
+}
+
+
+/* =====================================================
+   UPDATE ORDERS BADGE
+===================================================== */
+
+function updateOrdersBadge() {
+
+  if (!orderCountBadge) {
+    return;
+  }
+
+  orderCountBadge.textContent =
+    String(
+      ORDER_COUNT
+    );
+
+  orderCountBadge.style.display =
+    "inline-block";
+
+}
+
+
+/* =====================================================
+   UPDATE ALL BADGES
+===================================================== */
+
+function updateAllBadges() {
+
+  updateInboxBadge();
+
+  updateOrdersBadge();
+
+}
+
+
+/* =====================================================
+   REAL-TIME MESSAGE MONITOR
+===================================================== */
+
+let lastMessageCount =
+  getUnreadMessageCount();
+
+
+function monitorInboxBadge() {
+
+  const currentMessageCount =
+    getUnreadMessageCount();
+
+  if (
+    messageCountBadge &&
+    currentMessageCount !==
+    lastMessageCount
+  ) {
+
+    messageCountBadge.textContent =
+      String(
+        currentMessageCount
+      );
+
+    lastMessageCount =
+      currentMessageCount;
+
+  }
+
+  if (
+    orderCountBadge &&
+    orderCountBadge.textContent !==
+    String(ORDER_COUNT)
+  ) {
+
+    orderCountBadge.textContent =
+      String(
+        ORDER_COUNT
+      );
+
+  }
+
+}
+
+
+setInterval(
+  monitorInboxBadge,
+  500
+);
+
+
+/* =====================================================
+   CROSS-TAB REAL-TIME UPDATE
+===================================================== */
+
+window.addEventListener(
+  "storage",
+  function(event) {
+
+    if (
+      event.key ===
+      "adminMessages"
+    ) {
+
+      updateInboxBadge();
+
+      lastMessageCount =
+        getUnreadMessageCount();
+
+    }
+
+    if (
+      event.key ===
+      "orders"
+    ) {
+
+      updateOrdersBadge();
+
+    }
+
+    if (
+      event.key ===
+      "accountDetails"
+    ) {
+
+      loadAccountDetails();
+
+    }
+
+    if (
+      event.key ===
+      "profilePhoto"
+    ) {
+
+      loadProfilePhoto();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   SHOW ERROR
+===================================================== */
+
+function showError(message) {
+
+  if (!errorNotice) {
+    return;
+  }
+
+  errorNotice.textContent =
+    message;
+
+  errorNotice.style.display =
+    "block";
+
+  if (saveNotice) {
+    saveNotice.style.display =
+      "none";
+  }
+
+}
+
+
+/* =====================================================
+   HIDE ERROR
+===================================================== */
+
+function hideError() {
+
+  if (!errorNotice) {
+    return;
+  }
+
+  errorNotice.textContent =
+    "";
+
+  errorNotice.style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   SHOW SAVE NOTICE
+===================================================== */
+
+function showSaveNotice() {
+
+  if (!saveNotice) {
+    return;
+  }
+
+  saveNotice.textContent =
+    "Your details and profile photo have been saved.";
+
+  saveNotice.style.display =
+    "block";
+
+  if (errorNotice) {
+    errorNotice.style.display =
+      "none";
+  }
+
+  setTimeout(
+    function() {
+
+      saveNotice.style.display =
+        "none";
+
+    },
+    3000
+  );
+
+}
+
+
+/* =====================================================
+   DISPLAY PROFILE PHOTO
+===================================================== */
+
+function displayProfilePhoto(
+  imageData
+) {
+
+  if (
+    !profilePhotoPreview ||
+    !profilePhotoPlaceholder
+  ) {
+
+    return;
+
+  }
+
+  if (!imageData) {
+
+    profilePhotoPreview.src =
+      "";
+
+    profilePhotoPreview.style.display =
+      "none";
+
+    profilePhotoPlaceholder.style.display =
+      "block";
+
+    return;
+
+  }
+
+  profilePhotoPreview.src =
+    imageData;
+
+  profilePhotoPreview.style.display =
+    "block";
+
+  profilePhotoPlaceholder.style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   LOAD PROFILE PHOTO
+===================================================== */
+
+function loadProfilePhoto() {
+
+  const savedPhoto =
+    localStorage.getItem(
+      "profilePhoto"
+    );
+
+  displayProfilePhoto(
+    savedPhoto
+  );
+
+}
+
+
+/* =====================================================
+   SAVE PHOTO INTO ACCOUNT DETAILS
+===================================================== */
+
+function saveProfilePhotoToAccount(
+  imageData
+) {
+
+  let accountDetails = {};
+
+  try {
+
+    accountDetails =
+      JSON.parse(
+        localStorage.getItem(
+          "accountDetails"
+        )
+      ) || {};
+
+  } catch (error) {
+
+    accountDetails = {};
+
+  }
+
+  accountDetails.profilePhoto =
+    imageData;
+
+  accountDetails.updatedAt =
+    new Date().toISOString();
+
+  try {
+
+    localStorage.setItem(
+      "accountDetails",
+      JSON.stringify(
+        accountDetails
+      )
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Unable to update account details:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   PROFILE PHOTO UPLOAD
+===================================================== */
+
+if (profilePhotoInput) {
+
+  profilePhotoInput.addEventListener(
+    "change",
+    function() {
+
+      hideError();
+
+      const file =
+        profilePhotoInput.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        showError(
+          "Please select a valid image file."
+        );
+
+        profilePhotoInput.value =
+          "";
+
+        return;
+
+      }
+
+      const maxSize =
+        2 * 1024 * 1024;
+
+      if (
+        file.size > maxSize
+      ) {
+
+        showError(
+          "Please choose an image smaller than 2 MB."
+        );
+
+        profilePhotoInput.value =
+          "";
+
+        return;
+
+      }
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        function(event) {
+
+          const imageData =
+            event.target.result;
+
+          try {
+
+            localStorage.setItem(
+              "profilePhoto",
+              imageData
+            );
+
+            displayProfilePhoto(
+              imageData
+            );
+
+            saveProfilePhotoToAccount(
+              imageData
+            );
+
+            if (saveNotice) {
+
+              saveNotice.textContent =
+                "Your profile photo has been saved.";
+
+              saveNotice.style.display =
+                "block";
+
+            }
+
+            if (errorNotice) {
+
+              errorNotice.style.display =
+                "none";
+
+            }
+
+            setTimeout(
+              function() {
+
+                if (saveNotice) {
+
+                  saveNotice.style.display =
+                    "none";
+
+                }
+
+              },
+              3000
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Unable to save profile photo:",
+              error
+            );
+
+            showError(
+              "The image could not be saved. Please choose a smaller image."
+            );
+
+            displayProfilePhoto(
+              null
+            );
+
+          }
+
+        };
+
+      reader.onerror =
+        function() {
+
+          showError(
+            "Unable to read the selected image."
+          );
+
+        };
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   REMOVE PROFILE PHOTO
+===================================================== */
+
+if (removePhotoButton) {
+
+  removePhotoButton.addEventListener(
+    "click",
+    function() {
+
+      localStorage.removeItem(
+        "profilePhoto"
+      );
+
+      let accountDetails = {};
+
+      try {
+
+        accountDetails =
+          JSON.parse(
+            localStorage.getItem(
+              "accountDetails"
+            )
+          ) || {};
+
+      } catch (error) {
+
+        accountDetails = {};
+
+      }
+
+      delete accountDetails.profilePhoto;
+
+      accountDetails.updatedAt =
+        new Date().toISOString();
+
+      try {
+
+        localStorage.setItem(
+          "accountDetails",
+          JSON.stringify(
+            accountDetails
+          )
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Unable to update account details:",
+          error
+        );
+
+      }
+
+      if (profilePhotoInput) {
+
+        profilePhotoInput.value =
+          "";
+
+      }
+
+      displayProfilePhoto(
+        null
+      );
+
+      if (saveNotice) {
+
+        saveNotice.textContent =
+          "Your profile photo has been removed.";
+
+        saveNotice.style.display =
+          "block";
+
+      }
+
+      if (errorNotice) {
+
+        errorNotice.style.display =
+          "none";
+
+      }
+
+      setTimeout(
+        function() {
+
+          if (saveNotice) {
+
+            saveNotice.style.display =
+              "none";
+
+          }
+
+        },
+        3000
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SAVE USER IDENTITY
+===================================================== */
+
+function saveUserIdentity() {
+
+  const firstName =
+    document
+      .getElementById("firstName")
+      .value
+      .trim();
+
+  const lastName =
+    document
+      .getElementById("lastName")
+      .value
+      .trim();
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const fullName =
+    (
+      firstName +
+      " " +
+      lastName
+    ).trim();
+
+  const userId =
+    email
+      ? email + "_ID"
+      : "0000";
+
+  localStorage.setItem(
+    "userName",
+    fullName
+  );
+
+  localStorage.setItem(
+    "userEmail",
+    email
+  );
+
+  localStorage.setItem(
+    "userId",
+    userId
+  );
+
+}
+
+
+/* =====================================================
+   LOAD ACCOUNT DETAILS
+===================================================== */
+
+function loadAccountDetails() {
+
+  let accountDetails = null;
+
+  try {
+
+    accountDetails =
+      JSON.parse(
+        localStorage.getItem(
+          "accountDetails"
+        )
+      );
+
+  } catch (error) {
+
+    accountDetails = null;
+
+  }
+
+  if (
+    !accountDetails ||
+    typeof accountDetails !==
+      "object"
+  ) {
+
+    loadProfilePhoto();
+
+    return;
+
+  }
+
+  if (
+    accountDetails.firstName !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "firstName"
+    ).value =
+      accountDetails.firstName;
+
+  }
+
+  if (
+    accountDetails.lastName !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "lastName"
+    ).value =
+      accountDetails.lastName;
+
+  }
+
+  if (
+    accountDetails.email !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "email"
+    ).value =
+      accountDetails.email;
+
+  }
+
+  if (
+    accountDetails.phone !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "phone"
+    ).value =
+      accountDetails.phone;
+
+  }
+
+  if (
+    accountDetails.street !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "street"
+    ).value =
+      accountDetails.street;
+
+  }
+
+  if (
+    accountDetails.houseNumber !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "housenumber"
+    ).value =
+      accountDetails.houseNumber;
+
+  }
+
+  if (
+    accountDetails.city !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "city"
+    ).value =
+      accountDetails.city;
+
+  }
+
+  if (
+    accountDetails.postalCode !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "postalCode"
+    ).value =
+      accountDetails.postalCode;
+
+  }
+
+  if (
+    accountDetails.country !==
+    undefined
+  ) {
+
+    document.getElementById(
+      "country"
+    ).value =
+      accountDetails.country;
+
+  }
+
+  if (
+    accountDetails.profilePhoto
+  ) {
+
+    localStorage.setItem(
+      "profilePhoto",
+      accountDetails.profilePhoto
+    );
+
+    displayProfilePhoto(
+      accountDetails.profilePhoto
+    );
+
+  } else {
+
+    loadProfilePhoto();
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE COMPLETE ACCOUNT DETAILS
+===================================================== */
+
+function saveAccountDetails() {
+
+  hideError();
+
+  const firstName =
+    document
+      .getElementById("firstName")
+      .value
+      .trim();
+
+  const lastName =
+    document
+      .getElementById("lastName")
+      .value
+      .trim();
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const phone =
+    document
+      .getElementById("phone")
+      .value
+      .trim();
+
+  const street =
+    document
+      .getElementById("street")
+      .value
+      .trim();
+
+  const houseNumber =
+    document
+      .getElementById("housenumber")
+      .value
+      .trim();
+
+  const city =
+    document
+      .getElementById("city")
+      .value
+      .trim();
+
+  const postalCode =
+    document
+      .getElementById("postalCode")
+      .value
+      .trim();
+
+  const country =
+    document
+      .getElementById("country")
+      .value
+      .trim();
+
+
+  if (!firstName) {
+
+    showError(
+      "Please enter your first name."
+    );
+
+    document
+      .getElementById("firstName")
+      .focus();
+
+    return;
+
+  }
+
+
+  if (!lastName) {
+
+    showError(
+      "Please enter your last name."
+    );
+
+    document
+      .getElementById("lastName")
+      .focus();
+
+    return;
+
+  }
+
+
+  if (!email) {
+
+    showError(
+      "Please enter your email address."
+    );
+
+    document
+      .getElementById("email")
+      .focus();
+
+    return;
+
+  }
+
+
+  saveUserIdentity();
+
+
+  const profilePhoto =
+    localStorage.getItem(
+      "profilePhoto"
+    ) || null;
+
+
+  const accountDetails = {
+
+    firstName:
+      firstName,
+
+    lastName:
+      lastName,
+
+    fullName:
+      (
+        firstName +
+        " " +
+        lastName
+      ).trim(),
+
+    email:
+      email,
+
+    phone:
+      phone,
+
+    street:
+      street,
+
+    houseNumber:
+      houseNumber,
+
+    city:
+      city,
+
+    postalCode:
+      postalCode,
+
+    country:
+      country,
+
+    profilePhoto:
+      profilePhoto,
+
+    updatedAt:
+      new Date().toISOString()
+
+  };
+
+
+  try {
+
+    localStorage.setItem(
+      "accountDetails",
+      JSON.stringify(
+        accountDetails
+      )
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Unable to save account details:",
+      error
+    );
+
+    showError(
+      "Unable to save your account details."
+    );
+
+    return;
+
+  }
+
+
+  showSaveNotice();
+
+}
+
+
+/* =====================================================
+   SAVE BUTTON
+===================================================== */
+
+if (saveButton) {
+
+  saveButton.addEventListener(
+    "click",
+    saveAccountDetails
+  );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener(
+    "click",
+    function(event) {
+
+      event.preventDefault();
+
+      window.location.href =
+        "../auth/login.html";
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+loadAccountDetails();
+
+updateAllBadges();
+
+lastMessageCount =
+  getUnreadMessageCount();
+
+</script>
+
+</body>
+
+</html>

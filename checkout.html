@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Secure checkout for Aravon Shop."
+    >
+
+    <title>Checkout | Aravon Shop</title>
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         GLOBAL STYLE
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ====================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family: "Inter", sans-serif;
+
+            background: #f5f5f5;
+
+            color: #111;
+        }
+
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ====================================================== */
+
+        header {
+            background: #fff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 15px 25px;
+
+            border-bottom: 1px solid #ddd;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 999;
+        }
+
+
+        .logo {
+            font-size: 24px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+
+            user-select: none;
+        }
+
+
+        .logo:hover {
+            opacity: .8;
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ====================================================== */
+
+        .search-bar {
+            display: flex;
+
+            align-items: center;
+
+            gap: 0;
+
+            flex: 1;
+
+            justify-content: center;
+
+            margin: 0 30px;
+
+            max-width: 650px;
+        }
+
+
+        .search-bar input {
+            width: 100%;
+
+            min-width: 0;
+
+            padding: 10px 12px;
+
+            border: 1px solid #ccc;
+
+            border-right: none;
+
+            border-radius: 6px 0 0 6px;
+
+            box-sizing: border-box;
+
+            font-family: inherit;
+
+            font-size: 14px;
+        }
+
+
+        .search-bar input:focus {
+            outline: none;
+
+            border-color: #ff4747;
+        }
+
+
+        .search-bar button {
+            padding: 10px 18px;
+
+            background: #ff4747;
+
+            color: #fff;
+
+            border: none;
+
+            border-radius: 0 6px 6px 0;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .search-bar button:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           HEADER ICONS
+        ====================================================== */
+
+        .header-icons {
+            display: flex;
+
+            gap: 25px;
+
+            align-items: center;
+        }
+
+
+        .header-icons a {
+            color: #111;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            position: relative;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .header-icons a:hover {
+            opacity: .75;
+        }
+
+
+        /* =====================================================
+           CART BADGE
+        ====================================================== */
+
+        .cart-link {
+            position: relative;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 32px;
+
+            height: 32px;
+        }
+
+
+        .cart-badge {
+            position: absolute;
+
+            top: -9px;
+
+            right: -12px;
+
+            min-width: 20px;
+
+            height: 20px;
+
+            padding: 0 5px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #ff4747;
+
+            color: #fff;
+
+            border-radius: 50%;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            line-height: 1;
+
+            text-align: center;
+        }
+
+
+        /* =====================================================
+           MOBILE MENU BUTTON
+        ====================================================== */
+
+        .mobile-menu-button {
+            display: none;
+
+            width: 38px;
+
+            height: 38px;
+
+            padding: 0;
+
+            background: transparent;
+
+            border: none;
+
+            color: #111;
+
+            font-size: 28px;
+
+            cursor: pointer;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        /* =====================================================
+           MOBILE MENU
+        ====================================================== */
+
+        .mobile-menu {
+            display: none;
+
+            background: #fff;
+
+            border-top: 1px solid #eee;
+
+            border-bottom: 1px solid #ddd;
+
+            padding: 10px 15px;
+        }
+
+
+        .mobile-menu.open {
+            display: block;
+        }
+
+
+        .mobile-menu a {
+            display: block;
+
+            padding: 12px 5px;
+
+            color: #111;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            border-bottom: 1px solid #eee;
+        }
+
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+
+        .mobile-menu a:hover {
+            color: #ff4747;
+        }
+
+
+        /* =====================================================
+           PAGE TITLE
+        ====================================================== */
+
+        .page-title {
+            max-width: 1200px;
+
+            margin: 35px auto;
+
+            padding: 0 20px;
+        }
+
+
+        .page-title h1 {
+            margin: 0;
+
+            font-size: 32px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           CHECKOUT CONTAINER
+        ====================================================== */
+
+        .checkout-wrapper {
+            width: 100%;
+        }
+
+
+        .cart-container {
+            max-width: 1200px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns: 2fr 1fr;
+
+            gap: 25px;
+
+            padding: 20px;
+        }
+
+
+        /* =====================================================
+           CART ITEMS
+        ====================================================== */
+
+        .cart-items {
+            background: #fff;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            min-width: 0;
+        }
+
+
+        #cartItems {
+            width: 100%;
+        }
+
+
+        .cart-item {
+            display: flex;
+
+            gap: 20px;
+
+            align-items: center;
+
+            border-bottom: 1px solid #ddd;
+
+            padding: 20px 0;
+        }
+
+
+        .cart-item:first-child {
+            padding-top: 0;
+        }
+
+
+        .cart-item:last-child {
+            border-bottom: none;
+
+            padding-bottom: 0;
+        }
+
+
+        .cart-product-link {
+            display: flex;
+
+            gap: 20px;
+
+            align-items: center;
+
+            flex: 1;
+
+            min-width: 0;
+
+            text-decoration: none;
+
+            color: inherit;
+        }
+
+
+        .cart-item img {
+            width: 120px;
+
+            height: 120px;
+
+            object-fit: cover;
+
+            border-radius: 8px;
+
+            flex-shrink: 0;
+
+            background: #f3f3f3;
+        }
+
+
+        .item-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .item-title {
+            font-size: 18px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+
+            word-break: break-word;
+        }
+
+
+        .item-price {
+            color: #ff4747;
+
+            font-size: 20px;
+
+            font-weight: 700;
+        }
+
+
+        .item-size {
+            margin-top: 6px;
+
+            font-size: 14px;
+
+            color: #555;
+        }
+
+
+        /* =====================================================
+           CART CONTROLS
+        ====================================================== */
+
+        .cart-controls {
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            flex-shrink: 0;
+        }
+
+
+        .qty-box {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 15px;
+        }
+
+
+        .qty-box span {
+            min-width: 20px;
+
+            text-align: center;
+
+            font-weight: 600;
+        }
+
+
+        .qty-btn {
+            width: 34px;
+
+            height: 34px;
+
+            border: none;
+
+            background: #ff4747;
+
+            color: #fff;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .qty-btn:hover {
+            opacity: .9;
+        }
+
+
+        .qty-btn:disabled {
+            opacity: .5;
+
+            cursor: not-allowed;
+        }
+
+
+        .remove-btn {
+            margin-top: 15px;
+
+            background: none;
+
+            border: none;
+
+            color: red;
+
+            cursor: pointer;
+
+            font-family: inherit;
+        }
+
+
+        .remove-btn:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           CHECKOUT INPUTS
+        ====================================================== */
+
+        .checkout-input {
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+            background: #fafafa;
+
+            box-sizing: border-box;
+
+            font-family: inherit;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+
+        .checkout-input:focus {
+            outline: none;
+
+            border-color: #ff4747;
+
+            background: #fff;
+        }
+
+
+        .checkout-input.invalid {
+            border-color: #ff4747;
+
+            background: #fff8f8;
+        }
+
+
+        .checkout-input.valid {
+            border-color: #54a854;
+
+            background: #fff;
+        }
+
+
+        .shipping-wide {
+            width: 100%;
+
+            box-sizing: border-box;
+        }
+
+
+        .shipping-fields {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+
+        .field-group {
+            width: 100%;
+        }
+
+
+        .field-error {
+            display: none;
+
+            margin-top: 5px;
+
+            color: #b00000;
+
+            font-size: 12px;
+        }
+
+
+        .field-error.show {
+            display: block;
+        }
+
+
+        /* =====================================================
+           SUMMARY
+        ====================================================== */
+
+        .cart-summary {
+            background: #fff;
+
+            border-radius: 12px;
+
+            padding: 35px;
+
+            height: fit-content;
+
+            box-sizing: border-box;
+        }
+
+
+        .cart-summary h2 {
+            margin-top: 0;
+
+            margin-bottom: 20px;
+
+            font-size: 21px;
+        }
+
+
+        .summary-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin: 15px 0;
+
+            gap: 15px;
+        }
+
+
+        .summary-row span:last-child {
+            font-weight: 600;
+
+            text-align: right;
+        }
+
+
+        .total {
+            font-size: 24px;
+
+            font-weight: bold;
+        }
+
+
+        .total span:last-child {
+            color: #ff4747;
+        }
+
+
+        /* =====================================================
+           CHECKOUT BUTTON
+        ====================================================== */
+
+        .checkout-btn {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            background: #ff4747;
+
+            color: #fff;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-weight: 600;
+
+            transition:
+                opacity .2s ease,
+                background .2s ease;
+        }
+
+
+        .checkout-btn:hover:not(:disabled) {
+            opacity: .9;
+        }
+
+
+        .checkout-btn:disabled {
+            opacity: .6;
+
+            cursor: not-allowed;
+        }
+
+
+        .checkout-btn.loading {
+            cursor: wait;
+
+            opacity: .7;
+        }
+
+
+        .continue-btn {
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 14px;
+
+            background: #eee;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            font-weight: 600;
+        }
+
+
+        .continue-btn:hover {
+            background: #ddd;
+        }
+
+
+        /* =====================================================
+           EMPTY CART
+        ====================================================== */
+
+        .empty-cart {
+            text-align: center;
+
+            padding: 70px 20px;
+
+            display: none;
+        }
+
+
+        .empty-cart h2 {
+            margin-bottom: 20px;
+        }
+
+
+        .empty-cart.visible {
+            display: block;
+        }
+
+
+        /* =====================================================
+           CHECKOUT MESSAGE
+        ====================================================== */
+
+        .checkout-message {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        .checkout-message.error {
+            display: block;
+
+            background: #ffe5e5;
+
+            color: #b00000;
+        }
+
+
+        .checkout-message.success {
+            display: block;
+
+            background: #e5f7e5;
+
+            color: #176b17;
+        }
+
+
+        .checkout-message.warning {
+            display: block;
+
+            background: #fff4e5;
+
+            color: #8a5200;
+        }
+
+
+        /* =====================================================
+           FEATURED INFORMATION
+        ====================================================== */
+
+        .featured-info {
+            grid-column: 1 / -1;
+
+            margin-top: 20px;
+        }
+
+
+        .featured-grid {
+            background: #fff;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, .08);
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 25px;
+
+            text-align: center;
+        }
+
+
+        .featured-grid h3 {
+            margin-top: 0;
+        }
+
+
+        .featured-grid p {
+            color: #666;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        footer {
+            margin-top: 50px;
+
+            background: #222;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 30px 20px;
+        }
+
+
+        footer p {
+            margin: 10px 0;
+        }
+
+
+        footer a {
+            color: white;
+
+            text-decoration: none;
+
+            margin: 0 10px;
+        }
+
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           FOCUS
+        ====================================================== */
+
+        .qty-btn:focus-visible,
+        .remove-btn:focus-visible,
+        .checkout-btn:focus-visible,
+        .continue-btn:focus-visible,
+        .mobile-menu-button:focus-visible,
+        .search-bar button:focus-visible {
+            outline: 2px solid #111;
+
+            outline-offset: 2px;
+        }
+
+
+        /* =====================================================
+           ACCESSIBILITY
+        ====================================================== */
+
+        .sr-only {
+            position: absolute;
+
+            width: 1px;
+
+            height: 1px;
+
+            padding: 0;
+
+            margin: -1px;
+
+            overflow: hidden;
+
+            clip: rect(0, 0, 0, 0);
+
+            white-space: nowrap;
+
+            border: 0;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE — TABLET
+        ====================================================== */
+
+        @media (max-width: 900px) {
+
+            header {
+                padding: 14px 20px;
+            }
+
+
+            .mobile-menu-button {
+                display: flex;
+            }
+
+
+            .cart-container {
+                grid-template-columns: 1fr;
+            }
+
+
+            .search-bar {
+                display: none;
+            }
+
+
+            .header-icons {
+                gap: 18px;
+            }
+
+
+            .cart-item {
+                flex-wrap: wrap;
+            }
+
+
+            .cart-product-link {
+                width: 100%;
+            }
+
+
+            .cart-controls {
+                width: 100%;
+
+                flex-direction: row;
+
+                justify-content: space-between;
+
+                align-items: center;
+            }
+
+
+            .qty-box {
+                margin-top: 0;
+            }
+
+
+            .remove-btn {
+                margin-top: 0;
+            }
+
+
+            .cart-summary {
+                padding: 25px;
+            }
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE — MOBILE
+        ====================================================== */
+
+        @media (max-width: 500px) {
+
+            header {
+                padding: 12px 15px;
+
+                gap: 10px;
+            }
+
+
+            .logo {
+                font-size: 20px;
+            }
+
+
+            .mobile-menu-button {
+                margin-left: auto;
+            }
+
+
+            .header-icons {
+                gap: 15px;
+            }
+
+
+            .page-title {
+                margin: 25px auto;
+            }
+
+
+            .page-title h1 {
+                font-size: 26px;
+            }
+
+
+            .cart-container {
+                padding: 10px;
+            }
+
+
+            .cart-items,
+            .cart-summary {
+                padding: 18px;
+            }
+
+
+            .cart-product-link {
+                gap: 12px;
+            }
+
+
+            .cart-item img {
+                width: 85px;
+
+                height: 85px;
+            }
+
+
+            .item-title {
+                font-size: 15px;
+            }
+
+
+            .item-price {
+                font-size: 17px;
+            }
+
+
+            .cart-controls {
+                margin-top: 5px;
+            }
+
+
+            .featured-grid {
+                padding: 20px;
+
+                gap: 20px;
+            }
+
+
+            footer {
+                padding: 25px 15px;
+            }
+
+
+            footer a {
+                display: inline-block;
+
+                margin: 5px 7px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <!-- LOGO -->
+
+        <div
+            class="logo"
+            id="shopLogo"
+            role="button"
+            tabindex="0"
+            aria-label="Aravon Shop home"
+        >
+            Aravon Shop
+        </div>
+
+
+        <!-- MOBILE MENU BUTTON -->
+
+        <button
+            id="mobileMenuButton"
+            class="mobile-menu-button"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobileMenu"
+        >
+            ☰
+        </button>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-bar">
+
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Search products..."
+                aria-label="Search products"
+                autocomplete="off"
+            >
+
+            <button
+                id="searchBtn"
+                type="button"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- HEADER ICONS -->
+
+        <div class="header-icons">
+
+            <!-- ACCOUNT -->
+
+            <a
+                href="../users/auth/login.html"
+                aria-label="Account"
+                title="Account"
+            >
+                👤
+            </a>
+
+
+            <!-- CART -->
+
+            <a
+                href="./checkout.html"
+                class="cart-link"
+                aria-label="Shopping cart"
+                title="Shopping cart"
+            >
+
+                🛒
+
+                <span
+                    id="cartCount"
+                    class="cart-badge"
+                >
+                    0
+                </span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MOBILE NAVIGATION
+    ====================================================== -->
+
+    <nav
+        id="mobileMenu"
+        class="mobile-menu"
+        aria-label="Mobile navigation"
+    >
+
+        <a href="../index.html">
+            Home
+        </a>
+
+        <a href="../users/auth/login.html">
+            Account
+        </a>
+
+        <a href="./checkout.html">
+            Cart
+        </a>
+
+    </nav>
+
+
+    <!-- =====================================================
+         PAGE TITLE
+    ====================================================== -->
+
+    <div class="page-title">
+
+        <h1>
+            Checkout
+        </h1>
+
+    </div>
+
+
+    <!-- =====================================================
+         CHECKOUT
+    ====================================================== -->
+
+    <main class="checkout-wrapper">
+
+        <div class="cart-container">
+
+
+            <!-- =================================================
+                 LEFT SIDE — CART
+            ================================================== -->
+
+            <section
+                class="cart-items"
+                aria-label="Shopping cart"
+            >
+
+                <!-- CART ITEMS GENERATED BY cart.js -->
+
+                <div id="cartItems"></div>
+
+
+                <!-- EMPTY CART -->
+
+                <div
+                    id="emptyCart"
+                    class="empty-cart"
+                >
+
+                    <h2>
+                        Your cart is empty.
+                    </h2>
+
+
+                    <button
+                        class="checkout-btn"
+                        type="button"
+                        id="emptyCartButton"
+                    >
+                        Continue Shopping
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 RIGHT SIDE — CUSTOMER + SUMMARY
+            ================================================== -->
+
+            <section
+                class="cart-summary shipping-wide"
+                aria-label="Checkout information"
+            >
+
+
+                <!-- =================================================
+                     SHIPPING INFORMATION
+                ================================================== -->
+
+                <h2>
+                    Shipping Information
+                </h2>
+
+
+                <div
+                    class="shipping-fields"
+                    id="shippingFields"
+                >
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="firstName"
+                            class="sr-only"
+                        >
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="First Name"
+                            class="checkout-input"
+                            autocomplete="given-name"
+                            maxlength="100"
+                            required
+                        >
+
+                        <div
+                            id="firstNameError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="lastName"
+                            class="sr-only"
+                        >
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="Last Name"
+                            class="checkout-input"
+                            autocomplete="family-name"
+                            maxlength="100"
+                            required
+                        >
+
+                        <div
+                            id="lastNameError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="email"
+                            class="sr-only"
+                        >
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Email"
+                            class="checkout-input"
+                            autocomplete="email"
+                            maxlength="254"
+                            required
+                        >
+
+                        <div
+                            id="emailError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="phone"
+                            class="sr-only"
+                        >
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="Phone Number"
+                            class="checkout-input"
+                            autocomplete="tel"
+                            maxlength="30"
+                            required
+                        >
+
+                        <div
+                            id="phoneError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- HOUSE NUMBER -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="houseNumber"
+                            class="sr-only"
+                        >
+                            House Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="houseNumber"
+                            name="houseNumber"
+                            placeholder="House Number"
+                            class="checkout-input"
+                            autocomplete="address-line1"
+                            maxlength="30"
+                            required
+                        >
+
+                        <div
+                            id="houseNumberError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- STREET ADDRESS -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="address"
+                            class="sr-only"
+                        >
+                            Street Address
+                        </label>
+
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            placeholder="Street Address"
+                            class="checkout-input"
+                            autocomplete="street-address"
+                            maxlength="200"
+                            required
+                        >
+
+                        <div
+                            id="addressError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- CITY -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="city"
+                            class="sr-only"
+                        >
+                            City
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="City"
+                            class="checkout-input"
+                            autocomplete="address-level2"
+                            maxlength="100"
+                            required
+                        >
+
+                        <div
+                            id="cityError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- ZIP -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="zip"
+                            class="sr-only"
+                        >
+                            ZIP Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="zip"
+                            name="zip"
+                            placeholder="ZIP Code"
+                            class="checkout-input"
+                            autocomplete="postal-code"
+                            maxlength="20"
+                            required
+                        >
+
+                        <div
+                            id="zipError"
+                            class="field-error"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- COUNTRY -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="country"
+                            class="sr-only"
+                        >
+                            Country
+                        </label>
+
+                        <select
+                            id="country"
+                            name="country"
+                            class="checkout-input"
+                            autocomplete="country-name"
+                            required
+                        >
+
+                            <option value="Netherlands">
+                                Netherlands
+                            </option>
+
+                            <option value="Belgium">
+                                Belgium
+                            </option>
+
+                            <option value="Germany">
+                                Germany
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <hr
+                    style="margin: 25px 0;"
+                >
+
+
+                <!-- =================================================
+                     ORDER SUMMARY
+                ================================================== -->
+
+                <h2>
+                    Order Summary
+                </h2>
+
+
+                <!-- ITEMS -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <span id="summaryItems">
+                        0
+                    </span>
+
+                </div>
+
+
+                <!-- SUBTOTAL -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span id="summarySubtotal">
+                        €0.00
+                    </span>
+
+                </div>
+
+
+                <!-- SHIPPING -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Shipping
+                    </span>
+
+                    <span id="summaryShipping">
+                        Free
+                    </span>
+
+                </div>
+
+
+                <hr>
+
+
+                <!-- TOTAL -->
+
+                <div class="summary-row total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span id="summaryTotal">
+                        €0.00
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     STRIPE CHECKOUT BUTTON
+                ================================================== -->
+
+                <button
+                    id="checkoutBtn"
+                    class="checkout-btn"
+                    type="button"
+                >
+                    Proceed to Checkout
+                </button>
+
+
+                <!-- =================================================
+                     CHECKOUT MESSAGE
+                ================================================== -->
+
+                <div
+                    id="checkoutMessage"
+                    class="checkout-message"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+
+                <!-- =================================================
+                     CONTINUE SHOPPING
+                ================================================== -->
+
+                <button
+                    id="continueShoppingButton"
+                    class="continue-btn"
+                    type="button"
+                >
+                    Continue Shopping
+                </button>
+
+            </section>
+
+
+            <!-- =================================================
+                 FEATURED INFORMATION
+            ================================================== -->
+
+            <section
+                class="featured-info"
+                aria-label="Aravon Shop benefits"
+            >
+
+                <div class="featured-grid">
+
+
+                    <!-- FAST DELIVERY -->
+
+                    <div>
+
+                        <h3>
+                            🚚 Fast Delivery
+                        </h3>
+
+                        <p>
+                            Reliable shipping with tracking
+                            on every order.
+                        </p>
+
+                    </div>
+
+
+                    <!-- SECURE PAYMENTS -->
+
+                    <div>
+
+                        <h3>
+                            🔒 Secure Payments
+                        </h3>
+
+                        <p>
+                            Shop safely with encrypted checkout.
+                        </p>
+
+                    </div>
+
+
+                    <!-- CUSTOMER SUPPORT -->
+
+                    <div>
+
+                        <h3>
+                            💬 Customer Support
+                        </h3>
+
+                        <p>
+                            Friendly support whenever
+                            you need help.
+                        </p>
+
+                    </div>
+
+
+                    <!-- QUALITY PRODUCTS -->
+
+                    <div>
+
+                        <h3>
+                            ⭐ Quality Products
+                        </h3>
+
+                        <p>
+                            Carefully selected products
+                            at competitive prices.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+
+            <strong>
+                Aravon Shop
+            </strong>
+
+        </p>
+
+
+        <p>
+
+            <a href="../about.html">
+                About
+            </a>
+
+            |
+
+            <a href="../contact.html">
+                Contact
+            </a>
+
+            |
+
+            <a href="../privacy.html">
+                Privacy Policy
+            </a>
+
+            |
+
+            <a href="../terms.html">
+                Terms &amp; Conditions
+            </a>
+
+        </p>
+
+
+        <p>
+
+            &copy; 2026 Aravon Shop.
+            All rights reserved.
+
+        </p>
+
+    </footer>
+
+
+    <!-- =====================================================
+         CHECKOUT PAGE UI
+    ====================================================== -->
+
+    <script>
+
+        "use strict";
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                /* =================================================
+                   ELEMENTS
+                ================================================= */
+
+                const shopLogo =
+                    document.getElementById(
+                        "shopLogo"
+                    );
+
+
+                const searchInput =
+                    document.getElementById(
+                        "searchInput"
+                    );
+
+
+                const searchBtn =
+                    document.getElementById(
+                        "searchBtn"
+                    );
+
+
+                const mobileMenuButton =
+                    document.getElementById(
+                        "mobileMenuButton"
+                    );
+
+
+                const mobileMenu =
+                    document.getElementById(
+                        "mobileMenu"
+                    );
+
+
+                const emptyCartButton =
+                    document.getElementById(
+                        "emptyCartButton"
+                    );
+
+
+                const continueShoppingButton =
+                    document.getElementById(
+                        "continueShoppingButton"
+                    );
+
+
+                /* =================================================
+                   HOME
+                ================================================= */
+
+                function goHome() {
+
+                    window.location.href =
+                        "../index.html";
+
+                }
+
+
+                /* =================================================
+                   LOGO
+                ================================================= */
+
+                if (shopLogo) {
+
+                    shopLogo.addEventListener(
+                        "click",
+                        goHome
+                    );
+
+
+                    shopLogo.addEventListener(
+                        "keydown",
+                        function (event) {
+
+                            if (
+                                event.key === "Enter" ||
+                                event.key === " "
+                            ) {
+
+                                event.preventDefault();
+
+                                goHome();
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   CONTINUE SHOPPING
+                ================================================= */
+
+                if (emptyCartButton) {
+
+                    emptyCartButton.addEventListener(
+                        "click",
+                        goHome
+                    );
+
+                }
+
+
+                if (continueShoppingButton) {
+
+                    continueShoppingButton.addEventListener(
+                        "click",
+                        goHome
+                    );
+
+                }
+
+
+                /* =================================================
+                   SEARCH
+                ================================================= */
+
+                function runSearch() {
+
+                    if (!searchInput) {
+                        return;
+                    }
+
+
+                    const query =
+                        searchInput.value.trim();
+
+
+                    if (!query) {
+
+                        searchInput.focus();
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        `../index.html?search=${encodeURIComponent(
+                            query
+                        )}`;
+
+                }
+
+
+                if (searchBtn) {
+
+                    searchBtn.addEventListener(
+                        "click",
+                        runSearch
+                    );
+
+                }
+
+
+                if (searchInput) {
+
+                    searchInput.addEventListener(
+                        "keydown",
+                        function (event) {
+
+                            if (
+                                event.key === "Enter"
+                            ) {
+
+                                event.preventDefault();
+
+                                runSearch();
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   MOBILE MENU
+                ================================================= */
+
+                if (
+                    mobileMenuButton &&
+                    mobileMenu
+                ) {
+
+                    mobileMenuButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const isOpen =
+                                mobileMenu.classList.contains(
+                                    "open"
+                                );
+
+
+                            mobileMenu.classList.toggle(
+                                "open"
+                            );
+
+
+                            mobileMenuButton.setAttribute(
+                                "aria-expanded",
+                                String(!isOpen)
+                            );
+
+
+                            mobileMenuButton.setAttribute(
+                                "aria-label",
+                                isOpen
+                                    ? "Open navigation menu"
+                                    : "Close navigation menu"
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   CLOSE MOBILE MENU AFTER LINK CLICK
+                ================================================= */
+
+                if (mobileMenu) {
+
+                    mobileMenu
+                        .querySelectorAll("a")
+                        .forEach(
+                            function (link) {
+
+                                link.addEventListener(
+                                    "click",
+                                    function () {
+
+                                        mobileMenu.classList.remove(
+                                            "open"
+                                        );
+
+
+                                        if (
+                                            mobileMenuButton
+                                        ) {
+
+                                            mobileMenuButton.setAttribute(
+                                                "aria-expanded",
+                                                "false"
+                                            );
+
+
+                                            mobileMenuButton.setAttribute(
+                                                "aria-label",
+                                                "Open navigation menu"
+                                            );
+
+                                        }
+
+                                    }
+                                );
+
+                            }
+                        );
+
+                }
+
+
+                /* =================================================
+                   BASIC INPUT VALIDATION
+                   
+                   This does NOT create the Stripe session.
+                   
+                   checkout.js remains responsible for:
+                   
+                   1. Reading cart
+                   2. Reading customer information
+                   3. Calling the server
+                   4. Creating the Stripe Checkout Session
+                   5. Redirecting to Stripe
+                ================================================= */
+
+                const requiredFields = [
+
+                    "firstName",
+
+                    "lastName",
+
+                    "email",
+
+                    "phone",
+
+                    "houseNumber",
+
+                    "address",
+
+                    "city",
+
+                    "zip",
+
+                    "country"
+
+                ];
+
+
+                function validateCheckoutFields() {
+
+                    let valid = true;
+
+
+                    requiredFields.forEach(
+                        function (fieldId) {
+
+                            const field =
+                                document.getElementById(
+                                    fieldId
+                                );
+
+
+                            if (!field) {
+                                return;
+                            }
+
+
+                            const value =
+                                field.value.trim();
+
+
+                            if (!value) {
+
+                                field.classList.add(
+                                    "invalid"
+                                );
+
+                                valid = false;
+
+                            } else {
+
+                                field.classList.remove(
+                                    "invalid"
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    const email =
+                        document.getElementById(
+                            "email"
+                        );
+
+
+                    if (
+                        email &&
+                        email.value.trim()
+                    ) {
+
+                        const emailPattern =
+                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+                        if (
+                            !emailPattern.test(
+                                email.value.trim()
+                            )
+                        ) {
+
+                            email.classList.add(
+                                "invalid"
+                            );
+
+                            valid = false;
+
+                        }
+
+                    }
+
+
+                    return valid;
+
+                }
+
+
+                /* =================================================
+                   LIVE VALIDATION CLEANUP
+                ================================================= */
+
+                requiredFields.forEach(
+                    function (fieldId) {
+
+                        const field =
+                            document.getElementById(
+                                fieldId
+                            );
+
+
+                        if (!field) {
+                            return;
+                        }
+
+
+                        field.addEventListener(
+                            "input",
+                            function () {
+
+                                if (
+                                    field.value.trim()
+                                ) {
+
+                                    field.classList.remove(
+                                        "invalid"
+                                    );
+
+                                }
+
+                            }
+                        );
+
+
+                        field.addEventListener(
+                            "change",
+                            function () {
+
+                                if (
+                                    field.value.trim()
+                                ) {
+
+                                    field.classList.remove(
+                                        "invalid"
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   CHECKOUT BUTTON VALIDATION HOOK
+                   
+                   IMPORTANT:
+                   
+                   We do NOT replace checkout.js's click
+                   handler.
+                   
+                   We only expose a validation function that
+                   checkout.js can use if needed.
+                ================================================= */
+
+                window.validateAravonCheckout =
+                    validateCheckoutFields;
+
+
+                /* =================================================
+                   DO NOT CLEAR CART HERE
+                   
+                   The cart must remain available until:
+                   
+                   success.html
+                   
+                   receives:
+                   
+                   confirmed === true
+                   
+                   from:
+                   
+                   /api/checkout-status
+                ================================================= */
+
+            }
+        );
+
+    </script>
+
+
+    <!-- =====================================================
+         UNIVERSAL CART
+         
+         cart/checkout.html
+         →
+         cart/shared/cart.js
+    ====================================================== -->
+
+    <script
+        src="./shared/cart.js"
+    ></script>
+
+
+    <!-- =====================================================
+         CHECKOUT SYSTEM
+         
+         cart/checkout.html
+         →
+         cart/shared/checkout.js
+    ====================================================== -->
+
+    <script
+        src="./shared/checkout.js"
+    ></script>
+
+
+</body>
+
+</html>

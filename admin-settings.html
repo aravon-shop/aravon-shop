@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Settings – Aravon Shop</title>
+
+  <!-- Firestore SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getFirestore, doc, setDoc, getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    /* Initialize Firestore */
+    window.initFirestore = function(config) {
+      try {
+        const app = initializeApp(config);
+        return getFirestore(app);
+      } catch (e) {
+        console.error("Firestore init error:", e);
+        return null;
+      }
+    };
+
+    /* Firestore helpers */
+    window.firestoreSet = async function(db, path, data) {
+      const [collection, id] = path.split("/");
+      await setDoc(doc(db, collection, id), data);
+    };
+
+    window.firestoreGet = async function(db, path) {
+      const [collection, id] = path.split("/");
+      return await getDoc(doc(db, collection, id));
+    };
+  </script>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+
+    .sidebar h2 { margin-bottom:20px; }
+
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    /* MAIN */
+    .main {
+      flex:1;
+      padding:30px;
+      overflow-y:auto;
+      box-sizing:border-box;
+    }
+
+    .main h2 {
+      margin-top:0;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    .card {
+      background:#fff;
+      padding:20px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      margin-bottom:20px;
+    }
+
+    .card h3 {
+      margin:0 0 10px 0;
+      font-size:18px;
+    }
+
+    .card p {
+      margin:5px 0 15px 0;
+      font-size:14px;
+      color:#555;
+    }
+
+    .field-group { margin-bottom:12px; }
+    .field-group label { font-size:13px; display:block; margin-bottom:4px; color:#555; }
+    .field-group input,
+    .field-group select {
+      width:100%;
+      padding:8px;
+      border-radius:6px;
+      border:1px solid #ccc;
+      font-size:14px;
+    }
+
+    .btn {
+      padding:8px 14px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn-outline { background:#f1f3f4; color:#333; }
+    .btn-primary { background:#174ea6; color:#fff; }
+
+    .btn-sm {
+      padding:6px 10px;
+      border:none;
+      border-radius:6px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .btn-connect { background:#0f9d58; color:white; }
+    .btn-disconnect { background:#ea4335; color:white; }
+    .btn-save { background:#174ea6; color:white; }
+    .btn-secondary { background:#f1f3f4; color:#333; }
+
+    .badge-status {
+      padding:6px 10px;
+      border-radius:20px;
+      font-size:12px;
+      display:inline-block;
+      margin-bottom:10px;
+    }
+    .online { background:#e6f4ea; color:#0f9d58; }
+    .offline { background:#fce8e6; color:#ea4335; }
+
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { padding:8px; border-bottom:1px solid #ddd; font-size:13px; }
+    th { background:#f9f9f9; }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+  
+  <a href="../dashboard/admin-dashboard.html"><span>Dashboard</span></a>
+
+  <a href="../orders/admin-orders.html">
+    <span>Orders</span>
+    <span class="badge" id="ordersCount">0</span>
+  </a>
+
+  <a href="../users/users-list.html">
+    <span>Users</span>
+    <span class="badge" id="usersCount">0</span>
+  </a>
+
+  <a href="../inventory/admin-inventory.html">
+    <span>Products</span>
+    <span class="badge" id="inventoryCount">0</span>
+  </a>
+
+  <a href="../website-builder/product-page-editor.html"><span>Website Builder</span></a>
+
+  <a href="admin-settings.html" class="active"><span>Settings</span></a>
+
+  <a href="../payment/payment-setting.html">
+    <span>Payment</span>
+    <span class="badge" id="paymentCount">0</span>
+  </a>
+
+  <a href="../messages/admin-messages.html">
+    <span>Messages</span>
+    <span class="badge" id="messagesCount">0</span>
+  </a>
+
+  <button class="logout-btn">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <h2>Admin Settings (Owner Only)</h2>
+
+  <!-- Buttons -->
+  <div style="margin-bottom:20px; display:flex; gap:10px;">
+    <button class="btn btn-outline" onclick="viewShop()">View Shop</button>
+    <button class="btn btn-primary" onclick="saveAll()">Save All Settings</button>
+    <button class="btn btn-primary" onclick="saveAllToFirestore()">Save All to Firestore</button>
+    <button class="btn btn-primary" onclick="uploadAdminSettings()">Upload Admin Settings to Database</button>
+  </div>
+
+  <!-- Owner Account & Security -->
+  <div class="card">
+    <h3>Owner Account & Security</h3>
+    <p>Manage owner login, password, and security.</p>
+
+    <div id="ownerStatus" class="badge-status offline">Not Synced</div>
+
+    <div class="field-group">
+      <label>Owner Name</label>
+      <input id="ownerName" type="text">
+    </div>
+
+    <div class="field-group">
+      <label>Owner Email</label>
+      <input id="ownerEmail" type="email">
+    </div>
+
+    <button class="btn-sm btn-save" onclick="saveOwner()">Save Owner Settings</button>
+  </div>
+
+  <!-- Login History & Active Sessions -->
+  <div class="card">
+    <h3>Login History & Active Sessions</h3>
+    <p>Manage active devices, sign out, and delete sessions.</p>
+
+    <div id="sessionStatus" class="badge-status online">3 Active Devices</div>
+
+    <table id="sessionTable">
+      <thead>
+        <tr>
+          <th>Device</th>
+          <th>Location</th>
+          <th>Last Login</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Chrome · Windows</td>
+          <td>Arnhem, NL</td>
+          <td>Today · 16:12</td>
+          <td>Active</td>
+          <td>
+            <button class="btn-sm btn-disconnect" onclick="signOutDevice(this)">Sign Out</button>
+            <button class="btn-sm btn-secondary" onclick="deleteDevice(this)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button class="btn-sm btn-secondary" onclick="signOutAll()">Sign Out All Devices</button>
+  </div>
+
+  <!-- Database Connection -->
+  <div class="card">
+    <h3>Database Connection</h3>
+    <p>Connect to Firestore or any compatible database.</p>
+
+    <div id="dbStatus" class="badge-status offline">Disconnected</div>
+
+    <div class="field-group"><label>Project ID</label><input id="projectId"></div>
+    <div class="field-group"><label>API Key</label><input id="apiKey"></div>
+    <div class="field-group"><label>Auth Domain</label><input id="authDomain"></div>
+    <div class="field-group"><label>Storage Bucket</label><input id="storageBucket"></div>
+    <div class="field-group"><label>Apple ID</label><input id="appleId"></div>
+    <div class="field-group"><label>Messaging Sender ID</label><input id="senderId"></div>
+
+    <button class="btn-sm btn-connect" onclick="connectDB()">Connect</button>
+    <button class="btn-sm btn-disconnect" onclick="disconnectDB()">Disconnect</button>
+    <button class="btn-sm btn-save" onclick="saveDB()">Save Database Config</button>
+  </div>
+
+  <!-- Domain Settings -->
+  <div class="card">
+    <h3>Domain Settings</h3>
+    <p>Manage main domain and publishing state.</p>
+
+    <div class="field-group"><label>Main Domain</label><input id="mainDomain"></div>
+
+    <div id="domainStatus" class="badge-status offline">Domain Disconnected</div>
+    <div id="publishStatus" class="badge-status offline">Not Published</div>
+
+    <button class="btn-sm btn-connect" onclick="connectDomain()">Connect Domain</button>
+    <button class="btn-sm btn-disconnect" onclick="disconnectDomain()">Disconnect Domain</button>
+    <button class="btn-sm btn-secondary" onclick="publishSite()">Publish Website</button>
+    <button class="btn-sm btn-save" onclick="saveDomain()">Save Domain Settings</button>
+  </div>
+
+  <!-- General Settings -->
+  <div class="card">
+    <h3>General Settings</h3>
+    <p>Shop name, currency, language, and support email.</p>
+
+    <div class="field-group"><label>Shop Name</label><input id="shopName"></div>
+
+    <div class="field-group">
+      <label>Currency</label>
+      <select id="currency">
+        <option>EUR (€)</option>
+        <option>USD ($)</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Language</label>
+      <select id="language">
+        <option>English</option>
+        <option>Dutch</option>
+      </select>
+    </div>
+
+    <div class="field-group"><label>Support Email</label><input id="supportEmail"></div>
+
+    <button class="btn-sm btn-save" onclick="saveGeneral()">Save General Settings</button>
+  </div>
+
+</div>
+
+<script>
+/* Load saved database config */
+function loadDatabaseConfig() {
+  const config = JSON.parse(localStorage.getItem("databaseConfig")) || {};
+
+  projectId.value = config.projectId || "";
+  apiKey.value = config.apiKey || "";
+  authDomain.value = config.authDomain || "";
+  storageBucket.value = config.storageBucket || "";
+  appleId.value = config.appleId || "";
+  senderId.value = config.senderId || "";
+
+  if (config.projectId && config.apiKey) {
+    dbStatus.className = "badge-status online";
+    dbStatus.innerText = "Connected";
+  }
+}
+
+/* Save DB config */
+function saveDB() {
+  const config = {
+    projectId: projectId.value.trim(),
+    apiKey: apiKey.value.trim(),
+    authDomain: authDomain.value.trim(),
+    storageBucket: storageBucket.value.trim(),
+    appleId: appleId.value.trim(),
+    senderId: senderId.value.trim()
+  };
+
+  localStorage.setItem("databaseConfig", JSON.stringify(config));
+  dbStatus.className = "badge-status online";
+  dbStatus.innerText = "Connected";
+}
+
+function connectDB() { saveDB(); }
+function disconnectDB() {
+  localStorage.removeItem("databaseConfig");
+  dbStatus.className = "badge-status offline";
+  dbStatus.innerText = "Disconnected";
+}
+
+/* Owner Settings REAL-TIME */
+async function loadOwnerRealtime() {
+  const config = JSON.parse(localStorage.getItem("databaseConfig"));
+  if (!config) return;
+
+  const firebaseConfig = {
+    apiKey: config.apiKey,
+    authDomain: config.authDomain,
+    projectId: config.projectId,
+    storageBucket: config.storageBucket,
+    messagingSenderId: config.senderId,
+    appId: config.appleId
+  };
+
+  const db = initFirestore(firebaseConfig);
+  if (!db) return;
+
+  const snap = await firestoreGet(db, "ownerSettings/main");
+  if (snap.exists()) {
+    const data = snap.data();
+    ownerName.value = data.name || "";
+    ownerEmail.value = data.email || "";
+    ownerStatus.className = "badge-status online";
+    ownerStatus.innerText = "Synced";
+  }
+}
+
+async function saveOwner() {
+  const config = JSON.parse(localStorage.getItem("databaseConfig"));
+  if (!config) {
+    alert("Connect database first.");
+    return;
+  }
+
+  const firebaseConfig = {
+    apiKey: config.apiKey,
+    authDomain: config.authDomain,
+    projectId: config.projectId,
+    storageBucket: config.storageBucket,
+    messagingSenderId: config.senderId,
+    appId: config.appleId
+  };
+
+  const db = initFirestore(firebaseConfig);
+
+  const owner = {
+    name: ownerName.value.trim(),
+    email: ownerEmail.value.trim(),
+    updatedAt: new Date().toISOString()
+  };
+
+  await firestoreSet(db, "ownerSettings/main", owner);
+
+  ownerStatus.className = "badge-status online";
+  ownerStatus.innerText = "Synced";
+}
+
+/* Domain Settings */
+function saveDomain() {
+  localStorage.setItem("mainDomain", mainDomain.value.trim());
+  domainStatus.className = "badge-status online";
+  domainStatus.innerText = "Domain Connected";
+}
+
+function connectDomain() {
+  domainStatus.className = "badge-status online";
+  domainStatus.innerText = "Domain Connected";
+}
+
+function disconnectDomain() {
+  domainStatus.className = "badge-status offline";
+  domainStatus.innerText = "Domain Disconnected";
+}
+
+function publishSite() {
+  publishStatus.className = "badge-status online";
+  publishStatus.innerText = "Published";
+}
+
+/* General Settings */
+function saveGeneral() {
+  const settings = {
+    shopName: shopName.value.trim(),
+    currency: currency.value.trim(),
+    language: language.value.trim(),
+    supportEmail: supportEmail.value.trim()
+  };
+  localStorage.setItem("generalSettings", JSON.stringify(settings));
+}
+
+/* Upload Admin Settings to Firestore */
+async function uploadAdminSettings() {
+  const config = JSON.parse(localStorage.getItem("databaseConfig"));
+  if (!config) {
+    alert("Connect database first.");
+    return;
+  }
+
+  const firebaseConfig = {
+    apiKey: config.apiKey,
+    authDomain: config.authDomain,
+    projectId: config.projectId,
+    storageBucket: config.storageBucket,
+    messagingSenderId: config.senderId,
+    appId: config.appleId
+  };
+
+  const db = initFirestore(firebaseConfig);
+
+  const adminSettings = {
+    owner: {
+      name: ownerName.value.trim(),
+      email: ownerEmail.value.trim()
+    },
+    general: JSON.parse(localStorage.getItem("generalSettings")) || {},
+    domain: {
+      mainDomain: localStorage.getItem("mainDomain") || "",
+      domainStatus: domainStatus.innerText,
+      publishStatus: publishStatus.innerText
+    },
+    database: JSON.parse(localStorage.getItem("databaseConfig")) || {},
+    updatedAt: new Date().toISOString()
+  };
+
+  await firestoreSet(db, "adminSettings/main", adminSettings);
+
+  alert("Admin settings uploaded to Firestore.");
+}
+
+/* ⭐ Save All Settings (Local + Firestore) */
+async function saveAllToFirestore() {
+  saveAll(); // Save local first
+
+  const config = JSON.parse(localStorage.getItem("databaseConfig"));
+  if (!config) {
+    alert("Connect database first.");
+    return;
+  }
+
+  const firebaseConfig = {
+    apiKey: config.apiKey,
+    authDomain: config.authDomain,
+    projectId: config.projectId,
+    storageBucket: config.storageBucket,
+    messagingSenderId: config.senderId,
+    appId: config.appleId
+  };
+
+  const db = initFirestore(firebaseConfig);
+
+    const fullSettings = {
+    owner: {
+      name: ownerName.value.trim(),
+      email: ownerEmail.value.trim()
+    },
+    general: JSON.parse(localStorage.getItem("generalSettings")) || {},
+    domain: {
+      mainDomain: localStorage.getItem("mainDomain") || "",
+      domainStatus: domainStatus.innerText,
+      publishStatus: publishStatus.innerText
+    },
+    database: JSON.parse(localStorage.getItem("databaseConfig")) || {},
+    updatedAt: new Date().toISOString()
+  };
+
+  await firestoreSet(db, "adminSettings/full", fullSettings);
+
+  alert("All settings saved to Firestore.");
+}
+
+/* ⭐ Save All (Local only) */
+function saveAll() {
+  saveOwner();
+  saveDB();
+  saveDomain();
+  saveGeneral();
+
+  updateSidebarCounts();
+  updateSidebarCountsRealtime();
+
+  ownerStatus.className = "badge-status online";
+  ownerStatus.innerText = "Synced";
+
+  alert("All settings saved locally.");
+}
+
+/* ⭐ Sidebar counts (localStorage version) */
+function updateSidebarCounts() {
+  ordersCount.innerText = (JSON.parse(localStorage.getItem("adminOrders")) || []).length;
+  usersCount.innerText = (JSON.parse(localStorage.getItem("adminUsers")) || []).length;
+  inventoryCount.innerText = (JSON.parse(localStorage.getItem("inventoryProducts")) || []).length;
+  paymentCount.innerText = (JSON.parse(localStorage.getItem("adminPayments")) || []).length;
+  messagesCount.innerText = (JSON.parse(localStorage.getItem("adminMessages")) || []).length;
+}
+
+/* ⭐ Real-time sidebar counts */
+function loadData(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+  catch { return fallback; }
+}
+
+let products = loadData("inventoryProducts", []);
+let orders = loadData("adminOrders", []);
+let payments = loadData("adminPayments", []);
+let messages = loadData("adminMessages", []);
+let users = loadData("adminUsers", []);
+
+function updateSidebarCountsRealtime() {
+  document.getElementById("inventoryCount").innerText = products.length;
+  document.getElementById("usersCount").innerText = users.length;
+  document.getElementById("ordersCount").innerText = orders.length;
+  document.getElementById("paymentCount").innerText = payments.length;
+  document.getElementById("messagesCount").innerText = messages.length;
+}
+
+/* ⭐ Initial load */
+loadDatabaseConfig();
+loadOwnerRealtime();
+updateSidebarCounts();
+updateSidebarCountsRealtime();
+</script>
+
+</body>
+</html>

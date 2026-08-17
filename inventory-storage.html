@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Inventory Storage – Admin</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+    }
+
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
+    .sidebar {
+      width: 250px;
+      min-width: 250px;
+      background: #fff;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+    }
+
+    .sidebar a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 10px 12px;
+      margin-bottom: 8px;
+
+      text-decoration: none;
+      color: #333;
+
+      border-radius: 20px;
+
+      transition: 0.2s;
+
+      font-size: 14px;
+    }
+
+    .sidebar a:hover {
+      background: #f1f3f4;
+    }
+
+    .sidebar a.active {
+      background: #d2e3fc;
+      color: #174ea6;
+    }
+
+    .badge {
+      background: #ea4335;
+      color: white;
+
+      padding: 2px 8px;
+
+      border-radius: 12px;
+
+      font-size: 11px;
+    }
+
+    .logout-btn {
+      background: #333;
+      color: #fff;
+
+      padding: 10px;
+
+      border: none;
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      width: 100%;
+
+      font-size: 14px;
+
+      margin-top: 20px;
+
+      display: block;
+
+      text-align: center;
+    }
+
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+
+    .main {
+      flex: 1;
+
+      padding: 30px;
+
+      overflow-y: auto;
+
+      min-width: 0;
+    }
+
+    .main h2 {
+      margin-top: 0;
+
+      font-size: 24px;
+
+      font-weight: 600;
+    }
+
+
+    /* =========================================================
+       CREATE BUTTON
+    ========================================================= */
+
+    .create-btn {
+      background: #0f9d58;
+
+      color: white;
+
+      padding: 10px 16px;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      font-size: 14px;
+
+      margin-bottom: 20px;
+    }
+
+    .create-btn:hover {
+      opacity: 0.9;
+    }
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    .search-container {
+      display: flex;
+
+      gap: 10px;
+
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      flex: 1;
+
+      padding: 10px;
+
+      border-radius: 10px;
+
+      border: 1px solid #ccc;
+
+      font-size: 14px;
+
+      outline: none;
+    }
+
+    .search-bar:focus {
+      border-color: #174ea6;
+    }
+
+    .search-btn {
+      padding: 10px 16px;
+
+      background: #174ea6;
+
+      color: white;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      font-size: 14px;
+    }
+
+    .search-btn:hover {
+      opacity: 0.9;
+    }
+
+
+    /* =========================================================
+       PRODUCT LIST
+    ========================================================= */
+
+    .product-list {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 15px;
+    }
+
+
+    /* =========================================================
+       PRODUCT CARD
+    ========================================================= */
+
+    .product-card {
+      background: #fff;
+
+      padding: 20px;
+
+      border-radius: 12px;
+
+      border: 1px solid #ddd;
+    }
+
+    .product-card h3 {
+      margin: 0 0 10px 0;
+
+      font-size: 18px;
+    }
+
+    .product-card p {
+      margin: 5px 0;
+
+      font-size: 14px;
+    }
+
+
+    /* =========================================================
+       PRODUCT IMAGE
+    ========================================================= */
+
+    .product-card-image {
+      width: 100px;
+
+      height: 100px;
+
+      object-fit: cover;
+
+      border-radius: 10px;
+
+      border: 1px solid #ddd;
+
+      margin-bottom: 12px;
+
+      display: block;
+    }
+
+    .product-no-image {
+      width: 100px;
+
+      height: 100px;
+
+      border-radius: 10px;
+
+      border: 1px solid #ddd;
+
+      background: #f5f5f5;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      color: #777;
+
+      font-size: 12px;
+
+      margin-bottom: 12px;
+    }
+
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+
+    .edit-btn {
+      background: #174ea6;
+
+      color: white;
+
+      padding: 8px 14px;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      font-size: 13px;
+
+      margin-top: 10px;
+
+      margin-right: 10px;
+    }
+
+    .edit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .delete-btn {
+      background: #ea4335;
+
+      color: white;
+
+      padding: 8px 14px;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      font-size: 13px;
+
+      margin-top: 10px;
+    }
+
+    .delete-btn:hover {
+      opacity: 0.9;
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .empty-inventory {
+      background: #fff;
+
+      border: 1px solid #ddd;
+
+      border-radius: 12px;
+
+      padding: 30px;
+
+      text-align: center;
+
+      color: #777;
+
+      font-size: 14px;
+    }
+
+
+    /* =========================================================
+       LOADING
+    ========================================================= */
+
+    .inventory-loading {
+      background: #fff;
+
+      border: 1px solid #ddd;
+
+      border-radius: 12px;
+
+      padding: 30px;
+
+      text-align: center;
+
+      color: #777;
+
+      font-size: 14px;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+
+        min-width: 0;
+
+        border-right: none;
+
+        border-bottom: 1px solid #ddd;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .search-container {
+        flex-direction: column;
+      }
+
+      .search-btn {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================= -->
+
+  <div class="sidebar">
+
+    <h2>
+      Admin Panel
+    </h2>
+
+
+    <a href="../dashboard/admin-dashboard.html">
+
+      <span>
+        Dashboard
+      </span>
+
+    </a>
+
+
+    <a href="../orders/admin-orders.html">
+
+      <span>
+        Orders
+      </span>
+
+      <span
+        class="badge"
+        id="ordersCount"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../users/users-list.html">
+
+      <span>
+        Users
+      </span>
+
+      <span
+        class="badge"
+        id="usersCount"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a
+      href="admin-inventory.html"
+      class="active"
+    >
+
+      <span>
+        Inventory
+      </span>
+
+      <span
+        class="badge"
+        id="inventoryCount"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../website-builder/product-page-editor.html">
+
+      <span>
+        Website Builder
+      </span>
+
+    </a>
+
+
+    <a href="../settings/admin-settings.html">
+
+      <span>
+        Settings
+      </span>
+
+    </a>
+
+
+    <a href="../payment/payment-setting.html">
+
+      <span>
+        Payment
+      </span>
+
+      <span
+        class="badge"
+        id="paymentCount"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a href="../messages/admin-messages.html">
+
+      <span>
+        Messages
+      </span>
+
+      <span
+        class="badge"
+        id="messagesCount"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <button
+      type="button"
+      class="logout-btn"
+      id="logoutBtn"
+    >
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================= -->
+
+  <div class="main">
+
+    <h2>
+      Inventory
+    </h2>
+
+
+    <button
+      type="button"
+      class="create-btn"
+      id="createProductBtn"
+    >
+      + Create Product
+    </button>
+
+
+    <!-- =======================================================
+         SEARCH
+    ======================================================= -->
+
+    <div class="search-container">
+
+      <input
+        type="text"
+        class="search-bar"
+        id="searchInput"
+        placeholder="Search products..."
+        autocomplete="off"
+      >
+
+
+      <button
+        type="button"
+        class="search-btn"
+        id="searchBtn"
+      >
+        Search
+      </button>
+
+    </div>
+
+
+    <!-- =======================================================
+         PRODUCT LIST
+
+         admin-inventory.js dynamically creates the
+         product cards here.
+    ======================================================= -->
+
+    <div
+      class="product-list"
+      id="productList"
+    >
+
+      <div class="inventory-loading">
+        Loading inventory...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       ADMIN INVENTORY JAVASCRIPT
+  =========================================================
+
+       IMPORTANT:
+
+       This page does NOT manually create inventory products
+       from HTML data attributes.
+
+       The inventory comes from:
+
+       inventoryProducts
+
+       through:
+
+       admin-inventory.js
+  ========================================================= -->
+
+  <script
+    src="admin/shared/admin-inventory.js"
+  ></script>
+
+
+  <!-- =========================================================
+       PAGE FALLBACK INITIALIZATION
+  =========================================================
+
+       These handlers are only used when the admin JS has
+       not already attached its own handlers.
+
+       They do NOT create fake products.
+  ========================================================= -->
+
+  <script>
+
+    "use strict";
+
+
+    /* =======================================================
+       CREATE PRODUCT
+    ======================================================= */
+
+    const createProductButton =
+      document.getElementById(
+        "createProductBtn"
+      );
+
+
+    if (
+      createProductButton
+    ) {
+
+      createProductButton.addEventListener(
+        "click",
+        function () {
+
+          /*
+             Use the existing global function if the
+             admin inventory JS provides it.
+          */
+
+          if (
+            typeof window.createProduct ===
+            "function"
+          ) {
+
+            window.createProduct();
+
+            return;
+
+          }
+
+
+          /*
+             Fallback path.
+          */
+
+          window.location.href =
+            "admin-create-product.html";
+
+        }
+      );
+
+    }
+
+
+    /* =======================================================
+       SEARCH
+    ======================================================= */
+
+    const searchButton =
+      document.getElementById(
+        "searchBtn"
+      );
+
+
+    const searchInput =
+      document.getElementById(
+        "searchInput"
+      );
+
+
+    if (
+      searchButton
+    ) {
+
+      searchButton.addEventListener(
+        "click",
+        function () {
+
+          if (
+            typeof window.searchProducts ===
+            "function"
+          ) {
+
+            window.searchProducts();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+       Allow ENTER to search.
+    */
+
+    if (
+      searchInput
+    ) {
+
+      searchInput.addEventListener(
+        "keydown",
+        function (event) {
+
+          if (
+            event.key ===
+            "Enter"
+          ) {
+
+            event.preventDefault();
+
+
+            if (
+              typeof window.searchProducts ===
+              "function"
+            ) {
+
+              window.searchProducts();
+
+            }
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =======================================================
+       INVENTORY COUNT FALLBACK
+    ======================================================= */
+
+    function updateInventoryCountFallback() {
+
+      const inventoryCount =
+        document.getElementById(
+          "inventoryCount"
+        );
+
+
+      if (
+        !inventoryCount
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const raw =
+          localStorage.getItem(
+            "inventoryProducts"
+          );
+
+
+        if (!raw) {
+
+          inventoryCount.textContent =
+            "0";
+
+          return;
+
+        }
+
+
+        const products =
+          JSON.parse(
+            raw
+          );
+
+
+        inventoryCount.textContent =
+          Array.isArray(products)
+            ? products.length
+            : "0";
+
+      } catch (error) {
+
+        console.error(
+          "Aravon Shop: Could not read inventory count.",
+          error
+        );
+
+
+        inventoryCount.textContent =
+          "0";
+
+      }
+
+    }
+
+
+    updateInventoryCountFallback();
+
+
+    /*
+       Update count whenever product storage changes.
+    */
+
+    window.addEventListener(
+      "inventoryProductsUpdated",
+      updateInventoryCountFallback
+    );
+
+
+    window.addEventListener(
+      "productsUpdated",
+      updateInventoryCountFallback
+    );
+
+
+    /*
+       Storage event also handles changes made by another tab.
+    */
+
+    window.addEventListener(
+      "storage",
+      function (event) {
+
+        if (
+          event.key ===
+          "inventoryProducts"
+        ) {
+
+          updateInventoryCountFallback();
+
+        }
+
+      }
+    );
+
+
+    /* =======================================================
+       LOGOUT FALLBACK
+    ======================================================= */
+
+    const logoutButton =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+
+    if (
+      logoutButton
+    ) {
+
+      logoutButton.addEventListener(
+        "click",
+        function () {
+
+          /*
+             If an existing admin logout function exists,
+             use it.
+          */
+
+          if (
+            typeof window.logout ===
+            "function"
+          ) {
+
+            window.logout();
+
+            return;
+
+          }
+
+
+          if (
+            typeof window.adminLogout ===
+            "function"
+          ) {
+
+            window.adminLogout();
+
+            return;
+
+          }
+
+
+          /*
+             Otherwise return to the admin login page.
+          */
+
+          window.location.href =
+            "../login/admin-login.html";
+
+        }
+      );
+
+    }
+
+  </script>
+
+
+</body>
+</html>

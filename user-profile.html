@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile – Aravon Admin</title>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+
+    .sidebar h2 { margin-bottom:20px; }
+
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    /* MAIN */
+    .main {
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      height:100vh;
+      background:#fff;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      height:56px;
+      background:#fff;
+      border-bottom:1px solid #ddd;
+      display:flex;
+      align-items:center;
+      padding:0 20px;
+      box-sizing:border-box;
+      gap:20px;
+    }
+
+    .top-bar h3 {
+      margin:0;
+      font-size:20px;
+      font-weight:500;
+    }
+
+    .back-btn {
+      background:#f1f3f4;
+      border:none;
+      padding:8px 14px;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .back-btn:hover {
+      background:#e0e0e0;
+    }
+
+    /* PROFILE CARD */
+    .profile-container {
+      padding:30px;
+      overflow-y:auto;
+    }
+
+    .profile-card {
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      max-width:700px;
+    }
+
+    .profile-card h2 {
+      margin-top:0;
+      font-size:22px;
+      font-weight:600;
+    }
+
+    .profile-card p {
+      font-size:15px;
+      margin:6px 0;
+    }
+
+    .section-title {
+      margin-top:25px;
+      font-size:17px;
+      font-weight:bold;
+      border-bottom:1px solid #eee;
+      padding-bottom:6px;
+    }
+
+    .delete-btn {
+      background:#ea4335;
+      color:#fff;
+      padding:10px 18px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-top:20px;
+    }
+
+    .delete-btn:hover {
+      background:#c5221f;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <a href="../dashboard/admin-dashboard.html">
+     <span>Dashboard</span>
+  </a>
+
+  <a href="../orders/admin-orders.html">
+     <span>Orders</span>
+     <span class="badge" id="ordersCount">0</span>
+  </a>
+
+  <a href="users-list.html" class="active">
+     <span>Users</span>
+     <span class="badge" id="usersCount">0</span>
+  </a>
+
+  <a href="../inventory/admin-inventory.html">
+    <span>Inventory</span>
+    <span class="badge" id="inventoryCount">0</span>
+  </a>
+
+  <a href="../website-builder/product-page-editor.html">
+     <span>Website Builder</span>
+  </a>
+
+  <a href="../settings/admin-settings.html">
+     <span>Settings</span>
+  </a>
+
+  <a href="../payment/payment-setting.html">
+    <span>Payment</span>
+    <span class="badge" id="paymentCount">0</span>
+  </a>
+
+  <a href="../messages/admin-messages.html">
+    <span>Messages</span>
+    <span class="badge" id="messagesCount">0</span>
+  </a>
+
+  <button class="logout-btn">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="goBack()">← Back to Users</button>
+    <h3>User Profile</h3>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-card" id="profileCard">
+      <h2>Loading user...</h2>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ⭐ Extract UID */
+const params = new URLSearchParams(window.location.search);
+const uid = params.get("uid");
+
+/* ⭐ Your existing user generator stays EXACTLY the same */
+const baseUsers = [
+  { firstName:"Emma", lastName:"van Dijk", email:"emma.vandijk@example.com", phone:"+31 6 12345678", street:"Lange Straat", housenumber:"12A", city:"Arnhem", postalCode:"6811AA", country:"Netherlands", signupDate:"2024-07-10 14:22" },
+  { firstName:"Lucas", lastName:"Brouwer", email:"lucas.b@example.com", phone:"+31 6 87654321", street:"Korteweg", housenumber:"55", city:"Nijmegen", postalCode:"6521JJ", country:"Netherlands", signupDate:"2024-07-11 09:15" },
+  { firstName:"Sophie", lastName:"Janssen", email:"sophie.j@example.com", phone:"+31 6 99887766", street:"Stationsplein", housenumber:"3", city:"Utrecht", postalCode:"3511CE", country:"Netherlands", signupDate:"2024-07-12 16:40" },
+  { firstName:"Noah", lastName:"de Vries", email:"noah.vries@example.com", phone:"+31 6 44556677", street:"Marktstraat", housenumber:"88", city:"Rotterdam", postalCode:"3011AA", country:"Netherlands", signupDate:"2024-07-13 11:05" },
+  { firstName:"Lotte", lastName:"Smit", email:"lotte.smit@example.com", phone:"+31 6 55443322", street:"Bergweg", housenumber:"21B", city:"Eindhoven", postalCode:"5611JH", country:"Netherlands", signupDate:"2024-07-14 18:30" }
+];
+
+const countries = ["Netherlands","Germany","Belgium"];
+const citiesByCountry = {
+  "Netherlands":["Arnhem","Nijmegen","Utrecht","Rotterdam","Eindhoven"],
+  "Germany":["Berlin","Hamburg","Munich","Cologne","Frankfurt"],
+  "Belgium":["Brussels","Antwerp","Ghent","Leuven","Bruges"]
+};
+
+const allUsers = [];
+
+for (let i = 0; i < 5000; i++) {
+  const base = baseUsers[i % baseUsers.length];
+  const country = countries[i % countries.length];
+  const cityList = citiesByCountry[country];
+  const city = cityList[i % cityList.length];
+
+  allUsers.push({
+    uid:`UID-${i.toString().padStart(5,"0")}`,
+    firstName:base.firstName,
+    lastName:base.lastName,
+    email:base.email.replace("@",`+${i}@`),
+    phone:base.phone,
+    street:base.street,
+    housenumber:base.housenumber,
+    city,
+    postalCode:base.postalCode,
+    country,
+    signupDate:base.signupDate
+  });
+}
+
+/* ⭐ Load user */
+const user = allUsers.find(u => u.uid === uid);
+const card = document.getElementById("profileCard");
+
+if (!user) {
+  card.innerHTML = `<h2>User not found</h2>`;
+} else {
+  card.innerHTML = `
+    <h2>${user.firstName} ${user.lastName}</h2>
+    <p><strong>UID:</strong> ${user.uid}</p>
+
+    <div class="section-title">Contact Information</div>
+    <p><strong>Email:</strong> ${user.email}</p>
+    <p><strong>Phone:</strong> ${user.phone}</p>
+
+    <div class="section-title">Address</div>
+    <p><strong>Street:</strong> ${user.street} ${user.housenumber}</p>
+    <p><strong>City:</strong> ${user.city}</p>
+    <p><strong>Postal Code:</strong> ${user.postalCode}</p>
+    <p><strong>Country:</strong> ${user.country}</p>
+
+    <div class="section-title">Signup</div>
+    <p><strong>Date:</strong> ${user.signupDate}</p>
+
+    <button class="delete-btn" onclick="deleteUser('${user.uid}')">Delete User Permanently</button>
+  `;
+}
+
+/* ⭐ Back button */
+function goBack() {
+  window.location.href = "users-list.html";
+}
+
+/* ⭐ Delete */
+function deleteUser(uid) {
+  alert("User " + uid + " deleted permanently.");
+  window.location.href = "users-list.html";
+}
+
+/* ⭐ REAL-TIME SIDEBAR NOTIFICATIONS */
+function loadData(key, fallback) {
+  return JSON.parse(localStorage.getItem(key)) || fallback;
+}
+
+let products = loadData("inventoryProducts", []);
+let orders = loadData("adminOrders", []);
+let payments = loadData("adminPayments", []);
+let messages = loadData("adminMessages", []);
+let usersList = allUsers; // your real users
+
+function updateSidebarCounts() {
+  document.getElementById("inventoryCount").innerText = products.length;
+  document.getElementById("usersCount").innerText = usersList.length;
+  document.getElementById("ordersCount").innerText = orders.length;
+  document.getElementById("paymentCount").innerText = payments.length;
+  document.getElementById("messagesCount").innerText = messages.length;
+}
+
+/* ⭐ Initial load */
+updateSidebarCounts();
+</script>
+
+</body>
+</html>

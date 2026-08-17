@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Users</title>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    /* SIDEBAR (MATCHES ADMIN DASHBOARD) */
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+
+    .sidebar h2 { margin-bottom:20px; }
+
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    /* MAIN (MATCHES ADMIN DASHBOARD) */
+    .main {
+      flex:1;
+      padding:30px;
+      overflow-y:auto;
+    }
+
+    .main h2 {
+      margin-top:0;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    .sync-btn {
+      background:#174ea6;
+      color:white;
+      padding:8px 16px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-bottom:15px;
+    }
+
+    .sync-btn:hover {
+      background:#0f3c85;
+    } 
+
+    .card {
+      background:#fff;
+      padding:20px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      margin-bottom:20px;
+    }
+
+    /* RESPONSIVE SEARCH BAR */
+    .search-box {
+      width:100%;
+      max-width:480px;
+      background:#f1f3f4;
+      border-radius:16px;
+      padding:6px 12px;
+      margin-bottom:20px;
+    }
+
+    .search-box input {
+      width:100%;
+      border:none;
+      background:transparent;
+      font-size:13px;
+      outline:none;
+      padding:4px 0;
+    }
+
+    @media (max-width:600px) {
+      .search-box {
+        max-width:100%;
+        border-radius:14px;
+        padding:6px 10px;
+      }
+      .search-box input {
+        font-size:12px;
+      }
+    }
+
+    /* USERS TABLE */
+    table {
+      width:100%;
+      background:#fff;
+      border-collapse:collapse;
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    th, td {
+      padding:12px;
+      border-bottom:1px solid #ddd;
+      font-size:14px;
+    }
+
+    th { background:#eee; }
+
+    tr:hover { background:#f1f3f4; cursor:pointer; }
+
+    .delete-btn {
+      background:none;
+      border:none;
+      color:#ea4335;
+      font-size:18px;
+      cursor:pointer;
+    }
+
+    .delete-btn:hover {
+      color:#c5221f;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <a href="../dashboard/admin-dashboard.html"><span>Dashboard</span></a>
+
+  <a href="../orders/admin-orders.html">
+    <span>Orders</span>
+    <span class="badge" id="ordersCount">0</span>
+  </a>
+
+  <a href="users-list.html" class="active">
+    <span>Users</span>
+    <span class="badge" id="usersCount">0</span>
+  </a>
+
+  <a href="../inventory/admin-inventory.html">
+    <span>Inventory</span>
+    <span class="badge" id="inventoryCount">0</span>
+  </a>
+
+  <a href="../website-builder/product-page-editor.html">
+     <span>Website Builder</span>
+  </a>
+
+  <a href="../settings/admin-settings.html">
+     <span>Settings</span>
+  </a>
+
+  <a href="../payment/payment-setting.html">
+    <span>Payment</span>
+    <span class="badge" id="paymentCount">0</span>
+  </a>
+
+  <a href="../messages/admin-messages.html">
+    <span>Messages</span>
+    <span class="badge" id="messagesCount">0</span>
+  </a>
+
+  <button class="logout-btn">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+ <h2>Users</h2>
+
+<button class="sync-btn" onclick="createUser()">Create User</button>
+
+<button class="sync-btn" onclick="syncUsers()">Automatic Sync</button>
+
+  <div class="card">
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Search users by name, email, UID..." onkeyup="filterUsers()">
+    </div>
+
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Country</th>
+          <th>City</th>
+          <th>Signup Date</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+/* ⭐ DO NOT CHANGE USER DATA — ONLY ADD REAL-TIME NOTIFICATIONS */
+
+/* Your existing user generation stays EXACTLY the same */
+const baseUsers = [
+  { firstName:"Emma", lastName:"van Dijk", email:"emma.vandijk@example.com", city:"Arnhem", country:"Netherlands", signupDate:"2024-07-10 14:22" },
+  { firstName:"Lucas", lastName:"Brouwer", email:"lucas.b@example.com", city:"Nijmegen", country:"Netherlands", signupDate:"2024-07-11 09:15" },
+  { firstName:"Sophie", lastName:"Janssen", email:"sophie.j@example.com", city:"Utrecht", country:"Netherlands", signupDate:"2024-07-12 16:40" },
+  { firstName:"Noah", lastName:"de Vries", email:"noah.vries@example.com", city:"Rotterdam", country:"Netherlands", signupDate:"2024-07-13 11:05" },
+  { firstName:"Lotte", lastName:"Smit", email:"lotte.smit@example.com", city:"Eindhoven", country:"Netherlands", signupDate:"2024-07-14 18:30" }
+];
+
+const countries = ["Netherlands","Germany","Belgium"];
+const citiesByCountry = {
+  "Netherlands":["Arnhem","Nijmegen","Utrecht","Rotterdam","Eindhoven"],
+  "Germany":["Berlin","Hamburg","Munich","Cologne","Frankfurt"],
+  "Belgium":["Brussels","Antwerp","Ghent","Leuven","Bruges"]
+};
+
+const allUsers = [];
+
+for (let i = 0; i < 5000; i++) {
+  const base = baseUsers[i % baseUsers.length];
+  const country = countries[i % countries.length];
+  const cityList = citiesByCountry[country];
+  const city = cityList[i % cityList.length];
+
+  allUsers.push({
+    uid:`UID-${i.toString().padStart(5,"0")}`,
+    firstName:base.firstName,
+    lastName:base.lastName,
+    email:base.email.replace("@",`+${i}@`),
+    country,
+    city,
+    signupDate:base.signupDate
+  });
+}
+
+function createUser() {
+  window.location.href = "create-user.html";
+}
+
+/* ⭐ Automatic Sync Button */
+function syncUsers() {
+  localStorage.setItem("adminUsers", JSON.stringify(allUsers));
+}
+
+/* ⭐ Render users */
+function loadUsers() {
+  const tbody = document.querySelector("#usersTable tbody");
+  tbody.innerHTML = "";
+
+  allUsers.forEach(u => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td onclick="openProfile('${u.uid}')">${u.firstName} ${u.lastName}</td>
+      <td onclick="openProfile('${u.uid}')">${u.email}</td>
+      <td>${u.country}</td>
+      <td>${u.city}</td>
+      <td>${u.signupDate}</td>
+      <td><button class="delete-btn" onclick="deleteUser('${u.uid}')">🗑️</button></td>
+    `;
+
+    tr.onclick = (e) => {
+      if (e.target.tagName.toLowerCase() !== "button") {
+        openProfile(u.uid);
+      }
+    };
+
+    tbody.appendChild(tr);
+  });
+}
+
+/* ⭐ Search users */
+function filterUsers() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const rows = document.querySelectorAll("#usersTable tbody tr");
+
+  rows.forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+  });
+}
+
+/* ⭐ View user */
+function openProfile(uid) {
+  window.location.href = `user-profile.html?uid=${uid}`;
+}
+
+/* ⭐ Delete user */
+function deleteUser(uid) {
+  alert("Delete user UID: " + uid);
+}
+
+/* ⭐ REAL-TIME SIDEBAR NOTIFICATIONS */
+function loadData(key, fallback) {
+  return JSON.parse(localStorage.getItem(key)) || fallback;
+}
+
+let products = loadData("inventoryProducts", []);
+let orders = loadData("adminOrders", []);
+let payments = loadData("adminPayments", []);
+let messages = loadData("adminMessages", []);
+
+/* ⭐ Update sidebar badges */
+function updateSidebarCounts() {
+  document.getElementById("inventoryCount").innerText = products.length;
+  document.getElementById("usersCount").innerText = allUsers.length;
+  document.getElementById("ordersCount").innerText = orders.length;
+  document.getElementById("paymentCount").innerText = payments.length;
+  document.getElementById("messagesCount").innerText = messages.length;
+}
+
+/* ⭐ Initial load */
+loadUsers();
+updateSidebarCounts();
+</script>
+
+</body>
+</html>

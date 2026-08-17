@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Product – Aravon Admin</title>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+    .sidebar h2 { margin-bottom:20px; }
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    .main {
+      flex:1;
+      padding:30px;
+      overflow-y:auto;
+    }
+
+    h2 {
+      margin-top:0;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    .card {
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      margin-bottom:20px;
+    }
+
+    input, textarea {
+      width:100%;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      margin-top:6px;
+      font-size:14px;
+      box-sizing:border-box;
+    }
+
+    textarea {
+      height:120px;
+      resize:none;
+    }
+
+    .btn {
+      padding:10px 15px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-right:10px;
+    }
+
+    .publish-btn { background:#174ea6; color:white; }
+    .draft-btn { background:#0f3c85; color:white; }
+    .cancel-btn { background:#6c757d; color:white; }
+
+    .image-preview img {
+      width:120px;
+      height:120px;
+      object-fit:cover;
+      margin-right:10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+    }
+
+    .rec-btn {
+      background:#174ea6;
+      color:white;
+      padding:8px 14px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:13px;
+      margin-top:15px;
+      display:inline-block;
+    }
+
+    .recommended-preview {
+      display:flex;
+      flex-wrap:wrap;
+      gap:15px;
+      margin-top:15px;
+    }
+
+    .recommended-card {
+      width:140px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      padding:10px;
+      background:#fff;
+      text-align:center;
+    }
+
+    .recommended-card img {
+      width:100%;
+      height:100px;
+      object-fit:cover;
+      border-radius:8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <a href="../../dashboard/admin-dashboard.html"><span>Dashboard</span></a>
+  <a href="../../orders/admin-orders.html"><span>Orders</span><span class="badge" id="ordersCount">0</span></a>
+  <a href="../../users/users-list.html"><span>Users</span><span class="badge" id="usersCount">0</span></a>
+  <a href="../admin-inventory.html" class="active"><span>Inventory</span><span class="badge" id="inventoryCount">0</span></a>
+  <a href="../../website-builder/product-page-editor.html"><span>Website Builder</span></a>
+  <a href="../../settings/admin-settings.html"><span>Settings</span></a>
+  <a href="../../payment/payment-setting.html"><span>Payment</span><span class="badge" id="paymentCount">0</span></a>
+  <a href="../../messages/admin-messages.html"><span>Messages</span><span class="badge" id="messagesCount">0</span></a>
+
+  <button class="logout-btn">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <h2>Create a New Product</h2>
+
+  <button onclick="window.location.href='../admin-inventory.html'"
+    style="background:#6c757d;color:#fff;border:none;padding:10px 15px;border-radius:20px;cursor:pointer;font-size:14px;margin-bottom:20px;">
+    ← Back to Product Inventory
+  </button>
+
+  <div class="card">
+    <h3>General Information</h3>
+
+    <label>Product ID</label>
+    <input id="productId">
+
+    <label>Product Name</label>
+    <input id="productName">
+
+    <label>Brand</label>
+    <input id="brand">
+
+    <label>Description</label>
+    <textarea id="description"></textarea>
+
+    <label>Sale Price (€)</label>
+    <input id="price" type="number">
+
+    <label>Slug (Category)</label>
+    <input id="slug">
+
+    <label>SKU</label>
+    <input id="sku">
+
+    <label>Currency</label>
+    <input id="currency" value="EUR">
+  </div>
+
+  <div class="card">
+    <h3>Stripe Payment</h3>
+
+    <label>Stripe Product ID</label>
+    <input id="stripeProductId">
+
+    <label>Stripe Payment Link</label>
+    <input id="stripePaymentLink">
+  </div>
+
+  <div class="card">
+    <h3>Product Images</h3>
+
+    <div class="image-preview" id="imagePreview"></div>
+
+    <label>Upload New Images</label>
+    <input type="file" id="uploadImages" multiple>
+
+    <h4>Product Image URLs</h4>
+    <textarea id="imageUrls" placeholder="Paste image URLs here..."></textarea>
+  </div>
+
+  <div class="card">
+    <h3>Visibility</h3>
+
+    <label><input type="checkbox" id="vp_index"> index.html</label><br>
+    <label><input type="checkbox" id="vp_fashion"> fashion.html</label><br>
+    <label><input type="checkbox" id="vp_sports"> sports.html</label><br>
+    <label><input type="checkbox" id="vp_toys"> toys.html</label><br>
+    <label><input type="checkbox" id="vp_accessories"> accessories.html</label><br>
+    <label><input type="checkbox" id="vp_electronics"> electronics.html</label><br>
+    <label><input type="checkbox" id="vp_automotive"> automotive.html</label><br>
+    <label><input type="checkbox" id="vp_appliances"> appliances.html</label><br>
+    <label><input type="checkbox" id="vp_bestseller"> bestseller.html</label><br>
+    <label><input type="checkbox" id="vp_trending"> trending.html</label><br>
+    <label><input type="checkbox" id="vp_recommend"> recommend products</label><br>
+
+
+    
+
+  <div style="margin-top:20px;">
+    <button class="btn publish-btn" onclick="publishProduct()">Publish</button>
+    <button class="btn draft-btn">Save</button>
+    <button class="btn cancel-btn" onclick="window.location.href='../admin-inventory.html'">Cancel</button>
+  </div>
+
+</div>
+
+<script src="../../../js/admin-create-product.js"></script>
+
+<script>
+   // ⭐ Open recommend-product.html with correct product ID
+  document.getElementById("openRecommendBtn").onclick = function () {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+    window.location.href = `../recommend-product.html?id=${productId}`;
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Settings – Aravon Admin</title>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    /* ⭐ IDENTICAL SIDEBAR TO ADMIN DASHBOARD */
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+
+    .sidebar h2 { margin-bottom:20px; }
+
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    /* ⭐ IDENTICAL MAIN AREA TO ADMIN DASHBOARD */
+    .main {
+      flex:1;
+      padding:30px;
+      overflow-y:auto;
+    }
+
+    .main h2 {
+      margin-top:0;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    /* ⭐ IDENTICAL CARD STYLE */
+    .card {
+      background:#fff;
+      padding:20px;          /* FIXED: Dashboard uses 20px */
+      border-radius:12px;
+      border:1px solid #ddd;
+      margin-bottom:20px;    /* FIXED: Dashboard uses 20px */
+    }
+
+    .card h3 {
+      margin:0 0 10px 0;     /* FIXED: Dashboard uses this */
+      font-size:18px;
+    }
+
+    label {
+      font-weight:bold;
+      margin-top:15px;
+      display:block;
+    }
+
+    input, textarea {
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    textarea {
+      height:100px;
+      resize:none;
+    }
+
+    .btn {
+      padding:10px 15px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-top:15px;
+    }
+
+    .save-btn { background:#174ea6; color:white; }
+    .save-btn:hover { background:#0f3c85; }
+
+    .status-connected {
+      background:#d2e3fc;
+      color:#174ea6;
+      padding:8px 12px;
+      border-radius:20px;
+      display:inline-block;
+      margin-bottom:10px;
+      font-size:13px;
+    }
+
+    .status-disconnected {
+      background:#f8d7da;
+      color:#842029;
+      padding:8px 12px;
+      border-radius:20px;
+      display:inline-block;
+      margin-bottom:10px;
+      font-size:13px;
+    }
+
+    .history-item {
+      padding:12px;
+      border-bottom:1px solid #ddd;
+    }
+
+    .history-item:last-child {
+      border-bottom:none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <a href="../dashboard/admin-dashboard.html"><span>Dashboard</span></a>
+
+  <a href="../orders/admin-orders.html">
+    <span>Orders</span>
+    <span class="badge">5</span>
+  </a>
+
+  <a href="../users/users-list.html">
+    <span>Users</span>
+    <span class="badge">5000</span>
+  </a>
+
+  <a href="../inventory/admin-inventory.html">
+    <span>Inventory</span>
+    <span class="badge">5</span>
+  </a>
+
+  <a href="../website-builder/product-page-editor.html"> 
+     <span>Website Builder</span>
+    </a>
+
+  <a href="../settings/admin-settings.html"> 
+     <span>Settings</span>
+  </a>
+
+  <a href="payment-setting.html" class="active">
+    <span>Payment</span>
+    <span class="badge">5</span>
+  </a>
+
+  <a href="../messages/admin-messages.html">
+    <span>Messages</span>
+    <span class="badge">5</span>
+  </a>
+
+  <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="card">
+    <h2>Stripe Payment Settings</h2>
+
+    <h3>Connection Status</h3>
+    <div id="stripeStatus" class="status-disconnected">Stripe Not Connected</div>
+    <p>Connect your Stripe account to enable payments, refunds, and checkout sessions.</p>
+  </div>
+
+  <div class="card">
+    <h3>Stripe API Keys</h3>
+
+    <label>Publishable Key</label>
+    <input id="publishableKey">
+
+    <label>Secret Key</label>
+    <input id="secretKey">
+
+    <label>Webhook Secret</label>
+    <input id="webhookSecret">
+
+    <button class="btn save-btn" onclick="saveStripeKeys()">Save Stripe Keys</button>
+  </div>
+
+  <div class="card">
+    <h3>Checkout URLs</h3>
+
+    <label>Success URL</label>
+    <input id="successUrl">
+
+    <label>Cancel URL</label>
+    <input id="cancelUrl">
+
+    <label>Stripe Console URL</label>
+    <input id="consoleUrl" value="https://dashboard.stripe.com/" readonly>
+  </div>
+
+  <div class="card">
+    <h3>Payment History</h3>
+    <div id="paymentHistory">
+      <div class="history-item">Loading payment history...</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Refund Requests</h3>
+    <div id="refundList">
+      <div class="history-item">No refund requests yet.</div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+  getFirestore, doc, getDoc, updateDoc, collection, getDocs 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAs2n_FyLyH7GmVmJ_GcyYF9UaAQxg9QnY",
+  authDomain: "aravon-shop-48fdd.firebaseapp.com",
+  projectId: "aravon-shop-48fdd",
+  storageBucket: "aravon-shop-48fdd.appspot.com",
+  messagingSenderId: "436832537701",
+  appId: "1:436832537701:web:0047524bb50e9942390a8c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+window.logoutAdmin = () => signOut(auth).then(() => window.location.href = "../auth/admin-login.html");
+
+async function loadStripeSettings() {
+  const ref = doc(db, "payment_gateways_secrets", "stripe");
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    const data = snap.data();
+
+    document.getElementById("publishableKey").value = data.publishableKey || "";
+    document.getElementById("secretKey").value = data.secretKey || "";
+    document.getElementById("webhookSecret").value = data.webhookSecret || "";
+
+    if (data.secretKey) {
+      document.getElementById("stripeStatus").className = "status-connected";
+      document.getElementById("stripeStatus").innerText = "Stripe Connected";
+    }
+  }
+}
+
+window.saveStripeKeys = async () => {
+  const ref = doc(db, "payment_gateways_secrets", "stripe");
+
+  await updateDoc(ref, {
+    publishableKey: document.getElementById("publishableKey").value,
+    secretKey: document.getElementById("secretKey").value,
+    webhookSecret: document.getElementById("webhookSecret").value,
+    updatedAt: new Date()
+  });
+
+  alert("Stripe settings saved!");
+  loadStripeSettings();
+};
+
+async function loadPaymentHistory() {
+  const historyBox = document.getElementById("paymentHistory");
+  historyBox.innerHTML = "";
+
+  const snapshot = await getDocs(collection(db, "payments"));
+
+  if (snapshot.empty) {
+    historyBox.innerHTML = "<div class='history-item'>No payments found.</div>";
+    return;
+  }
+
+  snapshot.forEach(docSnap => {
+    const p = docSnap.data();
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `
+      <strong>${p.productName}</strong><br>
+      Amount: €${p.amount}<br>
+      Status: ${p.status}<br>
+      Date: ${p.date}
+    `;
+    historyBox.appendChild(div);
+  });
+}
+
+async function loadRefunds() {
+  const refundBox = document.getElementById("refundList");
+  refundBox.innerHTML = "";
+
+  const snapshot = await getDocs(collection(db, "refunds"));
+
+  if (snapshot.empty) {
+    refundBox.innerHTML = "<div class='history-item'>No refund requests.</div>";
+    return;
+  }
+
+  snapshot.forEach(docSnap => {
+    const r = docSnap.data();
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = `
+      <strong>${r.productName}</strong><br>
+      User: ${r.email}<br>
+      Reason: ${r.reason}<br>
+      Date: ${r.date}
+    `;
+    refundBox.appendChild(div);
+  });
+}
+
+loadStripeSettings();
+loadPaymentHistory();
+loadRefunds();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,329 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Login – Aravon Shop</title>
+
+
+  <style>
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+
+    .center-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+
+    .login-box {
+      background: #ffffff;
+      padding: 35px;
+      width: 360px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+
+    h2 {
+      margin-bottom: 30px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+
+    input {
+      width: 95%;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      background: #f8fafc;
+      box-sizing: border-box;
+    }
+
+
+    button {
+      width: 104%;
+      padding: 12px;
+      background: #ff4747;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+
+    button:hover {
+      background: #e63f3f;
+    }
+
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+
+    #error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+      min-height: 18px;
+    }
+
+
+    footer {
+
+      margin-top: 50px;
+
+      background: #222;
+
+      color: white;
+
+      text-align: center;
+
+      padding: 30px 20px;
+
+    }
+
+
+    footer p {
+      margin: 8px 0;
+    }
+
+
+    footer a {
+
+      color: white;
+
+      text-decoration: none;
+
+      margin: 0 10px;
+
+    }
+
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       ADMIN LOGIN
+  ========================= -->
+
+  <div class="center-wrapper">
+
+    <div class="login-box">
+
+      <h2>
+        Admin Login
+      </h2>
+
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Admin Email"
+        autocomplete="username"
+      >
+
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+
+      <button
+        id="loginBtn"
+        type="button"
+      >
+        Login
+      </button>
+
+
+      <div id="error"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       FEATURED INFO
+  ========================= -->
+
+  <section
+    style="
+      grid-column:1/-1;
+      margin-top:20px;
+    "
+  >
+
+    <div
+      style="
+        background:#ffffff;
+        border-radius:14px;
+        padding:30px;
+        box-shadow:0 4px 12px rgba(0,0,0,.08);
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:25px;
+        text-align:center;
+      "
+    >
+
+
+      <div>
+
+        <h3>
+          🚚 Fast Delivery
+        </h3>
+
+        <p>
+          Reliable shipping with tracking on every order.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          🔒 Secure Payments
+        </h3>
+
+        <p>
+          Shop safely with encrypted checkout.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          💬 Customer Support
+        </h3>
+
+        <p>
+          Friendly support whenever you need help.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>
+          ⭐ Quality Products
+        </h3>
+
+        <p>
+          Carefully selected products at competitive prices.
+        </p>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <p>
+      <strong>
+        Aravon Shop
+      </strong>
+    </p>
+
+
+    <p>
+
+      <a href="../../about.html">
+        About
+      </a>
+
+      |
+
+      <a href="../../contact.html">
+        Contact
+      </a>
+
+      |
+
+      <a href="../../privacy.html">
+        Privacy Policy
+      </a>
+
+      |
+
+      <a href="../../terms.html">
+        Terms & Conditions
+      </a>
+
+    </p>
+
+
+    <p>
+      © 2026 Aravon Shop. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =========================
+       ADMIN AUTHENTICATION
+  ========================= -->
+
+  <script
+    type="module"
+    src="/admin/shared/admin-login.js"
+  ></script>
+
+
+</body>
+
+</html>
+```

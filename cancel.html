@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Payment Cancelled | Aravon Shop</title>
+
+
+    <!-- =========================================================
+         GOOGLE FONT
+    ========================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            font-family: "Inter", sans-serif;
+
+            background: #f5f7fb;
+
+            color: #1f2933;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================== */
+
+        header {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 999;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0, 0, 0, .08);
+        }
+
+
+        .top-header {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+            width: 100%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 15px 30px;
+        }
+
+
+        /* =========================================================
+           LOGO
+        ========================================================== */
+
+        .logo {
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            color: #111111;
+
+            white-space: nowrap;
+
+            user-select: none;
+        }
+
+
+        .logo:hover {
+
+            opacity: .85;
+        }
+
+
+        .logo:focus-visible {
+
+            outline: 2px solid #ff4747;
+
+            outline-offset: 4px;
+
+            border-radius: 4px;
+        }
+
+
+        /* =========================================================
+           SEARCH
+        ========================================================== */
+
+        .search-bar {
+
+            flex: 1;
+
+            display: flex;
+
+            max-width: 700px;
+
+            min-width: 0;
+        }
+
+
+        .search-bar input {
+
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 13px 15px;
+
+            border:
+                2px solid #ff4747;
+
+            border-right: none;
+
+            border-radius:
+                8px 0 0 8px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            font-family: inherit;
+
+            background: #ffffff;
+        }
+
+
+        .search-bar input:focus {
+
+            box-shadow:
+                0 0 0 2px
+                rgba(255, 71, 71, .12);
+        }
+
+
+        .search-bar button {
+
+            background: #ff4747;
+
+            color: #ffffff;
+
+            border: none;
+
+            padding: 0 24px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+            border-radius:
+                0 8px 8px 0;
+
+            font-family: inherit;
+
+            transition:
+                background .2s ease,
+                opacity .2s ease;
+        }
+
+
+        .search-bar button:hover {
+
+            background: #e43b3b;
+        }
+
+
+        .search-bar button:focus-visible {
+
+            outline:
+                2px solid #111111;
+
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================================
+           HEADER ICONS
+        ========================================================== */
+
+        .header-icons {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+
+            flex-shrink: 0;
+        }
+
+
+        .header-icons a {
+
+            color: #222222;
+
+            text-decoration: none;
+
+            font-size: 24px;
+
+            line-height: 1;
+        }
+
+
+        .header-icons a:hover {
+
+            opacity: .7;
+        }
+
+
+        .header-icons a:focus-visible {
+
+            outline:
+                2px solid #ff4747;
+
+            outline-offset: 4px;
+
+            border-radius: 4px;
+        }
+
+
+        /* =========================================================
+           CART ICON
+        ========================================================== */
+
+        .cart-icon {
+
+            position: relative;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            font-size: 24px;
+
+            line-height: 1;
+
+            user-select: none;
+        }
+
+
+        .cart-icon:focus-visible {
+
+            outline:
+                2px solid #ff4747;
+
+            outline-offset: 4px;
+
+            border-radius: 4px;
+        }
+
+
+        .cart-badge {
+
+            position: absolute;
+
+            top: -9px;
+
+            right: -12px;
+
+            background: #ff4747;
+
+            color: #ffffff;
+
+            width: 22px;
+
+            height: 22px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            border-radius: 50%;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           MOBILE MENU BUTTON
+        ========================================================== */
+
+        .menu-toggle {
+
+            display: none;
+
+            background: none;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 32px;
+
+            color: #222222;
+
+            padding: 4px;
+
+            line-height: 1;
+        }
+
+
+        .menu-toggle:focus-visible {
+
+            outline:
+                2px solid #ff4747;
+
+            outline-offset: 3px;
+
+            border-radius: 4px;
+        }
+
+
+        /* =========================================================
+           MAIN
+        ========================================================== */
+
+        main {
+
+            flex: 1;
+        }
+
+
+        /* =========================================================
+           CANCEL CARD
+        ========================================================== */
+
+        .cancel-card {
+
+            width:
+                calc(100% - 30px);
+
+            background: #ffffff;
+
+            padding: 45px 35px;
+
+            border-radius: 14px;
+
+            max-width: 520px;
+
+            margin:
+                70px auto 45px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, .08);
+        }
+
+
+        /* =========================================================
+           CANCEL ICON
+        ========================================================== */
+
+        .cancel-icon {
+
+            width: 72px;
+
+            height: 72px;
+
+            margin:
+                0 auto 22px;
+
+            border-radius: 50%;
+
+            background: #fff0f0;
+
+            color: #d32f2f;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 34px;
+
+            font-weight: 700;
+
+            user-select: none;
+        }
+
+
+        /* =========================================================
+           TITLE
+        ========================================================== */
+
+        .cancel-card h1 {
+
+            margin-bottom: 12px;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            color: #111111;
+        }
+
+
+        .cancel-card p {
+
+            color: #6b7280;
+
+            line-height: 1.6;
+
+            margin-bottom: 12px;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================================================
+           PAYMENT STATUS
+        ========================================================== */
+
+        .payment-status {
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            border-radius: 8px;
+
+            background: #fff7e6;
+
+            color: #8a5a00;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        .payment-status.success {
+
+            background: #e8f7e8;
+
+            color: #176b17;
+        }
+
+
+        .payment-status.warning {
+
+            background: #fff7e6;
+
+            color: #8a5a00;
+        }
+
+
+        /* =========================================================
+           PAYMENT REFERENCE
+        ========================================================== */
+
+        .payment-reference {
+
+            display: none;
+
+            margin-top: 12px;
+
+            padding: 12px;
+
+            border:
+                1px solid #eeeeee;
+
+            border-radius: 8px;
+
+            background: #fafafa;
+
+            color: #666666;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            word-break: break-word;
+        }
+
+
+        .payment-reference.visible {
+
+            display: block;
+        }
+
+
+        .payment-reference-label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #777777;
+
+            font-size: 12px;
+
+            font-weight: 500;
+        }
+
+
+        .payment-reference-value {
+
+            display: block;
+
+            color: #444444;
+
+            font-weight: 600;
+
+            word-break: break-all;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================== */
+
+        .button-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+
+        .btn {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 14px 20px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            border: none;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            transition:
+                background .2s ease,
+                opacity .2s ease;
+        }
+
+
+        .btn:focus-visible {
+
+            outline:
+                2px solid #111111;
+
+            outline-offset: 2px;
+        }
+
+
+        .btn-primary {
+
+            background: #ff4747;
+
+            color: #ffffff;
+        }
+
+
+        .btn-primary:hover {
+
+            background: #e43b3b;
+        }
+
+
+        .btn-secondary {
+
+            background: #eeeeee;
+
+            color: #222222;
+        }
+
+
+        .btn-secondary:hover {
+
+            background: #dddddd;
+        }
+
+
+        /* =========================================================
+           FEATURED INFORMATION
+        ========================================================== */
+
+        .featured-section {
+
+            max-width: 1200px;
+
+            margin:
+                0 auto 40px;
+
+            padding:
+                0 20px;
+
+            width: 100%;
+        }
+
+
+        .featured-grid {
+
+            background: #ffffff;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, .08);
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 25px;
+
+            text-align: center;
+        }
+
+
+        .featured-grid h3 {
+
+            margin:
+                0 0 10px;
+
+            font-size: 18px;
+        }
+
+
+        .featured-grid p {
+
+            color: #6b7280;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+
+            margin: 0;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================== */
+
+        footer {
+
+            margin-top: auto;
+
+            background: #222222;
+
+            color: #ffffff;
+
+            text-align: center;
+
+            padding: 30px 20px;
+        }
+
+
+        footer p {
+
+            margin: 10px 0;
+        }
+
+
+        footer a {
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            margin:
+                0 10px;
+        }
+
+
+        footer a:hover {
+
+            text-decoration: underline;
+        }
+
+
+        footer a:focus-visible {
+
+            outline:
+                2px solid #ffffff;
+
+            outline-offset: 3px;
+
+            border-radius: 3px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE — TABLET
+        ========================================================== */
+
+        @media (max-width: 900px) {
+
+            .search-bar {
+
+                display: none;
+            }
+
+
+            .menu-toggle {
+
+                display: block;
+            }
+
+
+            .top-header {
+
+                padding:
+                    14px 20px;
+            }
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE — MOBILE
+        ========================================================== */
+
+        @media (max-width: 600px) {
+
+            .top-header {
+
+                padding:
+                    12px 16px;
+            }
+
+
+            .logo {
+
+                font-size: 22px;
+            }
+
+
+            .header-icons {
+
+                gap: 16px;
+            }
+
+
+            .header-icons a {
+
+                font-size: 21px;
+            }
+
+
+            .cart-icon {
+
+                font-size: 21px;
+            }
+
+
+            .cancel-card {
+
+                width:
+                    calc(100% - 30px);
+
+                margin:
+                    35px 15px;
+
+                padding:
+                    35px 22px;
+            }
+
+
+            .cancel-icon {
+
+                width: 68px;
+
+                height: 68px;
+
+                font-size: 32px;
+            }
+
+
+            .cancel-card h1 {
+
+                font-size: 25px;
+            }
+
+
+            .cancel-card p {
+
+                font-size: 15px;
+            }
+
+
+            .featured-section {
+
+                padding:
+                    0 15px;
+            }
+
+
+            .featured-grid {
+
+                padding:
+                    25px 20px;
+
+                gap: 20px;
+            }
+
+
+            footer {
+
+                padding:
+                    25px 15px;
+            }
+
+
+            footer a {
+
+                display: inline-block;
+
+                margin:
+                    5px 7px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="top-header">
+
+
+        <!-- =====================================================
+             LOGO
+        ====================================================== -->
+
+        <div
+            class="logo"
+            id="shopLogo"
+            role="button"
+            tabindex="0"
+            aria-label="Go to Aravon Shop homepage"
+        >
+            Aravon Shop
+        </div>
+
+
+        <!-- =====================================================
+             MOBILE MENU
+        ====================================================== -->
+
+        <button
+            id="menuToggle"
+            class="menu-toggle"
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+
+
+        <!-- =====================================================
+             SEARCH
+        ====================================================== -->
+
+        <div class="search-bar">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search products..."
+                aria-label="Search products"
+                autocomplete="off"
+            >
+
+
+            <button
+                id="searchBtn"
+                type="button"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- =====================================================
+             HEADER ICONS
+        ====================================================== -->
+
+        <div class="header-icons">
+
+
+            <!-- ACCOUNT -->
+
+            <a
+                href="../users/auth/login.html"
+                title="Account"
+                aria-label="Account"
+            >
+                👤
+            </a>
+
+
+            <!-- CART -->
+
+            <div
+                class="cart-icon"
+                id="cartIcon"
+                title="Shopping Cart"
+                aria-label="Shopping Cart"
+                role="button"
+                tabindex="0"
+            >
+
+                🛒
+
+                <span
+                    id="cartCount"
+                    class="cart-badge"
+                >
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     PAYMENT CANCELLED
+========================================================= -->
+
+<main>
+
+
+    <section
+        class="cancel-card"
+        aria-labelledby="cancelTitle"
+    >
+
+
+        <!-- CANCEL ICON -->
+
+        <div
+            class="cancel-icon"
+            aria-hidden="true"
+        >
+            ×
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h1 id="cancelTitle">
+            Payment Cancelled
+        </h1>
+
+
+        <p>
+            Your payment was not completed.
+        </p>
+
+
+        <p>
+            No order has been confirmed and
+            your cart has been kept so you can
+            try again.
+        </p>
+
+
+        <!-- PAYMENT STATUS -->
+
+        <div
+            id="paymentStatus"
+            class="payment-status warning"
+            role="status"
+            aria-live="polite"
+        >
+            Your cart is still available.
+            You can safely return to checkout
+            and complete your purchase.
+        </div>
+
+
+        <!-- PAYMENT REFERENCE -->
+
+        <div
+            id="paymentReference"
+            class="payment-reference"
+        ></div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="button-group">
+
+
+            <!-- RETURN TO CHECKOUT -->
+
+            <a
+                class="btn btn-primary"
+                href="./checkout.html"
+            >
+                Return to Checkout
+            </a>
+
+
+            <!-- CONTINUE SHOPPING -->
+
+            <a
+                class="btn btn-secondary"
+                href="../index.html"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     FEATURED INFORMATION
+========================================================= -->
+
+<section
+    class="featured-section"
+    aria-label="Aravon Shop benefits"
+>
+
+    <div class="featured-grid">
+
+
+        <!-- FAST DELIVERY -->
+
+        <div>
+
+            <h3>
+                🚚 Fast Delivery
+            </h3>
+
+            <p>
+                Reliable shipping with tracking
+                on every order.
+            </p>
+
+        </div>
+
+
+        <!-- SECURE PAYMENTS -->
+
+        <div>
+
+            <h3>
+                🔒 Secure Payments
+            </h3>
+
+            <p>
+                Shop safely with encrypted checkout.
+            </p>
+
+        </div>
+
+
+        <!-- CUSTOMER SUPPORT -->
+
+        <div>
+
+            <h3>
+                💬 Customer Support
+            </h3>
+
+            <p>
+                Friendly support whenever
+                you need help.
+            </p>
+
+        </div>
+
+
+        <!-- QUALITY PRODUCTS -->
+
+        <div>
+
+            <h3>
+                ⭐ Quality Products
+            </h3>
+
+            <p>
+                Carefully selected products
+                at competitive prices.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+
+    <p>
+
+        <strong>
+            Aravon Shop
+        </strong>
+
+    </p>
+
+
+    <p>
+
+        <a href="../about.html">
+            About
+        </a>
+
+        |
+
+        <a href="../contact.html">
+            Contact
+        </a>
+
+        |
+
+        <a href="../privacy.html">
+            Privacy Policy
+        </a>
+
+        |
+
+        <a href="../terms.html">
+            Terms &amp; Conditions
+        </a>
+
+    </p>
+
+
+    <p>
+
+        &copy; 2026 Aravon Shop.
+        All rights reserved.
+
+    </p>
+
+
+</footer>
+
+
+<!-- =========================================================
+     CANCEL PAGE JAVASCRIPT
+========================================================= -->
+
+<script>
+
+"use strict";
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        /* =====================================================
+           ELEMENTS
+        ====================================================== */
+
+        const shopLogo =
+            document.getElementById(
+                "shopLogo"
+            );
+
+
+        const menuToggle =
+            document.getElementById(
+                "menuToggle"
+            );
+
+
+        const cartCount =
+            document.getElementById(
+                "cartCount"
+            );
+
+
+        const cartIcon =
+            document.getElementById(
+                "cartIcon"
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+
+        const searchBtn =
+            document.getElementById(
+                "searchBtn"
+            );
+
+
+        const paymentStatus =
+            document.getElementById(
+                "paymentStatus"
+            );
+
+
+        const paymentReference =
+            document.getElementById(
+                "paymentReference"
+            );
+
+
+        /* =====================================================
+           NAVIGATION
+        ====================================================== */
+
+        function goHome() {
+
+            window.location.href =
+                "../index.html";
+        }
+
+
+        function goToCheckout() {
+
+            window.location.href =
+                "./checkout.html";
+        }
+
+
+        /* =====================================================
+           LOGO
+        ====================================================== */
+
+        if (shopLogo) {
+
+            shopLogo.addEventListener(
+                "click",
+                goHome
+            );
+
+
+            shopLogo.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        goHome();
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           CART ICON
+        ====================================================== */
+
+        if (cartIcon) {
+
+            cartIcon.addEventListener(
+                "click",
+                goToCheckout
+            );
+
+
+            cartIcon.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        goToCheckout();
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ====================================================== */
+
+        function runSearch() {
+
+            if (!searchInput) {
+
+                return;
+            }
+
+
+            const query =
+                searchInput.value.trim();
+
+
+            if (!query) {
+
+                return;
+            }
+
+
+            window.location.href =
+                `../index.html?search=${encodeURIComponent(
+                    query
+                )}`;
+
+        }
+
+
+        if (searchBtn) {
+
+            searchBtn.addEventListener(
+                "click",
+                runSearch
+            );
+
+        }
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        runSearch();
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           MOBILE MENU
+           
+           There is currently no separate mobile navigation
+           panel on this page, so the button remains harmless.
+           
+           This keeps the structure compatible with the rest
+           of the Aravon Shop header without inventing a new
+           navigation design.
+        ====================================================== */
+
+        if (menuToggle) {
+
+            menuToggle.addEventListener(
+                "click",
+                () => {
+
+                    const expanded =
+                        menuToggle.getAttribute(
+                            "aria-expanded"
+                        ) === "true";
+
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        String(!expanded)
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           CART READER
+        ====================================================== */
+
+        function getCart() {
+
+            try {
+
+                const savedCart =
+                    localStorage.getItem(
+                        "cart"
+                    );
+
+
+                if (!savedCart) {
+
+                    return [];
+                }
+
+
+                const parsed =
+                    JSON.parse(
+                        savedCart
+                    );
+
+
+                return Array.isArray(parsed)
+                    ? parsed
+                    : [];
+
+            } catch (error) {
+
+                console.error(
+                    "Aravon Shop: unable to read cart:",
+                    error
+                );
+
+
+                return [];
+            }
+
+        }
+
+
+        /* =====================================================
+           CART COUNT
+        ====================================================== */
+
+        function updateCartCount() {
+
+            if (!cartCount) {
+
+                return;
+            }
+
+
+            const cart =
+                getCart();
+
+
+            const count =
+                cart.reduce(
+                    (
+                        total,
+                        item
+                    ) => {
+
+
+                        if (
+                            !item ||
+                            typeof item !== "object"
+                        ) {
+
+                            return total;
+                        }
+
+
+                        const quantityValue =
+                            item.qty ??
+                            item.quantity ??
+                            1;
+
+
+                        const quantity =
+                            Number(
+                                quantityValue
+                            );
+
+
+                        if (
+                            !Number.isFinite(
+                                quantity
+                            ) ||
+                            quantity <= 0
+                        ) {
+
+                            return total + 1;
+                        }
+
+
+                        return total +
+                            Math.floor(
+                                quantity
+                            );
+
+                    },
+                    0
+                );
+
+
+            cartCount.textContent =
+                String(count);
+
+        }
+
+
+        /* =====================================================
+           STRIPE CANCEL SESSION REFERENCE
+           
+           Stripe may return session_id depending on
+           the cancel_url configured by server.js.
+           
+           IMPORTANT:
+           
+           This page:
+           
+           - DOES NOT create an order
+           - DOES NOT modify Firestore
+           - DOES NOT clear the cart
+           - DOES NOT mark payment as successful
+        ====================================================== */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const sessionId =
+            urlParams.get(
+                "session_id"
+            );
+
+
+        if (
+            sessionId &&
+            paymentReference
+        ) {
+
+
+            paymentReference.classList.add(
+                "visible"
+            );
+
+
+            paymentReference.innerHTML =
+                "";
+
+
+            const label =
+                document.createElement(
+                    "span"
+                );
+
+
+            label.className =
+                "payment-reference-label";
+
+
+            label.textContent =
+                "Payment Reference";
+
+
+            const value =
+                document.createElement(
+                    "span"
+                );
+
+
+            value.className =
+                "payment-reference-value";
+
+
+            value.textContent =
+                sessionId;
+
+
+            paymentReference.appendChild(
+                label
+            );
+
+
+            paymentReference.appendChild(
+                value
+            );
+
+        }
+
+
+        /* =====================================================
+           CANCEL STATUS
+        ====================================================== */
+
+        if (paymentStatus) {
+
+            paymentStatus.className =
+                "payment-status warning";
+
+
+            paymentStatus.textContent =
+                "Your payment was cancelled or not completed. No order has been confirmed, and your cart remains available.";
+
+        }
+
+
+        /* =====================================================
+           CART UPDATED EVENTS
+        ====================================================== */
+
+        document.addEventListener(
+            "cartUpdated",
+            updateCartCount
+        );
+
+
+        window.addEventListener(
+            "cartUpdated",
+            updateCartCount
+        );
+
+
+        /* =====================================================
+           STORAGE EVENT
+        ====================================================== */
+
+        window.addEventListener(
+            "storage",
+            event => {
+
+                if (
+                    event.key === "cart"
+                ) {
+
+                    updateCartCount();
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           INITIAL CART COUNT
+        ====================================================== */
+
+        updateCartCount();
+
+
+        /* =====================================================
+           OPTIONAL EXISTING CART.JS SUPPORT
+           
+           If cart.js is loaded globally elsewhere and exposes
+           updateCartCount(), use it without requiring it.
+        ====================================================== */
+
+        if (
+            typeof window.updateCartCount ===
+            "function"
+        ) {
+
+            try {
+
+                window.updateCartCount();
+
+            } catch (error) {
+
+                console.error(
+                    "Aravon Shop: existing updateCartCount failed:",
+                    error
+                );
+
+                updateCartCount();
+
+            }
+
+        }
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>

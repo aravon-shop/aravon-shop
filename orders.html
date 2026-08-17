@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Orders History – Aravon Shop</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    a {
+      touch-action: manipulation;
+    }
+
+    /* =====================================================
+       PAGE
+    ===================================================== */
+
+    .page-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 25px 20px;
+      border-right: 1px solid #ddd;
+      min-height: 100vh;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 25px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 7px;
+      transition: .2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #ff4747;
+      color: #fff;
+    }
+
+    .badge {
+      background: #ff4747;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+      line-height: 16px;
+    }
+
+    .sidebar a.active .badge {
+      background: #fff;
+      color: #ff4747;
+    }
+
+    #logoutBtn {
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       MAIN WRAPPER
+    ===================================================== */
+
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main {
+      flex: 1;
+      padding: 35px;
+      min-width: 0;
+    }
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    .error-box {
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 35px;
+      text-align: center;
+      color: #666;
+    }
+
+    /* =====================================================
+       ORDERS
+    ===================================================== */
+
+    #ordersContainer {
+      display: grid;
+      gap: 18px;
+    }
+
+    .order-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 22px;
+      transition: .2s;
+    }
+
+    .order-card:hover {
+      border-color: #ff4747;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .07);
+      transform: translateY(-2px);
+    }
+
+    /* =====================================================
+       ORDER TOP
+    ===================================================== */
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .order-id {
+      font-size: 18px;
+      font-weight: bold;
+      word-break: break-word;
+    }
+
+    .order-date {
+      color: #666;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .order-status {
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      background: #ff4747;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .status-processing {
+      background: #ff9800;
+    }
+
+    .status-shipped {
+      background: #2196f3;
+    }
+
+    .status-delivered {
+      background: #2e9d50;
+    }
+
+    .status-cancelled {
+      background: #777;
+    }
+
+    .status-pending {
+      background: #777;
+    }
+
+    .status-paid {
+      background: #2e9d50;
+    }
+
+    /* =====================================================
+       ORDER INFO
+    ===================================================== */
+
+    .order-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-label {
+      display: block;
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    /* =====================================================
+       ITEMS
+    ===================================================== */
+
+    .order-items {
+      margin-top: 15px;
+    }
+
+    .order-items-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 8px 0;
+      color: #555;
+      font-size: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .order-item-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .order-item-price {
+      flex-shrink: 0;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .order-actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .view-order-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      background: #ff4747;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .view-order-btn:hover {
+      background: #e63f3f;
+    }
+
+    .view-order-btn:active {
+      transform: scale(.98);
+    }
+
+    /* =====================================================
+       EMPTY
+    ===================================================== */
+
+    .empty-orders {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      text-align: center;
+      padding: 60px 25px;
+    }
+
+    .empty-orders h2 {
+      margin: 0 0 10px;
+    }
+
+    .empty-orders p {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .shop-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      background: #ff4747;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 7px;
+    }
+
+    .shop-btn:hover {
+      background: #e63f3f;
+    }
+
+    /* =====================================================
+       FEATURED INFO
+    ===================================================== */
+
+    .featured-info {
+      margin-top: 30px;
+    }
+
+    .featured-grid {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(140px, 1fr)
+        );
+
+      gap: 12px;
+
+      text-align: center;
+    }
+
+    .featured-grid > div {
+      padding: 8px;
+    }
+
+    .featured-grid h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .featured-grid p {
+      margin: 0;
+      color: #666;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      margin-top: 40px;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    footer p {
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       TABLET
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .sidebar {
+        width: 220px;
+      }
+
+      .main {
+        padding: 25px;
+      }
+
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 800px) {
+
+      .page-layout {
+        display: block;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        position: static;
+
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+
+        padding: 15px;
+
+        overflow-x: auto;
+      }
+
+      .sidebar h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+
+      .sidebar a {
+        display: inline-flex;
+        align-items: center;
+        margin: 3px 4px 3px 0;
+        padding: 10px 12px;
+        white-space: nowrap;
+      }
+
+      .main {
+        padding: 22px 15px;
+      }
+
+      .order-info {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .featured-grid {
+        padding: 18px;
+      }
+
+    }
+
+    /* =====================================================
+       SMALL PHONE
+    ===================================================== */
+
+    @media (max-width: 500px) {
+
+      .main {
+        padding: 18px 10px;
+      }
+
+      .page-header {
+        margin-bottom: 18px;
+      }
+
+      .page-header h1 {
+        font-size: 25px;
+      }
+
+      .page-header p {
+        font-size: 14px;
+      }
+
+      .order-card {
+        padding: 15px;
+        border-radius: 9px;
+      }
+
+      .order-top {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .order-id {
+        font-size: 16px;
+      }
+
+      .order-date {
+        font-size: 13px;
+      }
+
+      .order-status {
+        align-self: flex-start;
+      }
+
+      .order-info {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .order-item {
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .order-item-price {
+        align-self: flex-start;
+      }
+
+      .order-actions {
+        justify-content: stretch;
+      }
+
+      .view-order-btn {
+        width: 100%;
+        min-height: 46px;
+      }
+
+      .empty-orders {
+        padding: 45px 18px;
+      }
+
+      .shop-btn {
+        width: 100%;
+      }
+
+      .featured-grid {
+        grid-template-columns: 1fr;
+        padding: 18px 12px;
+      }
+
+      footer {
+        margin-top: 25px;
+        padding: 25px 12px;
+      }
+
+      footer a {
+        display: inline-block;
+        margin: 5px 4px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page-layout">
+
+
+  <!-- ===================================================
+       SIDEBAR
+  ==================================================== -->
+
+  <aside class="sidebar">
+
+    <h2>
+      Welcome Back
+    </h2>
+
+
+    <a
+      href="../dashboard/account-dashboard.html"
+    >
+      Dashboard
+    </a>
+
+
+    <a
+      href="../messages/inbox.html"
+    >
+      Inbox
+
+      <span
+        id="messageCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a
+      href="orders.html"
+      class="active"
+    >
+      Orders
+
+      <span
+        id="orderCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+
+    <a
+      href="../../index.html"
+    >
+      Back to Shop
+    </a>
+
+
+    <a
+      id="logoutBtn"
+      href="#"
+    >
+      Logout
+    </a>
+
+  </aside>
+
+
+  <!-- ===================================================
+       MAIN
+  ==================================================== -->
+
+  <div class="main-wrapper">
+
+
+    <main class="main">
+
+
+      <div class="page-header">
+
+        <h1>
+          Orders History
+        </h1>
+
+        <p>
+          View your recent orders and open the
+          complete order details.
+        </p>
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        id="errorMessage"
+        class="error-box"
+        style="display:none;"
+      ></div>
+
+
+      <!-- LOADING -->
+
+      <div
+        id="loadingMessage"
+        class="loading"
+      >
+        Loading your orders...
+      </div>
+
+
+      <!-- ORDERS -->
+
+      <div
+        id="ordersContainer"
+        style="display:none;"
+      ></div>
+
+
+      <!-- EMPTY -->
+
+      <div
+        id="emptyOrders"
+        class="empty-orders"
+        style="display:none;"
+      >
+
+        <h2>
+          No orders yet
+        </h2>
+
+        <p>
+          You haven't placed an order yet.
+        </p>
+
+        <a
+          href="../../index.html"
+          class="shop-btn"
+        >
+          Start Shopping
+        </a>
+
+      </div>
+
+
+      <!-- =================================================
+           FEATURED INFO
+      ================================================== -->
+
+      <section class="featured-info">
+
+        <div class="featured-grid">
+
+
+          <div>
+
+            <h3>
+              🚚 Fast Delivery
+            </h3>
+
+            <p>
+              Reliable shipping with tracking
+              on every order.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              🔒 Secure Payments
+            </h3>
+
+            <p>
+              Shop safely with encrypted checkout.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              💬 Customer Support
+            </h3>
+
+            <p>
+              Friendly support whenever
+              you need help.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              ⭐ Quality Products
+            </h3>
+
+            <p>
+              Carefully selected products
+              at competitive prices.
+            </p>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+    </main>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <footer>
+
+      <p>
+        <strong>
+          Aravon Shop
+        </strong>
+      </p>
+
+
+      <p>
+
+        <a href="../../about.html">
+          About
+        </a>
+
+        |
+
+        <a href="../../contact.html">
+          Contact
+        </a>
+
+        |
+
+        <a href="../../privacy.html">
+          Privacy Policy
+        </a>
+
+        |
+
+        <a href="../../terms.html">
+          Terms &amp; Conditions
+        </a>
+
+      </p>
+
+
+      <p>
+        &copy; 2026 Aravon Shop.
+        All rights reserved.
+      </p>
+
+    </footer>
+
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const ordersContainer =
+  document.getElementById(
+    "ordersContainer"
+  );
+
+const loadingMessage =
+  document.getElementById(
+    "loadingMessage"
+  );
+
+const emptyOrders =
+  document.getElementById(
+    "emptyOrders"
+  );
+
+const errorMessage =
+  document.getElementById(
+    "errorMessage"
+  );
+
+const orderCountBadge =
+  document.getElementById(
+    "orderCountBadge"
+  );
+
+const messageCountBadge =
+  document.getElementById(
+    "messageCountBadge"
+  );
+
+const logoutBtn =
+  document.getElementById(
+    "logoutBtn"
+  );
+
+
+/* =========================================================
+   STORAGE KEYS
+========================================================= */
+
+const ORDER_STORAGE_KEYS = [
+
+  "orders",
+  "customerOrders",
+  "userOrders",
+  "myOrders",
+  "aravonOrders",
+  "orderHistory"
+
+];
+
+
+/* =========================================================
+   SAFE LOCAL STORAGE
+========================================================= */
+
+function getLocalStorageJSON(
+  key,
+  fallback = null
+) {
+
+  try {
+
+    const value =
+      localStorage.getItem(key);
+
+    if (!value) {
+
+      return fallback;
+
+    }
+
+    return JSON.parse(value);
+
+  } catch (error) {
+
+    console.warn(
+      "Unable to read localStorage:",
+      key,
+      error
+    );
+
+    return fallback;
+
+  }
+
+}
+
+
+/* =========================================================
+   SAFE SESSION STORAGE
+========================================================= */
+
+function getSessionStorageJSON(
+  key,
+  fallback = null
+) {
+
+  try {
+
+    const value =
+      sessionStorage.getItem(key);
+
+    if (!value) {
+
+      return fallback;
+
+    }
+
+    return JSON.parse(value);
+
+  } catch (error) {
+
+    console.warn(
+      "Unable to read sessionStorage:",
+      key,
+      error
+    );
+
+    return fallback;
+
+  }
+
+}
+
+
+/* =========================================================
+   CURRENT CUSTOMER
+========================================================= */
+
+function getCurrentCustomer() {
+
+  const localCustomer =
+    getLocalStorageJSON(
+      "currentCustomer",
+      null
+    );
+
+  if (
+    localCustomer &&
+    typeof localCustomer === "object"
+  ) {
+
+    return localCustomer;
+
+  }
+
+
+  const sessionCustomer =
+    getSessionStorageJSON(
+      "currentCustomer",
+      null
+    );
+
+  if (
+    sessionCustomer &&
+    typeof sessionCustomer === "object"
+  ) {
+
+    return sessionCustomer;
+
+  }
+
+
+  const localSession =
+    getLocalStorageJSON(
+      "customerSession",
+      null
+    );
+
+  if (
+    localSession &&
+    typeof localSession === "object"
+  ) {
+
+    return (
+      localSession.user ||
+      localSession.customer ||
+      localSession
+    );
+
+  }
+
+
+  const sessionSession =
+    getSessionStorageJSON(
+      "customerSession",
+      null
+    );
+
+  if (
+    sessionSession &&
+    typeof sessionSession === "object"
+  ) {
+
+    return (
+      sessionSession.user ||
+      sessionSession.customer ||
+      sessionSession
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener(
+    "click",
+    function(event) {
+
+      event.preventDefault();
+
+
+      try {
+
+        localStorage.removeItem(
+          "currentCustomer"
+        );
+
+        localStorage.removeItem(
+          "customerSession"
+        );
+
+        sessionStorage.removeItem(
+          "currentCustomer"
+        );
+
+        sessionStorage.removeItem(
+          "customerSession"
+        );
+
+      } catch (error) {
+
+        console.warn(
+          "Unable to clear session:",
+          error
+        );
+
+      }
+
+
+      window.location.href =
+        "../auth/login.html";
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   FORMAT MONEY
+========================================================= */
+
+function formatMoney(
+  amount,
+  currency = "EUR"
+) {
+
+  const number =
+    Number(amount) || 0;
+
+
+  try {
+
+    return new Intl.NumberFormat(
+      "en-NL",
+      {
+        style: "currency",
+        currency: currency
+      }
+    ).format(number);
+
+  } catch (error) {
+
+    return "€" +
+      number.toFixed(2);
+
+  }
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(value) {
+
+  if (!value) {
+
+    return "Unknown date";
+
+  }
+
+
+  let date = null;
+
+
+  if (
+    value &&
+    typeof value.toDate === "function"
+  ) {
+
+    try {
+
+      date =
+        value.toDate();
+
+    } catch (error) {
+
+      date = null;
+
+    }
+
+  }
+
+
+  if (
+    !date &&
+    value &&
+    typeof value === "object" &&
+    typeof value.seconds === "number"
+  ) {
+
+    date =
+      new Date(
+        value.seconds * 1000
+      );
+
+  }
+
+
+  if (
+    !date &&
+    value &&
+    typeof value === "object" &&
+    typeof value._seconds === "number"
+  ) {
+
+    date =
+      new Date(
+        value._seconds * 1000
+      );
+
+  }
+
+
+  if (!date) {
+
+    date =
+      new Date(value);
+
+  }
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return String(value);
+
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "en-NL",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }
+  ).format(date);
+
+}
+
+
+/* =========================================================
+   GET DATE VALUE
+========================================================= */
+
+function getOrderDateValue(order) {
+
+  if (!order) {
+
+    return null;
+
+  }
+
+
+  return (
+    order.createdAt ||
+    order.created_at ||
+    order.orderDate ||
+    order.date ||
+    order.created ||
+    order.timestamp ||
+    null
+  );
+
+}
+
+
+/* =========================================================
+   GET DATE TIMESTAMP
+========================================================= */
+
+function getOrderTimestamp(order) {
+
+  const value =
+    getOrderDateValue(order);
+
+
+  if (!value) {
+
+    return 0;
+
+  }
+
+
+  if (
+    value &&
+    typeof value.toDate === "function"
+  ) {
+
+    try {
+
+      return value.toDate().getTime();
+
+    } catch (error) {}
+
+  }
+
+
+  if (
+    value &&
+    typeof value === "object" &&
+    typeof value.seconds === "number"
+  ) {
+
+    return value.seconds * 1000;
+
+  }
+
+
+  if (
+    value &&
+    typeof value === "object" &&
+    typeof value._seconds === "number"
+  ) {
+
+    return value._seconds * 1000;
+
+  }
+
+
+  const timestamp =
+    new Date(value).getTime();
+
+
+  return Number.isFinite(timestamp)
+    ? timestamp
+    : 0;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   CAPITALIZE
+========================================================= */
+
+function capitalize(value) {
+
+  const text =
+    String(
+      value || ""
+    );
+
+
+  if (!text) {
+
+    return "";
+
+  }
+
+
+  return (
+    text.charAt(0).toUpperCase() +
+    text.slice(1)
+  );
+
+}
+
+
+/* =========================================================
+   ORDER ID
+========================================================= */
+
+function getOrderId(order) {
+
+  if (!order) {
+
+    return "unknown";
+
+  }
+
+
+  const id =
+    order.orderID ||
+    order.orderId ||
+    order.order_id ||
+    order.id ||
+    order.ID ||
+    order.docId ||
+    order.documentId ||
+    "";
+
+
+  return String(
+    id || "unknown"
+  );
+
+}
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+function getOrderItems(order) {
+
+  if (!order) {
+
+    return [];
+
+  }
+
+
+  const possibleItems = [
+
+    order.items,
+    order.products,
+    order.orderItems,
+    order.lineItems,
+    order.cartItems
+
+  ];
+
+
+  for (
+    const items of possibleItems
+  ) {
+
+    if (
+      Array.isArray(items)
+    ) {
+
+      return items;
+
+    }
+
+  }
+
+
+  return [];
+
+}
+
+
+/* =========================================================
+   ITEM QUANTITY
+========================================================= */
+
+function getItemQuantity(item) {
+
+  if (!item) {
+
+    return 1;
+
+  }
+
+
+  const quantity =
+    Number(
+      item.quantity ??
+      item.qty ??
+      item.count ??
+      item.amount ??
+      1
+    );
+
+
+  return (
+    Number.isFinite(quantity) &&
+    quantity > 0
+  )
+    ? quantity
+    : 1;
+
+}
+
+
+/* =========================================================
+   ITEM PRICE
+========================================================= */
+
+function getItemPrice(item) {
+
+  if (!item) {
+
+    return 0;
+
+  }
+
+
+  return (
+    Number(
+      item.price ??
+      item.unitPrice ??
+      item.amount ??
+      item.unit_price ??
+      0
+    ) || 0
+  );
+
+}
+
+
+/* =========================================================
+   ITEM COUNT
+========================================================= */
+
+function getItemCount(
+  order,
+  items
+) {
+
+  const savedCount =
+    Number(
+      order.itemCount ??
+      order.itemsCount ??
+      order.totalItems
+    );
+
+
+  if (
+    Number.isFinite(
+      savedCount
+    ) &&
+    savedCount >= 0
+  ) {
+
+    return savedCount;
+
+  }
+
+
+  return items.reduce(
+    function(
+      total,
+      item
+    ) {
+
+      return (
+        total +
+        getItemQuantity(item)
+      );
+
+    },
+    0
+  );
+
+}
+
+
+/* =========================================================
+   GET TOTAL
+========================================================= */
+
+function getOrderTotal(order) {
+
+  if (!order) {
+
+    return 0;
+
+  }
+
+
+  const possibleTotals = [
+
+    order.total,
+    order.grandTotal,
+    order.orderTotal,
+    order.amount,
+    order.totalAmount,
+    order.finalTotal
+
+  ];
+
+
+  for (
+    const value of possibleTotals
+  ) {
+
+    const number =
+      Number(value);
+
+
+    if (
+      Number.isFinite(number)
+    ) {
+
+      return number;
+
+    }
+
+  }
+
+
+  const items =
+    getOrderItems(order);
+
+
+  return items.reduce(
+    function(
+      total,
+      item
+    ) {
+
+      return (
+        total +
+        (
+          getItemPrice(item) *
+          getItemQuantity(item)
+        )
+      );
+
+    },
+    0
+  );
+
+}
+
+
+/* =========================================================
+   STATUS CLASS
+========================================================= */
+
+function getStatusClass(order) {
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus ||
+      order.fulfillment_status ||
+      ""
+    ).toLowerCase();
+
+
+  const status =
+    String(
+      order.status ||
+      order.orderStatus ||
+      ""
+    ).toLowerCase();
+
+
+  if (
+    fulfillment === "cancelled" ||
+    fulfillment === "canceled" ||
+    status === "cancelled" ||
+    status === "canceled"
+  ) {
+
+    return "status-cancelled";
+
+  }
+
+
+  if (
+    fulfillment === "delivered" ||
+    status === "delivered"
+  ) {
+
+    return "status-delivered";
+
+  }
+
+
+  if (
+    fulfillment === "shipped" ||
+    status === "shipped"
+  ) {
+
+    return "status-shipped";
+
+  }
+
+
+  if (
+    fulfillment === "processing" ||
+    status === "processing"
+  ) {
+
+    return "status-processing";
+
+  }
+
+
+  if (
+    String(
+      order.paymentStatus ||
+      order.payment_status ||
+      ""
+    ).toLowerCase() === "paid"
+  ) {
+
+    return "status-paid";
+
+  }
+
+
+  return "status-pending";
+
+}
+
+
+/* =========================================================
+   DISPLAY STATUS
+========================================================= */
+
+function getDisplayStatus(order) {
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus ||
+      order.fulfillment_status ||
+      ""
+    ).toLowerCase();
+
+
+  const status =
+    String(
+      order.status ||
+      order.orderStatus ||
+      ""
+    ).toLowerCase();
+
+
+  if (
+    fulfillment === "cancelled" ||
+    fulfillment === "canceled" ||
+    status === "cancelled" ||
+    status === "canceled"
+  ) {
+
+    return "Cancelled";
+
+  }
+
+
+  if (
+    fulfillment === "delivered" ||
+    status === "delivered"
+  ) {
+
+    return "Delivered";
+
+  }
+
+
+  if (
+    fulfillment === "shipped" ||
+    status === "shipped"
+  ) {
+
+    return "Shipped";
+
+  }
+
+
+  if (
+    fulfillment === "processing" ||
+    status === "processing"
+  ) {
+
+    return "Processing";
+
+  }
+
+
+  if (
+    String(
+      order.paymentStatus ||
+      order.payment_status ||
+      ""
+    ).toLowerCase() === "paid"
+  ) {
+
+    return "Paid";
+
+  }
+
+
+  return "Pending";
+
+}
+
+
+/* =========================================================
+   GET CUSTOMER EMAIL
+========================================================= */
+
+function getCustomerEmail(customer) {
+
+  if (
+    !customer ||
+    typeof customer !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  return String(
+    customer.email ||
+    customer.emailAddress ||
+    customer.userEmail ||
+    customer.customerEmail ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+/* =========================================================
+   GET CUSTOMER ID
+========================================================= */
+
+function getCustomerId(customer) {
+
+  if (
+    !customer ||
+    typeof customer !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  return String(
+    customer.uid ||
+    customer.userId ||
+    customer.userID ||
+    customer.customerId ||
+    customer.customerID ||
+    customer.id ||
+    ""
+  )
+    .trim();
+
+}
+
+
+/* =========================================================
+   GET ORDER CUSTOMER EMAIL
+========================================================= */
+
+function getOrderCustomerEmail(order) {
+
+  if (
+    !order ||
+    typeof order !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const userInfo =
+    order.USERINFO ||
+    order.userInfo ||
+    order.user ||
+    order.customer ||
+    order.customerInfo ||
+    {};
+
+
+  return getCustomerEmail({
+
+    email:
+      order.email ||
+      order.customerEmail ||
+      order.userEmail ||
+      order.user_email ||
+      userInfo.email ||
+      userInfo.emailAddress
+
+  });
+
+}
+
+
+/* =========================================================
+   GET ORDER CUSTOMER ID
+========================================================= */
+
+function getOrderCustomerId(order) {
+
+  if (
+    !order ||
+    typeof order !== "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const userInfo =
+    order.USERINFO ||
+    order.userInfo ||
+    order.user ||
+    order.customer ||
+    order.customerInfo ||
+    {};
+
+
+  return String(
+    order.uid ||
+    order.userId ||
+    order.userID ||
+    order.customerId ||
+    order.customerID ||
+    userInfo.uid ||
+    userInfo.userId ||
+    userInfo.userID ||
+    userInfo.customerId ||
+    userInfo.customerID ||
+    ""
+  ).trim();
+
+}
+
+
+/* =========================================================
+   CHECK WHETHER ORDER BELONGS TO CUSTOMER
+========================================================= */
+
+function orderBelongsToCustomer(
+  order,
+  customer
+) {
+
+  if (
+    !customer ||
+    typeof customer !== "object"
+  ) {
+
+    return true;
+
+  }
+
+
+  const customerEmail =
+    getCustomerEmail(
+      customer
+    );
+
+
+  const customerId =
+    getCustomerId(
+      customer
+    );
+
+
+  const orderEmail =
+    getOrderCustomerEmail(
+      order
+    );
+
+
+  const orderId =
+    getOrderCustomerId(
+      order
+    );
+
+
+  /*
+    If the order has no customer identification,
+    do not hide it.
+
+    This preserves compatibility with the
+    existing demo orders and older order records.
+  */
+
+  if (
+    !orderEmail &&
+    !orderId
+  ) {
+
+    return true;
+
+  }
+
+
+  if (
+    customerEmail &&
+    orderEmail &&
+    customerEmail === orderEmail
+  ) {
+
+    return true;
+
+  }
+
+
+  if (
+    customerId &&
+    orderId &&
+    customerId === orderId
+  ) {
+
+    return true;
+
+  }
+
+
+  return false;
+
+}
+
+
+/* =========================================================
+   CREATE ORDER DETAILS URL
+========================================================= */
+
+function createOrderDetailsUrl(
+  orderId
+) {
+
+  /*
+    IMPORTANT:
+
+    This page and order-details.html are expected
+    to be inside the same orders folder.
+
+    Example:
+
+    orders/
+      orders.html
+      order-details.html
+
+    Result:
+
+    order-details.html?orderId=order_1721670000001
+  */
+
+  const cleanId =
+    String(
+      orderId || "unknown"
+    );
+
+
+  return (
+    "order-details.html?orderId=" +
+    encodeURIComponent(
+      cleanId
+    )
+  );
+
+}
+
+
+/* =========================================================
+   CREATE ORDER CARD
+========================================================= */
+
+function createOrderCard(order) {
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "order-card";
+
+
+  const orderId =
+    getOrderId(order);
+
+
+  const items =
+    getOrderItems(order);
+
+
+  const itemCount =
+    getItemCount(
+      order,
+      items
+    );
+
+
+  const currency =
+    String(
+      order.currency ||
+      order.currencyCode ||
+      "EUR"
+    ).toUpperCase();
+
+
+  const total =
+    getOrderTotal(order);
+
+
+  const date =
+    getOrderDateValue(order);
+
+
+  const status =
+    getDisplayStatus(order);
+
+
+  const statusClass =
+    getStatusClass(order);
+
+
+  /*
+    IMPORTANT:
+
+    The exact order ID is placed into the URL.
+
+    This prevents the details page from opening
+    without knowing which order it needs to display.
+  */
+
+  const detailUrl =
+    createOrderDetailsUrl(
+      orderId
+    );
+
+
+  let itemsHTML = "";
+
+
+  if (items.length) {
+
+    itemsHTML =
+      items
+        .slice(0, 5)
+        .map(
+          function(item) {
+
+            const name =
+              item.name ||
+              item.title ||
+              item.productName ||
+              item.product_title ||
+              "Product";
+
+
+            const quantity =
+              getItemQuantity(
+                item
+              );
+
+
+            const itemPrice =
+              getItemPrice(
+                item
+              );
+
+
+            return `
+
+              <div class="order-item">
+
+                <span class="order-item-name">
+
+                  ${escapeHTML(name)}
+
+                  ×${escapeHTML(quantity)}
+
+                </span>
+
+                <span class="order-item-price">
+
+                  ${escapeHTML(
+                    formatMoney(
+                      itemPrice * quantity,
+                      currency
+                    )
+                  )}
+
+                </span>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    if (
+      items.length > 5
+    ) {
+
+      itemsHTML += `
+
+        <div class="order-item">
+
+          <span class="order-item-name">
+
+            +${escapeHTML(
+              items.length - 5
+            )}
+            more item(s)
+
+          </span>
+
+        </div>
+
+      `;
+
+    }
+
+  } else {
+
+    itemsHTML = `
+
+      <div class="order-item">
+
+        <span class="order-item-name">
+
+          View order details for
+          complete item information.
+
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const paymentStatus =
+    order.paymentStatus ||
+    order.payment_status ||
+    "pending";
+
+
+  card.innerHTML = `
+
+    <div class="order-top">
+
+      <div>
+
+        <div class="order-id">
+
+          Order #${escapeHTML(orderId)}
+
+        </div>
+
+        <div class="order-date">
+
+          ${escapeHTML(
+            formatDate(date)
+          )}
+
+        </div>
+
+      </div>
+
+
+      <span
+        class="order-status ${escapeHTML(
+          statusClass
+        )}"
+      >
+
+        ${escapeHTML(status)}
+
+      </span>
+
+    </div>
+
+
+    <div class="order-info">
+
+
+      <div>
+
+        <span class="info-label">
+          Total
+        </span>
+
+        <span class="info-value">
+
+          ${escapeHTML(
+            formatMoney(
+              total,
+              currency
+            )
+          )}
+
+        </span>
+
+      </div>
+
+
+      <div>
+
+        <span class="info-label">
+          Items
+        </span>
+
+        <span class="info-value">
+
+          ${escapeHTML(
+            itemCount
+          )}
+
+        </span>
+
+      </div>
+
+
+      <div>
+
+        <span class="info-label">
+          Payment
+        </span>
+
+        <span class="info-value">
+
+          ${escapeHTML(
+            capitalize(
+              paymentStatus
+            )
+          )}
+
+        </span>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="order-items">
+
+      <div class="order-items-title">
+        Order Items
+      </div>
+
+      ${itemsHTML}
+
+    </div>
+
+
+    <div class="order-actions">
+
+      <a
+        href="${escapeHTML(detailUrl)}"
+        class="view-order-btn"
+        data-order-id="${escapeHTML(orderId)}"
+        aria-label="View order ${escapeHTML(orderId)}"
+      >
+
+        View Order Details
+
+      </a>
+
+    </div>
+
+  `;
+
+
+  /*
+    Extra protection.
+
+    If the browser or another script modifies
+    the link later, clicking the button still
+    constructs the correct URL from data-order-id.
+  */
+
+  const detailsButton =
+    card.querySelector(
+      ".view-order-btn"
+    );
+
+
+  if (detailsButton) {
+
+    detailsButton.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+
+        const id =
+          detailsButton.getAttribute(
+            "data-order-id"
+          );
+
+
+        if (!id) {
+
+          console.error(
+            "Cannot open order details: missing order ID."
+          );
+
+          return;
+
+        }
+
+
+        const url =
+          createOrderDetailsUrl(
+            id
+          );
+
+
+        window.location.href =
+          url;
+
+      }
+    );
+
+  }
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   FIND SAVED ORDERS
+========================================================= */
+
+function getSavedOrders() {
+
+  for (
+    const key of ORDER_STORAGE_KEYS
+  ) {
+
+    const value =
+      getLocalStorageJSON(
+        key,
+        null
+      );
+
+
+    if (
+      Array.isArray(value) &&
+      value.length
+    ) {
+
+      return value;
+
+    }
+
+
+    /*
+      Some projects store orders inside
+      an object instead of directly as an array.
+    */
+
+    if (
+      value &&
+      typeof value === "object"
+    ) {
+
+      if (
+        Array.isArray(
+          value.orders
+        )
+      ) {
+
+        return value.orders;
+
+      }
+
+
+      if (
+        Array.isArray(
+          value.items
+        )
+      ) {
+
+        return value.items;
+
+      }
+
+    }
+
+  }
+
+
+  return [];
+
+}
+
+
+/* =========================================================
+   FALLBACK ORDERS
+========================================================= */
+
+function getFallbackOrders() {
+
+  /*
+    These are the three existing demo orders.
+
+    They are only used when no real orders
+    exist in localStorage.
+  */
+
+  return [
+
+    {
+
+      orderID:
+        "order_1721670000001",
+
+      USERINFO: {
+
+        firstName:
+          "Molly",
+
+        lastName:
+          "Barbie",
+
+        email:
+          "ti.a.eduardo24@gmail.com"
+
+      },
+
+      total:
+        49.00,
+
+      status:
+        "processing",
+
+      paymentStatus:
+        "paid",
+
+      fulfillmentStatus:
+        "processing",
+
+      currency:
+        "EUR",
+
+      createdAt:
+        "2024-07-22T10:00:00",
+
+      items: []
+
+    },
+
+
+    {
+
+      orderID:
+        "order_1721670000002",
+
+      USERINFO: {
+
+        firstName:
+          "Molly",
+
+        lastName:
+          "Barbie",
+
+        email:
+          "ti.a.eduardo24@gmail.com"
+
+      },
+
+      total:
+        45.00,
+
+      status:
+        "shipped",
+
+      paymentStatus:
+        "paid",
+
+      fulfillmentStatus:
+        "shipped",
+
+      currency:
+        "EUR",
+
+      createdAt:
+        "2024-07-22T10:15:00",
+
+      items: []
+
+    },
+
+
+    {
+
+      orderID:
+        "order_1721670000003",
+
+      USERINFO: {
+
+        firstName:
+          "Molly",
+
+        lastName:
+          "Barbie",
+
+        email:
+          "ti.a.eduardo24@gmail.com"
+
+      },
+
+      total:
+        39.00,
+
+      status:
+        "delivered",
+
+      paymentStatus:
+        "paid",
+
+      fulfillmentStatus:
+        "delivered",
+
+      currency:
+        "EUR",
+
+      createdAt:
+        "2024-07-22T10:30:00",
+
+      items: []
+
+    }
+
+  ];
+
+}
+
+
+/* =========================================================
+   REMOVE DUPLICATE ORDERS
+========================================================= */
+
+function removeDuplicateOrders(
+  orders
+) {
+
+  const seen =
+    new Set();
+
+
+  return orders.filter(
+    function(order) {
+
+      const id =
+        getOrderId(
+          order
+        );
+
+
+      if (
+        id === "unknown"
+      ) {
+
+        return true;
+
+      }
+
+
+      if (
+        seen.has(id)
+      ) {
+
+        return false;
+
+      }
+
+
+      seen.add(id);
+
+      return true;
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   LOAD ORDERS
+========================================================= */
+
+function loadOrders() {
+
+  if (!loadingMessage) {
+
+    return;
+
+  }
+
+
+  loadingMessage.style.display =
+    "block";
+
+
+  if (ordersContainer) {
+
+    ordersContainer.style.display =
+      "none";
+
+    ordersContainer.innerHTML =
+      "";
+
+  }
+
+
+  if (emptyOrders) {
+
+    emptyOrders.style.display =
+      "none";
+
+  }
+
+
+  if (errorMessage) {
+
+    errorMessage.style.display =
+      "none";
+
+    errorMessage.textContent =
+      "";
+
+  }
+
+
+  try {
+
+    let orders =
+      getSavedOrders();
+
+
+    /*
+      If no real orders are stored,
+      show the three existing demo orders.
+    */
+
+    if (!orders.length) {
+
+      orders =
+        getFallbackOrders();
+
+    }
+
+
+    /*
+      Remove accidental duplicate records.
+    */
+
+    orders =
+      removeDuplicateOrders(
+        orders
+      );
+
+
+    /*
+      If a logged-in customer exists,
+      show matching customer orders.
+
+      Orders without customer information
+      remain visible for backwards compatibility.
+    */
+
+    const customer =
+      getCurrentCustomer();
+
+
+    if (customer) {
+
+      orders =
+        orders.filter(
+          function(order) {
+
+            return orderBelongsToCustomer(
+              order,
+              customer
+            );
+
+          }
+        );
+
+    }
+
+
+    /*
+      Newest orders first.
+    */
+
+    orders.sort(
+      function(a, b) {
+
+        return (
+          getOrderTimestamp(b) -
+          getOrderTimestamp(a)
+        );
+
+      }
+    );
+
+
+    if (orderCountBadge) {
+
+      orderCountBadge.textContent =
+        String(
+          orders.length
+        );
+
+    }
+
+
+    if (!orders.length) {
+
+      loadingMessage.style.display =
+        "none";
+
+
+      if (emptyOrders) {
+
+        emptyOrders.style.display =
+          "block";
+
+      }
+
+
+      return;
+
+    }
+
+
+    orders.forEach(
+      function(order) {
+
+        if (!ordersContainer) {
+
+          return;
+
+        }
+
+
+        ordersContainer.appendChild(
+          createOrderCard(
+            order
+          )
+        );
+
+      }
+    );
+
+
+    loadingMessage.style.display =
+      "none";
+
+
+    if (ordersContainer) {
+
+      ordersContainer.style.display =
+        "grid";
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Orders loading error:",
+      error
+    );
+
+
+    loadingMessage.style.display =
+      "none";
+
+
+    if (ordersContainer) {
+
+      ordersContainer.style.display =
+        "none";
+
+    }
+
+
+    if (emptyOrders) {
+
+      emptyOrders.style.display =
+        "none";
+
+    }
+
+
+    if (errorMessage) {
+
+      errorMessage.textContent =
+        "Unable to load your orders. Please try again.";
+
+      errorMessage.style.display =
+        "block";
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   INBOX MESSAGE COUNT
+========================================================= */
+
+function updateMessageCount() {
+
+  if (!messageCountBadge) {
+
+    return;
+
+  }
+
+
+  let unreadCount =
+    0;
+
+
+  try {
+
+    const storedMessages =
+      localStorage.getItem(
+        "adminMessages"
+      );
+
+
+    if (!storedMessages) {
+
+      messageCountBadge.textContent =
+        "0";
+
+      return;
+
+    }
+
+
+    const messages =
+      JSON.parse(
+        storedMessages
+      );
+
+
+    if (
+      !Array.isArray(messages)
+    ) {
+
+      messageCountBadge.textContent =
+        "0";
+
+      return;
+
+    }
+
+
+    unreadCount =
+      messages.filter(
+        function(message) {
+
+          if (
+            !message ||
+            typeof message !== "object"
+          ) {
+
+            return false;
+
+          }
+
+
+          /*
+            read === true means already read.
+          */
+
+          if (
+            message.read === true
+          ) {
+
+            return false;
+
+          }
+
+
+          /*
+            unread === false means already read.
+          */
+
+          if (
+            message.unread === false
+          ) {
+
+            return false;
+
+          }
+
+
+          /*
+            Explicit status "read".
+          */
+
+          if (
+            String(
+              message.status || ""
+            ).toLowerCase() === "read"
+          ) {
+
+            return false;
+
+          }
+
+
+          return true;
+
+        }
+      ).length;
+
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read adminMessages:",
+      error
+    );
+
+
+    unreadCount =
+      0;
+
+  }
+
+
+  messageCountBadge.textContent =
+    String(
+      unreadCount
+    );
+
+}
+
+
+/* =========================================================
+   STORAGE EVENT
+========================================================= */
+
+window.addEventListener(
+  "storage",
+  function(event) {
+
+    /*
+      Refresh inbox badge.
+    */
+
+    if (
+      event.key ===
+      "adminMessages"
+    ) {
+
+      updateMessageCount();
+
+    }
+
+
+    /*
+      Refresh orders whenever another
+      browser tab changes order data.
+    */
+
+    if (
+      ORDER_STORAGE_KEYS.includes(
+        event.key
+      )
+    ) {
+
+      loadOrders();
+
+    }
+
+
+    /*
+      Customer login/session changed.
+    */
+
+    if (
+      event.key ===
+        "currentCustomer" ||
+      event.key ===
+        "customerSession"
+    ) {
+
+      loadOrders();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   VISIBILITY REFRESH
+========================================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  function() {
+
+    if (
+      document.visibilityState ===
+      "visible"
+    ) {
+
+      updateMessageCount();
+
+      loadOrders();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   WINDOW FOCUS REFRESH
+========================================================= */
+
+window.addEventListener(
+  "focus",
+  function() {
+
+    updateMessageCount();
+
+    loadOrders();
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+updateMessageCount();
+
+loadOrders();
+
+</script>
+
+
+</body>
+
+</html>

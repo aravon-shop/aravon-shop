@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product – Aravon Admin</title>
+
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f5f5f5; display:flex; height:100vh; }
+
+    .sidebar {
+      width:250px;
+      background:#fff;
+      padding:20px;
+      border-right:1px solid #ddd;
+      box-sizing:border-box;
+    }
+    .sidebar h2 { margin-bottom:20px; }
+    .sidebar a {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 12px;
+      margin-bottom:8px;
+      text-decoration:none;
+      color:#333;
+      border-radius:20px;
+      transition:0.2s;
+      font-size:14px;
+    }
+    .sidebar a:hover { background:#f1f3f4; }
+    .sidebar a.active { background:#d2e3fc; color:#174ea6; }
+    .badge {
+      background:#ea4335;
+      color:white;
+      padding:2px 8px;
+      border-radius:12px;
+      font-size:11px;
+    }
+    .logout-btn {
+      background:#333;
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+      margin-top:20px;
+      display:block;
+      text-align:center;
+    }
+
+    .main {
+      flex:1;
+      padding:30px;
+      overflow-y:auto;
+    }
+
+    h2 {
+      margin-top:0;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    .form-card {
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      max-width:700px;
+    }
+
+    label {
+      font-size:14px;
+      font-weight:bold;
+      display:block;
+      margin-top:15px;
+    }
+
+    input, textarea, select {
+      width:100%;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      margin-top:6px;
+      font-size:14px;
+      box-sizing:border-box;
+    }
+
+    textarea {
+      height:120px;
+      resize:none;
+    }
+
+    .save-btn {
+      background:#174ea6;
+      color:white;
+      padding:10px 18px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-top:20px;
+    }
+
+    .back-btn {
+      background:#6c757d;
+      color:white;
+      padding:10px 18px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      margin-top:10px;
+    }
+
+    .image-preview img {
+      width:120px;
+      height:120px;
+      object-fit:cover;
+      margin-right:10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+    }
+
+    .category-box {
+      margin-top:20px;
+      padding:15px;
+      border:1px solid #ddd;
+      border-radius:12px;
+      background:#fafafa;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Panel</h2>
+
+  <a href="../../dashboard/admin-dashboard.html"><span>Dashboard</span></a>
+  <a href="../../orders/admin-orders.html"><span>Orders</span><span class="badge" id="ordersCount">0</span></a>
+  <a href="../../users/users-list.html"><span>Users</span><span class="badge" id="usersCount">0</span></a>
+  <a href="../admin-inventory.html" class="active"><span>Inventory</span><span class="badge" id="inventoryCount">0</span></a>
+  <a href="../../website-builder/product-page-editor.html"><span>Website Builder</span></a>
+  <a href="../../settings/admin-settings.html"><span>Settings</span></a>
+  <a href="../../payment/payment-setting.html"><span>Payment</span><span class="badge" id="paymentCount">0</span></a>
+  <a href="../../messages/admin-messages.html"><span>Messages</span><span class="badge" id="messagesCount">0</span></a>
+
+  <button class="logout-btn">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <h2>Edit Product</h2>
+
+  <div class="form-card">
+    <h3 id="productName">Loading...</h3>
+
+    <!-- ⭐ PRODUCT ID FIELD (NEW + REQUIRED) -->
+    <label>Product ID</label>
+    <input id="productIdInput" type="text" readonly>
+
+    <label>Product Name</label>
+    <input id="nameInput" type="text">
+
+    <label>Price (€)</label>
+    <input id="priceInput" type="number" step="0.01">
+
+    <label>Stock</label>
+    <input id="stockInput" type="number">
+
+    <label>Description</label>
+    <textarea id="descInput"></textarea>
+
+    <label>Stripe Product ID</label>
+    <input id="stripeProductId">
+
+    <label>Stripe Payment Link</label>
+    <input id="stripePaymentLink">
+
+    <label>Upload New Images</label>
+    <input type="file" id="uploadImages" multiple>
+
+    <div class="image-preview" id="imagePreview"></div>
+
+    <!-- ⭐ SHOW PRODUCT ON PAGES -->
+    <div class="category-box">
+      <h3>Show Product On These Pages</h3>
+
+      <label><input type="checkbox" id="vp_index"> index.html</label><br>
+      <label><input type="checkbox" id="vp_fashion"> fashion.html</label><br>
+      <label><input type="checkbox" id="vp_sports"> sports.html</label><br>
+      <label><input type="checkbox" id="vp_toys"> toys.html</label><br>
+      <label><input type="checkbox" id="vp_accessories"> accessories.html</label><br>
+      <label><input type="checkbox" id="vp_electronics"> electronics.html</label><br>
+      <label><input type="checkbox" id="vp_automotive"> automotive.html</label><br>
+      <label><input type="checkbox" id="vp_appliances"> appliances.html</label><br>
+      <label><input type="checkbox" id="vp_bestseller"> bestseller.html</label><br>
+      <label><input type="checkbox" id="vp_trending"> trending.html</label><br>
+      <label><input type="checkbox" id="vp_recommend"> recommend products</label><br>
+
+      <button class="save-btn" onclick="saveProduct()">Save Changes</button>
+      <button class="back-btn" onclick="window.location.href='../admin-inventory.html'">← Back to Inventory</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../../js/admin-edit-product.js"></script>
+
+</body>
+</html>

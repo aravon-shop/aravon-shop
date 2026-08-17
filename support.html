@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Support – Aravon Shop</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       PAGE LAYOUT
+    ========================= */
+
+    .page-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 25px 20px;
+      border-right: 1px solid #ddd;
+      min-height: 100vh;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 25px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 7px;
+      transition: .2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #ff4747;
+      color: #fff;
+    }
+
+    .badge {
+      background: #ff4747;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+      line-height: normal;
+      font-weight: normal;
+    }
+
+    .sidebar a.active .badge {
+      background: #fff;
+      color: #ff4747;
+    }
+
+    #logoutBtn {
+      cursor: pointer;
+    }
+
+    /* =========================
+       MAIN WRAPPER
+    ========================= */
+
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .main {
+      flex: 1;
+      padding: 35px;
+      min-width: 0;
+    }
+
+    /* =========================
+       PAGE HEADER
+    ========================= */
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #666;
+    }
+
+    /* =========================
+       CONVERSATION
+    ========================= */
+
+    .conversation-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .conversation-card h3 {
+      margin-top: 0;
+    }
+
+    .conversation-card p {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       REPLY BOX
+    ========================= */
+
+    .reply-box {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .reply-box h3 {
+      margin-top: 0;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      resize: vertical;
+      font-family: Arial, sans-serif;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .reply-file {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .btn {
+      background: #ff4747;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background: #e63f3f;
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    /* =========================
+       NOTICE
+    ========================= */
+
+    .notice {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 7px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .success-notice {
+      background: #e6f7ea;
+      color: #176b2c;
+      border: 1px solid #b8e3c1;
+    }
+
+    .error-notice {
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+    }
+
+    /* =========================
+       FEATURED INFO
+    ========================= */
+
+    .featured-info {
+      margin-top: 30px;
+    }
+
+    .featured-grid {
+  background: #fff;
+  border-radius: 14px;
+  padding: 15px;              /* smaller padding */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(140px, 1fr)        /* smaller min width */
+  );
+  gap: 12px;                  /* smaller gap */
+  text-align: center;
+}
+
+    .featured-grid h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .featured-grid p {
+      margin: 0;
+      color: #666;
+      line-height: 1.4;
+      font-size: 13px; 
+    }
+
+    /* =========================
+       FOOTER
+       SAME STRUCTURE AS ORDERS
+    ========================= */
+
+    footer {
+      margin-top: 40px;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+      width: 100%;
+    }
+
+    footer p {
+      margin: 10px 0;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+   /* =========================
+       MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+  .page-layout {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+  }
+
+  .sidebar h2 {
+    margin-bottom: 15px;
+  }
+
+  .sidebar a {
+    display: inline-block;
+    margin: 3px;
+  }
+
+  .main {
+    padding: 22px 15px;
+  }
+
+  .featured-grid {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 500px) {
+
+  .reply-box,
+  .conversation-card {
+    padding: 17px;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .featured-grid h3 {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .featured-grid p {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  footer a {
+    display: inline-block;
+    margin: 5px;
+  }
+}
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="page-layout">
+
+  <!-- =====================================================
+       SIDEBAR
+  ===================================================== -->
+
+  <aside class="sidebar">
+
+    <h2>
+      Welcome Back
+    </h2>
+
+    <a
+      href="../dashboard/account-dashboard.html"
+    >
+      Dashboard
+    </a>
+
+    <a href="inbox.html">
+
+      Inbox
+
+      <span
+        id="messageCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../orders/orders.html">
+
+      Orders
+
+      <span
+        id="orderCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </a>
+
+    <a href="../../index.html">
+      Back to Shop
+    </a>
+
+    <a
+      id="logoutBtn"
+      href="#"
+    >
+      Logout
+    </a>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN WRAPPER
+       IMPORTANT: FOOTER IS INSIDE THIS WRAPPER
+       JUST LIKE orders.html
+  ===================================================== -->
+
+  <div class="main-wrapper">
+
+
+    <!-- ===================================================
+         MAIN CONTENT
+    =================================================== -->
+
+    <main class="main">
+
+      <div class="page-header">
+
+        <h1>
+          Support
+        </h1>
+
+        <p>
+          How can we help you today?
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           NOTICES
+      ================================================= -->
+
+      <div
+        id="successNotice"
+        class="notice success-notice"
+      ></div>
+
+      <div
+        id="errorNotice"
+        class="notice error-notice"
+      ></div>
+
+
+      <!-- =================================================
+           SUPPORT CONVERSATION CARD
+      ================================================= -->
+
+      <div class="conversation-card">
+
+        <h3>
+          Support Team
+        </h3>
+
+        <p>
+          Hello! Please describe your issue below.
+          You can also attach an image.
+        </p>
+
+        <small>
+
+          Opened:
+
+          <span id="supportTime"></span>
+
+        </small>
+
+      </div>
+
+
+      <!-- =================================================
+           REPLY BOX
+      ================================================= -->
+
+      <div
+        id="supportReplyBox"
+        class="reply-box"
+      >
+
+        <h3>
+          Send a Message
+        </h3>
+
+
+        <!-- TYPE SELECTOR -->
+
+        <select id="messageType">
+
+          <option value="request">
+            Request
+          </option>
+
+          <option value="refund">
+            Refund
+          </option>
+
+          <option value="cancel">
+            Cancel
+          </option>
+
+          <option value="support">
+            Support
+          </option>
+
+        </select>
+
+
+        <!-- MESSAGE -->
+
+        <textarea
+          id="replyText"
+          placeholder="Write your message..."
+          class="reply-input"
+        ></textarea>
+
+
+        <!-- IMAGE -->
+
+        <input
+          type="file"
+          id="replyImage"
+          accept="image/*"
+          class="reply-file"
+        >
+
+
+        <!-- SEND -->
+
+        <button
+          id="sendReplyBtn"
+          class="btn"
+          type="button"
+        >
+          Send Message
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           FEATURED INFO
+      ================================================= -->
+
+      <section class="featured-info">
+
+        <div class="featured-grid">
+
+          <div>
+
+            <h3>
+              🚚 Fast Delivery
+            </h3>
+
+            <p>
+              Reliable shipping with tracking
+              on every order.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              🔒 Secure Payments
+            </h3>
+
+            <p>
+              Shop safely with encrypted checkout.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              💬 Customer Support
+            </h3>
+
+            <p>
+              Friendly support whenever
+              you need help.
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <h3>
+              ⭐ Quality Products
+            </h3>
+
+            <p>
+              Carefully selected products
+              at competitive prices.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- =================================================
+         FOOTER
+         SAME LAYOUT AS orders.html
+    ================================================= -->
+
+    <footer>
+
+      <p>
+        <strong>
+          Aravon Shop
+        </strong>
+      </p>
+
+      <p>
+
+        <a href="../../about.html">
+          About
+        </a>
+
+        |
+
+        <a href="../../contact.html">
+          Contact
+        </a>
+
+        |
+
+        <a href="../../privacy.html">
+          Privacy Policy
+        </a>
+
+        |
+
+        <a href="../../terms.html">
+          Terms &amp; Conditions
+        </a>
+
+      </p>
+
+      <p>
+        &copy; 2026 Aravon Shop.
+        All rights reserved.
+      </p>
+
+    </footer>
+
+
+  </div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+/* ========================================================
+   ELEMENTS
+======================================================== */
+
+const messageCountBadge =
+  document.getElementById(
+    "messageCountBadge"
+  );
+
+
+const orderCountBadge =
+  document.getElementById(
+    "orderCountBadge"
+  );
+
+
+const logoutBtn =
+  document.getElementById(
+    "logoutBtn"
+  );
+
+
+const supportTime =
+  document.getElementById(
+    "supportTime"
+  );
+
+
+const messageType =
+  document.getElementById(
+    "messageType"
+  );
+
+
+const replyText =
+  document.getElementById(
+    "replyText"
+  );
+
+
+const replyImage =
+  document.getElementById(
+    "replyImage"
+  );
+
+
+const sendReplyBtn =
+  document.getElementById(
+    "sendReplyBtn"
+  );
+
+
+const successNotice =
+  document.getElementById(
+    "successNotice"
+  );
+
+
+const errorNotice =
+  document.getElementById(
+    "errorNotice"
+  );
+
+
+/* ========================================================
+   USER DATA
+======================================================== */
+
+const userName =
+  localStorage.getItem(
+    "userName"
+  ) ||
+  "Unknown User";
+
+
+const userEmail =
+  localStorage.getItem(
+    "userEmail"
+  ) ||
+  "unknown@noemail.com";
+
+
+const userId =
+  localStorage.getItem(
+    "userId"
+  ) ||
+  "0000";
+
+
+/* ========================================================
+   SUPPORT TIME
+======================================================== */
+
+supportTime.textContent =
+  new Date().toLocaleString(
+    "en-NL"
+  );
+
+
+/* ========================================================
+   SAFE JSON READER
+======================================================== */
+
+function getLocalStorageArray(key) {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        key
+      );
+
+    if (!raw) {
+      return [];
+    }
+
+    const parsed =
+      JSON.parse(
+        raw
+      );
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read localStorage:",
+      key,
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* ========================================================
+   SUPPORT ORDER FALLBACK
+======================================================== */
+
+const supportOrderFallback = [
+
+  {
+    orderId: "order_001",
+    status: "new",
+    paymentStatus: "paid",
+    fulfillmentStatus: "processing",
+    total: 129.99,
+    currency: "EUR",
+    createdAt: "2026-08-10"
+  },
+
+  {
+    orderId: "order_002",
+    status: "new",
+    paymentStatus: "paid",
+    fulfillmentStatus: "shipped",
+    total: 899,
+    currency: "EUR",
+    createdAt: "2026-08-08"
+  },
+
+  {
+    orderId: "order_003",
+    status: "new",
+    paymentStatus: "paid",
+    fulfillmentStatus: "delivered",
+    total: 549,
+    currency: "EUR",
+    createdAt: "2026-08-05"
+  }
+
+];
+
+
+/* ========================================================
+   CHECK MESSAGE UNREAD
+======================================================== */
+
+function isMessageUnread(message) {
+
+  if (!message) {
+    return false;
+  }
+
+  if (
+    message.read === true
+  ) {
+
+    return false;
+
+  }
+
+  if (
+    message.unread === false
+  ) {
+
+    return false;
+
+  }
+
+  const status =
+    String(
+      message.status || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  if (
+    status === "read"
+  ) {
+
+    return false;
+
+  }
+
+  if (
+    message.unread === true
+  ) {
+
+    return true;
+
+  }
+
+  if (
+    status === "unread" ||
+    status === "new"
+  ) {
+
+    return true;
+
+  }
+
+  return true;
+
+}
+
+
+/* ========================================================
+   GET REAL MESSAGE COUNT
+======================================================== */
+
+function getRealMessageCount() {
+
+  const messages =
+    getLocalStorageArray(
+      "adminMessages"
+    );
+
+
+  const userMessages =
+    messages.filter(
+      function(message) {
+
+        if (!message) {
+          return false;
+        }
+
+
+        if (
+          message.email &&
+          String(message.email)
+            .toLowerCase() ===
+          String(userEmail)
+            .toLowerCase()
+        ) {
+
+          return true;
+
+        }
+
+
+        if (
+          message.userId &&
+          String(message.userId) ===
+          String(userId)
+        ) {
+
+          return true;
+
+        }
+
+
+        return false;
+
+      }
+    );
+
+
+  return userMessages.filter(
+    function(message) {
+
+      return isMessageUnread(
+        message
+      );
+
+    }
+  ).length;
+
+}
+
+
+/* ========================================================
+   GET REAL ORDER COUNT
+======================================================== */
+
+function getRealOrderCount() {
+
+  const storedOrders =
+    getLocalStorageArray(
+      "orders"
+    );
+
+
+  if (
+    storedOrders.length > 0
+  ) {
+
+    return storedOrders.length;
+
+  }
+
+
+  return supportOrderFallback.length;
+
+}
+
+
+/* ========================================================
+   UPDATE MESSAGE BADGE
+======================================================== */
+
+function updateMessageBadge() {
+
+  const count =
+    getRealMessageCount();
+
+
+  messageCountBadge.textContent =
+    String(
+      count
+    );
+
+
+  messageCountBadge.style.display =
+    count > 0
+      ? "inline-block"
+      : "none";
+
+}
+
+
+/* ========================================================
+   UPDATE ORDER BADGE
+======================================================== */
+
+function updateOrderBadge() {
+
+  const count =
+    getRealOrderCount();
+
+
+  orderCountBadge.textContent =
+    String(
+      count
+    );
+
+
+  orderCountBadge.style.display =
+    count > 0
+      ? "inline-block"
+      : "none";
+
+}
+
+
+/* ========================================================
+   UPDATE BOTH BADGES
+======================================================== */
+
+function updateNotificationBadges() {
+
+  updateMessageBadge();
+
+  updateOrderBadge();
+
+}
+
+
+/* ========================================================
+   LAST KNOWN COUNTS
+======================================================== */
+
+let lastMessageCount =
+  getRealMessageCount();
+
+
+let lastOrderCount =
+  getRealOrderCount();
+
+
+/* ========================================================
+   CROSS-TAB REAL-TIME UPDATE
+======================================================== */
+
+window.addEventListener(
+  "storage",
+  function(event) {
+
+    if (
+      event.key ===
+      "adminMessages"
+    ) {
+
+      updateMessageBadge();
+
+      lastMessageCount =
+        getRealMessageCount();
+
+    }
+
+
+    if (
+      event.key ===
+      "orders"
+    ) {
+
+      updateOrderBadge();
+
+      lastOrderCount =
+        getRealOrderCount();
+
+    }
+
+  }
+);
+
+
+/* ========================================================
+   SAME-TAB REAL-TIME MONITOR
+======================================================== */
+
+function monitorNotificationBadges() {
+
+  const currentMessageCount =
+    getRealMessageCount();
+
+
+  const currentOrderCount =
+    getRealOrderCount();
+
+
+  if (
+    currentMessageCount !==
+    lastMessageCount
+  ) {
+
+    messageCountBadge.textContent =
+      String(
+        currentMessageCount
+      );
+
+
+    messageCountBadge.style.display =
+      currentMessageCount > 0
+        ? "inline-block"
+        : "none";
+
+
+    lastMessageCount =
+      currentMessageCount;
+
+  }
+
+
+  if (
+    currentOrderCount !==
+    lastOrderCount
+  ) {
+
+    orderCountBadge.textContent =
+      String(
+        currentOrderCount
+      );
+
+
+    orderCountBadge.style.display =
+      currentOrderCount > 0
+        ? "inline-block"
+        : "none";
+
+
+    lastOrderCount =
+      currentOrderCount;
+
+  }
+
+}
+
+
+setInterval(
+  monitorNotificationBadges,
+  500
+);
+
+
+/* ========================================================
+   LOGOUT
+======================================================== */
+
+logoutBtn.addEventListener(
+  "click",
+  function(event) {
+
+    event.preventDefault();
+
+
+    window.location.href =
+      "../../index.html";
+
+  }
+);
+
+
+/* ========================================================
+   SHOW SUCCESS
+======================================================== */
+
+function showSuccess(message) {
+
+  successNotice.textContent =
+    message;
+
+
+  successNotice.style.display =
+    "block";
+
+
+  errorNotice.style.display =
+    "none";
+
+
+  setTimeout(
+    function() {
+
+      successNotice.style.display =
+        "none";
+
+    },
+    4000
+  );
+
+}
+
+
+/* ========================================================
+   SHOW ERROR
+======================================================== */
+
+function showError(message) {
+
+  errorNotice.textContent =
+    message;
+
+
+  errorNotice.style.display =
+    "block";
+
+
+  successNotice.style.display =
+    "none";
+
+}
+
+
+/* ========================================================
+   SEND SUPPORT MESSAGE
+======================================================== */
+
+sendReplyBtn.addEventListener(
+  "click",
+  function() {
+
+    const text =
+      replyText.value.trim();
+
+
+    const imageFile =
+      replyImage.files[0];
+
+
+    const type =
+      messageType.value;
+
+
+    if (
+      !text &&
+      !imageFile
+    ) {
+
+      showError(
+        "Please type a message or attach an image."
+      );
+
+
+      return;
+
+    }
+
+
+    sendReplyBtn.disabled =
+      true;
+
+
+    sendReplyBtn.textContent =
+      "Sending...";
+
+
+    if (imageFile) {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function() {
+
+          saveSupportMessage(
+            text,
+            reader.result,
+            type
+          );
+
+        };
+
+
+      reader.onerror =
+        function() {
+
+          sendReplyBtn.disabled =
+            false;
+
+
+          sendReplyBtn.textContent =
+            "Send Message";
+
+
+          showError(
+            "Unable to read the selected image."
+          );
+
+        };
+
+
+      reader.readAsDataURL(
+        imageFile
+      );
+
+    } else {
+
+      saveSupportMessage(
+        text,
+        null,
+        type
+      );
+
+    }
+
+  }
+);
+
+
+/* ========================================================
+   SAVE SUPPORT MESSAGE
+======================================================== */
+
+function saveSupportMessage(
+  text,
+  imageData,
+  type
+) {
+
+  try {
+
+    const now =
+      new Date();
+
+
+    const subject =
+      type.charAt(0).toUpperCase() +
+      type.slice(1) +
+      " Request";
+
+
+    const message = {
+
+      id:
+        "msg_" +
+        Date.now() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2, 8),
+
+
+      text:
+        text,
+
+
+      image:
+        imageData,
+
+
+      date:
+        now.toLocaleString(
+          "en-NL"
+        ),
+
+
+      timestamp:
+        now.toISOString(),
+
+
+      from:
+        "user",
+
+
+      type:
+        type,
+
+
+      name:
+        userName,
+
+
+      email:
+        userEmail,
+
+
+      userId:
+        userId,
+
+
+      subject:
+        subject,
+
+
+      read:
+        false,
+
+
+      unread:
+        true,
+
+
+      status:
+        "unread"
+
+    };
+
+
+    const messages =
+      getLocalStorageArray(
+        "adminMessages"
+      );
+
+
+    messages.push(
+      message
+    );
+
+
+    localStorage.setItem(
+      "adminMessages",
+      JSON.stringify(
+        messages
+      )
+    );
+
+
+    replyText.value =
+      "";
+
+
+    replyImage.value =
+      "";
+
+
+    messageType.value =
+      "request";
+
+
+    sendReplyBtn.disabled =
+      false;
+
+
+    sendReplyBtn.textContent =
+      "Send Message";
+
+
+    updateMessageBadge();
+
+
+    lastMessageCount =
+      getRealMessageCount();
+
+
+    lastOrderCount =
+      getRealOrderCount();
+
+
+    showSuccess(
+      "Message sent successfully."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Unable to save support message:",
+      error
+    );
+
+
+    sendReplyBtn.disabled =
+      false;
+
+
+    sendReplyBtn.textContent =
+      "Send Message";
+
+
+    showError(
+      "Unable to send your message. Please try again."
+    );
+
+  }
+
+}
+
+
+/* ========================================================
+   INITIAL LOAD
+======================================================== */
+
+updateNotificationBadges();
+
+
+lastMessageCount =
+  getRealMessageCount();
+
+
+lastOrderCount =
+  getRealOrderCount();
+
+</script>
+
+</body>
+
+</html>

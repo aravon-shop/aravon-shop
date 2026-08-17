@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appliances – Aravon Shop</title>
+
+  <!-- GLOBAL PRODUCT DATABASE -->
+  <script src="../js/products.js"></script>
+
+  <!-- GLOBAL CART LOGIC -->
+  <script>
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const el = document.getElementById("cartCount");
+      if (el) el.textContent = cart.length;
+    }
+
+    function addToCart(id, name, price, image) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      cart.push({
+        id,
+        name,
+        price,
+        image,
+        qty: 1
+      });
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    document.addEventListener("DOMContentLoaded", updateCartCount);
+  </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Inter',sans-serif;
+    background:#f5f5f5;
+    color:#222;
+
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+
+    position:sticky;
+    top:0;
+    z-index:999;
+
+    background:#ffffff;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+
+}
+
+.top-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:15px 30px;
+
+}
+
+.logo{
+
+    font-size:28px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    color:#111;
+
+    white-space:nowrap;
+
+}
+
+.search-bar{
+
+    flex:1;
+
+    display:flex;
+
+    max-width:700px;
+
+}
+
+.search-bar input{
+
+    flex:1;
+
+    padding:13px 15px;
+
+    border:2px solid #ff4747;
+
+    border-right:none;
+
+    border-radius:8px 0 0 8px;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+.search-bar button{
+
+    background:#ff4747;
+
+    color:#fff;
+
+    border:none;
+
+    padding:0 24px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    border-radius:0 8px 8px 0;
+
+    transition:.25s;
+
+}
+
+.search-bar button:hover{
+
+    background:#e43b3b;
+
+}
+
+.header-icons{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+}
+
+.header-icons a{
+
+    color:#222;
+
+    text-decoration:none;
+
+    font-size:24px;
+
+}
+
+.cart-icon{
+
+    position:relative;
+
+    cursor:pointer;
+
+    font-size:24px;
+
+}
+
+.cart-badge{
+
+    position:absolute;
+
+    top:-8px;
+
+    right:-12px;
+
+    background:#ff4747;
+
+    color:white;
+
+    width:22px;
+
+    height:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:50%;
+
+    font-size:11px;
+
+    font-weight:700;
+
+}
+
+/* =========================
+   MOBILE MENU BUTTON
+========================= */
+
+.menu-toggle{
+
+    display:none;
+
+    background:none;
+
+    border:none;
+
+    cursor:pointer;
+
+    font-size:32px;
+
+    color:#222;
+
+}
+
+/* =========================
+   CATEGORY BAR
+========================= */
+
+.category-bar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    overflow-x:auto;
+
+    padding:14px 25px;
+
+    background:white;
+
+    border-top:1px solid #eee;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.category-bar::-webkit-scrollbar{
+
+    height:5px;
+
+}
+
+.category-bar::-webkit-scrollbar-thumb{
+
+    background:#ccc;
+
+    border-radius:20px;
+
+}
+
+.cat-btn{
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#ff4747;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    white-space:nowrap;
+
+}
+
+.cat-btn:hover{
+
+    background:#e43b3b;
+
+}
+
+/* =========================
+   DROPDOWNS
+========================= */
+
+.sort-dropdown,
+.gender-dropdown{
+
+    padding:10px 14px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    background:#fff;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+/* =========================
+   HERO BANNER
+========================= */
+
+.banner{
+
+    width:100%;
+
+    overflow:hidden;
+
+}
+
+.banner img{
+
+    width:100%;
+
+    height:420px;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-grid{
+    max-width:1600px;
+    margin:30px auto;
+    padding:0 20px;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(250px,1fr));
+    gap:22px;
+}
+
+.product-card{
+
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    transition:.25s;
+
+}
+
+.slider{
+
+    height:200px;
+
+}
+
+.slider img{
+
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+}
+
+.product-info{
+
+    padding:14px;
+
+}
+
+.product-title{
+
+    font-size:15px;
+
+    font-weight:600;
+
+    min-height:40px;
+
+    margin-bottom:8px;
+
+}
+
+.product-price{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#ff4747;
+
+}
+
+.add-cart-btn{
+
+    width:100%;
+
+    margin-top:14px;
+
+    padding:11px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#ff4747;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.add-cart-btn:hover{
+
+    background:#e43b3b;
+
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    margin-top:50px;
+
+    background:#222;
+
+    color:white;
+
+    text-align:center;
+
+    padding:30px 20px;
+
+}
+
+footer p{
+
+    margin:8px 0;
+
+}
+
+footer a{
+
+    color:white;
+
+    text-decoration:none;
+
+    margin:0 10px;
+
+}
+
+footer a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:768px){
+
+    .top-header{
+
+        display:grid;
+
+        grid-template-columns:1fr auto;
+
+        gap:15px;
+
+        padding:15px;
+
+    }
+
+    .logo{
+
+        font-size:24px;
+
+    }
+
+    .menu-toggle{
+
+        display:block;
+
+    }
+
+    .search-bar{
+
+        grid-column:1 / -1;
+
+        max-width:100%;
+
+    }
+
+    .header-icons{
+
+        grid-column:1 / -1;
+
+        justify-content:flex-end;
+
+    }
+
+    .category-bar{
+
+        display:none;
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+        padding:15px;
+
+        gap:12px;
+
+    }
+
+    .category-bar.show{
+
+        display:flex;
+
+    }
+
+    .cat-btn{
+
+        text-align:center;
+
+    }
+
+    .sort-dropdown,
+
+    .gender-dropdown{
+
+        width:100%;
+
+    }
+
+    .banner img{
+
+        height:220px;
+
+    }
+
+    .product-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+    padding:20px 15px;
+
+}
+
+.slider{
+
+    height:170px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="top-header">
+
+        <div
+            class="logo"
+            onclick="window.location.href='../index.html'">
+            Aravon Shop
+        </div>
+
+        <button
+            id="menuToggle"
+            class="menu-toggle"
+            aria-label="Open navigation">
+            ☰
+        </button>
+
+        <div class="search-bar">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search products..."
+                aria-label="Search products">
+
+            <button
+                id="searchBtn"
+                type="button">
+                Search
+            </button>
+
+        </div>
+
+        <div class="header-icons">
+
+            <a
+                href="../users/auth/login.html"
+                title="Account"
+                aria-label="Account">
+                👤
+            </a>
+
+            <div
+                class="cart-icon"
+                onclick="window.location.href='../cart/checkout.html'"
+                title="Shopping Cart"
+                aria-label="Shopping Cart">
+
+                🛒
+
+                <span
+                    id="cartCount"
+                    class="cart-badge">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- =========================
+     BANNER
+========================= -->
+
+<section class="banner">
+
+    <img
+        src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1600&q=80"
+        alt="Fashion collection banner"
+        loading="lazy">
+
+</section>
+
+
+    <!-- CATEGORY BAR -->
+
+    <nav
+        id="mobileMenu"
+        class="category-bar">
+
+        <a class="cat-btn" href="../product-pages/Fashion.html">
+            Fashion
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Sports.html">
+            Sports
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Toys.html">
+            Toys
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Accessories.html">
+            Accessories
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Automotive.html">
+            Automotive
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Electronics.html">
+            Electronics
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Appliances.html">
+            Appliances
+        </a>
+
+        <a class="cat-btn" href="../product-pages/Trending.html">
+            Trending
+        </a>
+
+        <a class="cat-btn" href="../product-pages/BestSeller.html">
+            Best Seller
+        </a>
+
+<select id="sortDropdown" class="sort-dropdown">
+    <option value="default" selected>Sort By</option>
+    <option value="low-high">Price: Low to High</option>
+    <option value="high-low">Price: High to Low</option>
+</select>
+
+ <select
+    id="genderDropdown"
+    class="gender-dropdown">
+
+    <option value="all" selected>
+        Show All
+    </option>
+
+    <option value="adults">
+        Adults
+    </option>
+
+    <option value="kids">
+        Kids
+    </option>
+
+</select>
+
+    </nav>
+
+<!-- =========================
+     PRODUCTS
+========================= -->
+
+<section id="productGrid" class="product-grid">
+
+    <!-- =========================
+         PRODUCT 1
+    ========================= -->
+
+    <div
+        class="product-card"
+        data-id="J6qT4VyLp8Xm2HrK9WdN"
+        data-price="49"
+        data-gender="adults"
+        tabindex="0">
+
+        <div class="slider">
+
+            <img
+                src="https://picsum.photos/seed/appliance1/500"
+                alt="EcoHeat Portable Heater"
+                loading="lazy">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-title">
+                EcoHeat Portable Heater
+            </div>
+
+            <div class="product-price">
+                €49
+            </div>
+
+            <button
+                class="add-cart-btn"
+                type="button">
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         PRODUCT 2
+    ========================= -->
+
+    <div
+        class="product-card"
+        data-id="cV4Np8QxLm1Tr7Hy5KbJ"
+        data-price="39"
+        data-gender="adults"
+        tabindex="0">
+
+        <div class="slider">
+
+            <img
+                src="https://picsum.photos/seed/appliance2/500"
+                alt="AquaPure Water Filter"
+                loading="lazy">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-title">
+                AquaPure Water Filter
+            </div>
+
+            <div class="product-price">
+                €39
+            </div>
+
+            <button
+                class="add-cart-btn"
+                type="button">
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         PRODUCT 3
+    ========================= -->
+
+    <div
+        class="product-card"
+        data-id="Tz5Hk1Qm9VcR7LpX4JnB"
+        data-price="59"
+        data-gender="adults"
+        tabindex="0">
+
+        <div class="slider">
+
+            <img
+                src="https://picsum.photos/seed/appliance3/500"
+                alt="SteamPro Garment Steamer"
+                loading="lazy">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-title">
+                SteamPro Garment Steamer
+            </div>
+
+            <div class="product-price">
+                €59
+            </div>
+
+            <button
+                class="add-cart-btn"
+                type="button">
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         PRODUCT 4
+    ========================= -->
+
+    <div
+        class="product-card"
+        data-id="bQ9Wm3XaLf8Kp2Rt6NvD"
+        data-price="89"
+        data-gender="kids"
+        tabindex="0">
+
+        <div class="slider">
+
+            <img
+                src="https://picsum.photos/seed/appliance4/500"
+                alt="FreshBreeze Air Purifier"
+                loading="lazy">
+
+        </div>
+
+        <div class="product-info">
+
+            <div class="product-title">
+                FreshBreeze Air Purifier
+            </div>
+
+            <div class="product-price">
+                €89
+            </div>
+
+            <button
+                class="add-cart-btn"
+                type="button">
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+         FEATURED INFO
+    ========================= -->
+
+    <section style="grid-column:1/-1; margin-top:20px;">
+
+        <div style="
+            background:#ffffff;
+            border-radius:14px;
+            padding:30px;
+            box-shadow:0 4px 12px rgba(0,0,0,.08);
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:25px;
+            text-align:center;">
+
+            <div>
+                <h3>🚚 Fast Delivery</h3>
+                <p>Reliable shipping with tracking on every order.</p>
+            </div>
+
+            <div>
+                <h3>🔒 Secure Payments</h3>
+                <p>Shop safely with encrypted checkout.</p>
+            </div>
+
+            <div>
+                <h3>💬 Customer Support</h3>
+                <p>Friendly support whenever you need help.</p>
+            </div>
+
+            <div>
+                <h3>⭐ Quality Products</h3>
+                <p>Carefully selected products at competitive prices.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <p><strong>Aravon Shop</strong></p>
+
+    <p>
+
+        <a href="../about.html">About</a> |
+
+        <a href="../contact.html">Contact</a> |
+
+        <a href="../privacy.html">Privacy Policy</a> |
+
+        <a href="../terms.html">Terms & Conditions</a>
+
+    </p>
+
+    <p>
+
+        &copy; 2026 Aravon Shop. All rights reserved.
+
+    </p>
+
+</footer>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script src="../js/category.js"></script>
+
+<script>
+// ======================================
+// APPLIANCES PAGE - CATEGORY SEARCH
+// ======================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+
+    function runCategorySearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        if (query.length === 0) return;
+
+        const categoryMap = {
+            fashion: ["shirt", "tshirt", "pants", "jeans", "dress", "hoodie", "jacket", "clothes", "hat", "cap"],
+            sports: ["sports", "ball", "football", "basketball", "running", "gym"],
+            toys: ["toy", "lego", "doll", "action figure", "puzzle"],
+            accessories: ["wallet", "belt", "sunglasses", "necklace", "chain", "watch", "bag", "tote"],
+            automotive: ["car", "automotive", "vehicle", "tire"],
+            electronics: ["earbuds", "phone", "laptop", "camera", "electronics"],
+            appliances: ["fridge", "microwave", "appliance", "washer"],
+            trending: ["trending", "popular", "hot"],
+            bestseller: ["best seller", "bestseller", "top"]
+        };
+
+        for (const category in categoryMap) {
+            if (categoryMap[category].some(word => query.includes(word))) {
+                window.location.href = `./${category.charAt(0).toUpperCase() + category.slice(1)}.html`;
+                return;
+            }
+        }
+
+        window.location.href = "./Trending.html";
+    }
+
+    searchBtn.addEventListener("click", runCategorySearch);
+
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            runCategorySearch();
+        }
+    });
+
+});
+</script>
+
+<script type="module">
+  import { addInventoryItem } from "../admin/inventory/shared/inventory-storage.js";
+
+  // Scan all product cards on the appliances page
+  const cards = document.querySelectorAll(".product-card");
+
+  cards.forEach(card => {
+    const product = {
+      id: card.dataset.id,
+      name: card.dataset.name,
+      price: Number(card.dataset.price),
+      gender: card.dataset.gender,
+      image: card.dataset.image,
+      category: "appliances",   // ⭐ appliances category
+      stock: 0                  // admin will update later
+    };
+
+    addInventoryItem(product);
+  });
+</script>
+
+</body>
+
+</html>

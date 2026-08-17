@@ -1,0 +1,3806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Order Details – Aravon Shop</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       PAGE LAYOUT
+    ===================================================== */
+
+    .page-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      padding: 25px 20px;
+      border-right: 1px solid #ddd;
+      min-height: 100vh;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 25px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 7px;
+      transition: .2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #ff4747;
+      color: #fff;
+    }
+
+    .badge {
+      background: #ff4747;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .sidebar a.active .badge {
+      background: #fff;
+      color: #ff4747;
+    }
+
+    #logoutBtn {
+      cursor: pointer;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main {
+      flex: 1;
+      padding: 35px;
+      min-width: 0;
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: #ff4747;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #666;
+    }
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    .error-box {
+      background: #ffe5e5;
+      color: #b00000;
+      border: 1px solid #ffbcbc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .error-box a {
+      color: #b00000;
+      font-weight: bold;
+    }
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 40px;
+      text-align: center;
+      color: #666;
+    }
+
+    /* =====================================================
+       ORDER HEADER
+    ===================================================== */
+
+    .order-header-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .order-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .order-id {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .order-date {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .order-status {
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      background: #777;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .status-processing {
+      background: #ff9800;
+    }
+
+    .status-shipped {
+      background: #2196f3;
+    }
+
+    .status-delivered {
+      background: #2e9d50;
+    }
+
+    .status-cancelled {
+      background: #777;
+    }
+
+    .status-pending {
+      background: #777;
+    }
+
+    .status-paid {
+      background: #2e9d50;
+    }
+
+    /* =====================================================
+       GRID
+    ===================================================== */
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    .card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 18px;
+      font-size: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+    }
+
+    /* =====================================================
+       CUSTOMER INFORMATION
+    ===================================================== */
+
+    .customer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 17px;
+    }
+
+    .customer-field {
+      min-width: 0;
+    }
+
+    .customer-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-label {
+      display: block;
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .field-value {
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    /* =====================================================
+       ORDER ITEMS
+    ===================================================== */
+
+    .items-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) auto auto;
+      gap: 16px;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+    }
+
+    /* =====================================================
+       PRODUCT IMAGE
+    ===================================================== */
+
+    .item-image-wrapper {
+      width: 76px;
+      height: 76px;
+      border-radius: 9px;
+      overflow: hidden;
+      background: #f1f1f1;
+      border: 1px solid #e2e2e2;
+      flex-shrink: 0;
+    }
+
+    .item-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .item-image-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 11px;
+      text-align: center;
+      padding: 5px;
+    }
+
+    /* =====================================================
+       ITEM INFORMATION
+    ===================================================== */
+
+    .item-details {
+      min-width: 0;
+    }
+
+    .item-name {
+      font-weight: 600;
+      overflow-wrap: anywhere;
+      margin-bottom: 5px;
+    }
+
+    .item-id {
+      color: #888;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .item-quantity {
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .item-price {
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    /* =====================================================
+       PAYMENT SUMMARY
+    ===================================================== */
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      color: #666;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .summary-total {
+      font-size: 20px;
+      font-weight: bold;
+      padding-top: 15px;
+    }
+
+    /* =====================================================
+       TRACKING CARD
+    ===================================================== */
+
+    .tracking-card {
+      border: 2px solid #eee;
+    }
+
+    .tracking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .tracking-title {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .tracking-live {
+      background: #2e9d50;
+      color: #fff;
+      padding: 5px 9px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .tracking-information {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tracking-field {
+      min-width: 0;
+    }
+
+    .tracking-value {
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    /* =====================================================
+       TRACKING STATUS
+    ===================================================== */
+
+    #trackingStatus {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 7px;
+      background: #f5f5f5;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .tracking-status-incoming {
+      background: #fff4df !important;
+      color: #9a6200 !important;
+    }
+
+    .tracking-status-added {
+      background: #e7f2ff !important;
+      color: #1769aa !important;
+    }
+
+    .tracking-status-updated {
+      background: #e7f8ec !important;
+      color: #24733a !important;
+    }
+
+    /* =====================================================
+       TRACKING LINK
+    ===================================================== */
+
+    .tracking-button {
+      display: inline-block;
+      margin-top: 16px;
+      background: #ff4747;
+      color: #fff;
+      text-decoration: none;
+      padding: 11px 17px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .tracking-button:hover {
+      background: #e63f3f;
+    }
+
+    .tracking-button.disabled {
+      background: #aaa;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* =====================================================
+       ESTIMATED DELIVERY
+    ===================================================== */
+
+    .estimated-delivery {
+      margin-top: 15px;
+      padding: 13px 14px;
+      background: #f8f8f8;
+      border-radius: 7px;
+    }
+
+    .estimated-delivery strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .estimated-delivery span {
+      color: #666;
+    }
+
+    /* =====================================================
+       SHIPMENT TRACKER
+    ===================================================== */
+
+    .shipment-tracker {
+      margin-top: 25px;
+    }
+
+    .tracker-line {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .tracker-line::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 16%;
+      right: 16%;
+      height: 3px;
+      background: #ddd;
+      z-index: 0;
+    }
+
+    .tracker-step {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .tracker-dot {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 9px;
+      border-radius: 50%;
+      background: #ddd;
+      color: #777;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 1px #ddd;
+    }
+
+    .tracker-step.active .tracker-dot,
+    .tracker-step.completed .tracker-dot {
+      background: #ff4747;
+      color: #fff;
+      box-shadow: 0 0 0 1px #ff4747;
+    }
+
+    .tracker-step.completed .tracker-dot {
+      background: #2e9d50;
+      box-shadow: 0 0 0 1px #2e9d50;
+    }
+
+    .tracker-label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tracker-date {
+      margin-top: 4px;
+      color: #777;
+      font-size: 11px;
+    }
+
+    /* =====================================================
+       SHIPPING ADDRESS
+    ===================================================== */
+
+    .address-box {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 15px;
+      line-height: 1.6;
+    }
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      display: inline-block;
+      padding: 10px 15px;
+      border-radius: 7px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .primary-button {
+      background: #ff4747;
+      color: #fff;
+    }
+
+    .secondary-button {
+      background: #eee;
+      color: #333;
+    }
+
+    .primary-button:hover {
+      background: #e63f3f;
+    }
+
+    .secondary-button:hover {
+      background: #ddd;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      margin-top: 40px;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    footer p {
+      margin: 10px 0;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================
+       HIDDEN
+    ===================================================== */
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .page-layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+      }
+
+      .sidebar h2 {
+        margin-bottom: 15px;
+      }
+
+      .sidebar a {
+        display: inline-block;
+        margin: 3px;
+      }
+
+      .main {
+        padding: 22px 15px;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .page-header h1 {
+        font-size: 25px;
+      }
+
+      .order-header-top {
+        flex-direction: column;
+      }
+
+      .order-status {
+        align-self: flex-start;
+      }
+
+      .customer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .customer-field.full {
+        grid-column: auto;
+      }
+
+      .tracking-information {
+        grid-template-columns: 1fr;
+      }
+
+      .item-row {
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 10px 12px;
+        align-items: center;
+      }
+
+      .item-image-wrapper {
+        width: 64px;
+        height: 64px;
+        grid-row: 1 / span 2;
+      }
+
+      .item-details {
+        min-width: 0;
+      }
+
+      .item-quantity {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .item-price {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        align-self: start;
+      }
+
+      .tracker-line {
+        gap: 4px;
+      }
+
+      .tracker-line::before {
+        left: 17%;
+        right: 17%;
+      }
+
+      .tracker-label {
+        font-size: 11px;
+      }
+
+      .card,
+      .order-header-card {
+        padding: 17px;
+      }
+
+      footer a {
+        display: inline-block;
+        margin: 5px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="page-layout">
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside class="sidebar">
+
+    <h2>
+      Welcome Back
+    </h2>
+
+    <a href="../dashboard/account-dashboard.html">
+      Dashboard
+    </a>
+
+    <a href="../messages/inbox.html">
+      Inbox
+
+      <span
+        id="messageCountBadge"
+        class="badge"
+      >
+        0
+      </span>
+    </a>
+
+    <a
+      href="orders.html"
+      class="active"
+    >
+      Orders
+
+      <span
+        id="orderCountBadge"
+        class="badge"
+      >
+        3
+      </span>
+    </a>
+
+    <a href="../../index.html">
+      Back to Shop
+    </a>
+
+    <a
+      id="logoutBtn"
+      href="#"
+    >
+      Logout
+    </a>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN WRAPPER
+  ====================================================== -->
+
+  <div class="main-wrapper">
+
+    <main class="main">
+
+      <!-- HEADER -->
+
+      <div class="page-header">
+
+        <a
+          href="orders.html"
+          class="back-link"
+        >
+          ← Back to Orders
+        </a>
+
+        <h1>
+          Order Details
+        </h1>
+
+        <p>
+          View your order, customer information,
+          shipping and tracking details.
+        </p>
+
+      </div>
+
+
+      <!-- ERROR -->
+
+      <div
+        id="errorMessage"
+        class="error-box hidden"
+      ></div>
+
+
+      <!-- LOADING -->
+
+      <div
+        id="loadingMessage"
+        class="loading"
+      >
+        Loading order details...
+      </div>
+
+
+      <!-- ORDER CONTENT -->
+
+      <div
+        id="orderContent"
+        class="hidden"
+      >
+
+        <!-- ORDER HEADER -->
+
+        <section class="order-header-card">
+
+          <div class="order-header-top">
+
+            <div>
+
+              <div
+                id="orderId"
+                class="order-id"
+              >
+                Order
+              </div>
+
+              <div
+                id="orderDate"
+                class="order-date"
+              >
+                -
+              </div>
+
+            </div>
+
+            <span
+              id="orderStatus"
+              class="order-status"
+            >
+              Pending
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- DETAILS GRID -->
+
+        <div class="details-grid">
+
+
+          <!-- LEFT COLUMN -->
+
+          <div>
+
+            <!-- CUSTOMER INFORMATION -->
+
+            <section class="card">
+
+              <h2>
+                Customer Information
+              </h2>
+
+              <div class="customer-grid">
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    Full Name
+                  </span>
+
+                  <span
+                    id="customerName"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    Email
+                  </span>
+
+                  <span
+                    id="customerEmail"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    Phone
+                  </span>
+
+                  <span
+                    id="customerPhone"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    City
+                  </span>
+
+                  <span
+                    id="customerCity"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    Country
+                  </span>
+
+                  <span
+                    id="customerCountry"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field">
+
+                  <span class="field-label">
+                    ZIP / Postal Code
+                  </span>
+
+                  <span
+                    id="customerPostalCode"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+
+                <div class="customer-field full">
+
+                  <span class="field-label">
+                    Full Shipping Address
+                  </span>
+
+                  <span
+                    id="customerAddress"
+                    class="field-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+              </div>
+
+            </section>
+
+
+            <!-- ORDER ITEMS -->
+
+            <section class="card">
+
+              <h2>
+                Order Items
+              </h2>
+
+              <div
+                id="itemsList"
+                class="items-list"
+              ></div>
+
+            </section>
+
+
+            <!-- TRACKING -->
+
+            <section class="card tracking-card">
+
+              <div class="tracking-header">
+
+                <h2 class="tracking-title">
+                  Tracking Information
+                </h2>
+
+                <span
+                  id="trackingLive"
+                  class="tracking-live"
+                >
+                  LIVE
+                </span>
+
+              </div>
+
+
+              <div class="tracking-information">
+
+                <div class="tracking-field">
+
+                  <span class="field-label">
+                    Tracking Number
+                  </span>
+
+                  <span
+                    id="trackingNumber"
+                    class="tracking-value"
+                  >
+                    Tracking Incoming
+                  </span>
+
+                </div>
+
+
+                <div class="tracking-field">
+
+                  <span class="field-label">
+                    Carrier
+                  </span>
+
+                  <span
+                    id="trackingCarrier"
+                    class="tracking-value"
+                  >
+                    -
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div
+                id="trackingStatus"
+                class="tracking-status-incoming"
+              >
+                Tracking Incoming
+              </div>
+
+
+              <a
+                id="trackingLink"
+                class="tracking-button disabled"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Track Package
+              </a>
+
+
+              <div class="estimated-delivery">
+
+                <strong>
+                  Estimated Delivery
+                </strong>
+
+                <span id="estimatedDelivery">
+                  Calculating...
+                </span>
+
+              </div>
+
+
+              <div class="shipment-tracker">
+
+                <h3>
+                  Shipment Progress
+                </h3>
+
+                <div class="tracker-line">
+
+                  <div
+                    id="trackerProcessing"
+                    class="tracker-step"
+                  >
+
+                    <div class="tracker-dot">
+                      1
+                    </div>
+
+                    <div class="tracker-label">
+                      Processing
+                    </div>
+
+                    <div
+                      id="processingDate"
+                      class="tracker-date"
+                    >
+                      -
+                    </div>
+
+                  </div>
+
+
+                  <div
+                    id="trackerShipped"
+                    class="tracker-step"
+                  >
+
+                    <div class="tracker-dot">
+                      2
+                    </div>
+
+                    <div class="tracker-label">
+                      Shipped
+                    </div>
+
+                    <div
+                      id="shippedDate"
+                      class="tracker-date"
+                    >
+                      -
+                    </div>
+
+                  </div>
+
+
+                  <div
+                    id="trackerDelivered"
+                    class="tracker-step"
+                  >
+
+                    <div class="tracker-dot">
+                      3
+                    </div>
+
+                    <div class="tracker-label">
+                      Delivered
+                    </div>
+
+                    <div
+                      id="deliveredDate"
+                      class="tracker-date"
+                    >
+                      -
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </section>
+
+          </div>
+
+
+          <!-- RIGHT COLUMN -->
+
+          <div>
+
+            <!-- PAYMENT -->
+
+            <section class="card">
+
+              <h2>
+                Payment Summary
+              </h2>
+
+              <div class="summary-row">
+
+                <span class="summary-label">
+                  Payment Status
+                </span>
+
+                <span
+                  id="paymentStatus"
+                  class="summary-value"
+                >
+                  Pending
+                </span>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span class="summary-label">
+                  Payment Method
+                </span>
+
+                <span
+                  id="paymentMethod"
+                  class="summary-value"
+                >
+                  -
+                </span>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span class="summary-label">
+                  Subtotal
+                </span>
+
+                <span
+                  id="subtotal"
+                  class="summary-value"
+                >
+                  €0.00
+                </span>
+
+              </div>
+
+
+              <div class="summary-row">
+
+                <span class="summary-label">
+                  Shipping
+                </span>
+
+                <span
+                  id="shippingCost"
+                  class="summary-value"
+                >
+                  €0.00
+                </span>
+
+              </div>
+
+
+              <div class="summary-row summary-total">
+
+                <span>
+                  Total
+                </span>
+
+                <span id="orderTotal">
+                  €0.00
+                </span>
+
+              </div>
+
+            </section>
+
+
+            <!-- SHIPPING -->
+
+            <section class="card">
+
+              <h2>
+                Shipping Address
+              </h2>
+
+              <div
+                id="shippingAddress"
+                class="address-box"
+              >
+                -
+              </div>
+
+            </section>
+
+
+            <!-- ACTIONS -->
+
+            <section class="card">
+
+              <h2>
+                Order Actions
+              </h2>
+
+              <div class="action-buttons">
+
+                <a
+                  href="orders.html"
+                  class="action-button secondary-button"
+                >
+                  ← All Orders
+                </a>
+
+                <a
+                  href="../../index.html"
+                  class="action-button primary-button"
+                >
+                  Continue Shopping
+                </a>
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+      <p>
+        <strong>
+          Aravon Shop
+        </strong>
+      </p>
+
+      <p>
+
+        <a href="../../about.html">
+          About
+        </a>
+
+        |
+
+        <a href="../../contact.html">
+          Contact
+        </a>
+
+        |
+
+        <a href="../../privacy.html">
+          Privacy Policy
+        </a>
+
+        |
+
+        <a href="../../terms.html">
+          Terms &amp; Conditions
+        </a>
+
+      </p>
+
+      <p>
+        &copy; 2026 Aravon Shop.
+        All rights reserved.
+      </p>
+
+    </footer>
+
+  </div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+/* =========================================================
+   ARAVON SHOP
+   CUSTOMER ORDER DETAILS
+   FIXED ORDER-ID + 3 DEMO ORDERS
+========================================================= */
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const loadingMessage =
+  document.getElementById("loadingMessage");
+
+const errorMessage =
+  document.getElementById("errorMessage");
+
+const orderContent =
+  document.getElementById("orderContent");
+
+const orderIdElement =
+  document.getElementById("orderId");
+
+const orderDateElement =
+  document.getElementById("orderDate");
+
+const orderStatusElement =
+  document.getElementById("orderStatus");
+
+const orderCountBadge =
+  document.getElementById("orderCountBadge");
+
+const messageCountBadge =
+  document.getElementById("messageCountBadge");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+const customerName =
+  document.getElementById("customerName");
+
+const customerEmail =
+  document.getElementById("customerEmail");
+
+const customerPhone =
+  document.getElementById("customerPhone");
+
+const customerCity =
+  document.getElementById("customerCity");
+
+const customerCountry =
+  document.getElementById("customerCountry");
+
+const customerPostalCode =
+  document.getElementById("customerPostalCode");
+
+const customerAddress =
+  document.getElementById("customerAddress");
+
+const shippingAddress =
+  document.getElementById("shippingAddress");
+
+
+/* =========================================================
+   ORDER
+========================================================= */
+
+const itemsList =
+  document.getElementById("itemsList");
+
+const paymentStatus =
+  document.getElementById("paymentStatus");
+
+const paymentMethod =
+  document.getElementById("paymentMethod");
+
+const subtotal =
+  document.getElementById("subtotal");
+
+const shippingCost =
+  document.getElementById("shippingCost");
+
+const orderTotal =
+  document.getElementById("orderTotal");
+
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+const trackingNumber =
+  document.getElementById("trackingNumber");
+
+const trackingCarrier =
+  document.getElementById("trackingCarrier");
+
+const trackingLink =
+  document.getElementById("trackingLink");
+
+const trackingStatus =
+  document.getElementById("trackingStatus");
+
+const estimatedDelivery =
+  document.getElementById("estimatedDelivery");
+
+
+/* =========================================================
+   TRACKER
+========================================================= */
+
+const trackerProcessing =
+  document.getElementById("trackerProcessing");
+
+const trackerShipped =
+  document.getElementById("trackerShipped");
+
+const trackerDelivered =
+  document.getElementById("trackerDelivered");
+
+const processingDate =
+  document.getElementById("processingDate");
+
+const shippedDate =
+  document.getElementById("shippedDate");
+
+const deliveredDate =
+  document.getElementById("deliveredDate");
+
+
+/* =========================================================
+   FORMAT FIRESTORE / NORMAL DATES
+========================================================= */
+
+function toDate(value) {
+
+  if (!value) {
+    return null;
+  }
+
+  try {
+
+    if (
+      value &&
+      typeof value.toDate === "function"
+    ) {
+
+      return value.toDate();
+
+    }
+
+    if (
+      value &&
+      typeof value === "object" &&
+      typeof value.seconds === "number"
+    ) {
+
+      return new Date(
+        value.seconds * 1000
+      );
+
+    }
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return null;
+
+    }
+
+    return date;
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(value) {
+
+  const date =
+    toDate(value);
+
+  if (!date) {
+    return "Unknown date";
+  }
+
+  return new Intl.DateTimeFormat(
+    "en-NL",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }
+  ).format(date);
+
+}
+
+
+/* =========================================================
+   FORMAT SHORT DATE
+========================================================= */
+
+function formatShortDate(value) {
+
+  const date =
+    toDate(value);
+
+  if (!date) {
+    return "-";
+  }
+
+  return new Intl.DateTimeFormat(
+    "en-NL",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    }
+  ).format(date);
+
+}
+
+
+/* =========================================================
+   FORMAT MONEY
+========================================================= */
+
+function formatMoney(
+  amount,
+  currency = "EUR"
+) {
+
+  const number =
+    Number(amount) || 0;
+
+  try {
+
+    return new Intl.NumberFormat(
+      "en-NL",
+      {
+        style: "currency",
+        currency: currency
+      }
+    ).format(number);
+
+  } catch {
+
+    return "€" +
+      number.toFixed(2);
+
+  }
+
+}
+
+
+/* =========================================================
+   CAPITALIZE
+========================================================= */
+
+function capitalize(value) {
+
+  const text =
+    String(value || "");
+
+  if (!text) {
+    return "";
+  }
+
+  return (
+    text.charAt(0).toUpperCase() +
+    text.slice(1)
+  );
+
+}
+
+
+/* =========================================================
+   GET ORDER ID FROM URL
+   IMPORTANT FIX:
+   NO MORE AUTOMATIC FIRST ORDER FALLBACK
+========================================================= */
+
+function getOrderIdFromURL() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const orderId =
+    params.get("orderId");
+
+  const id =
+    params.get("id");
+
+  const value =
+    orderId ||
+    id ||
+    "";
+
+  return String(
+    value
+  ).trim();
+
+}
+
+
+/* =========================================================
+   THREE DEMO ORDERS
+========================================================= */
+
+const exampleOrders = [
+
+  /* =======================================================
+     ORDER 1
+  ======================================================= */
+
+  {
+    orderId: "order_1721670000001",
+
+    status: "new",
+
+    paymentStatus: "paid",
+
+    paymentMethod: "Stripe",
+
+    fulfillmentStatus: "processing",
+
+    total: 49,
+
+    subtotal: 49,
+
+    shippingCost: 0,
+
+    currency: "EUR",
+
+    createdAt: "2024-07-22",
+
+    customer: {
+
+      firstName: "Molly",
+
+      lastName: "Barbie",
+
+      name: "Molly Barbie",
+
+      email: "ti.a.eduardo24@gmail.com",
+
+      phone: "31698765432",
+
+      street: "Klarden",
+
+      houseNumber: "88",
+
+      address: "Klarden 88",
+
+      city: "Arnhem",
+
+      country: "Netherlands",
+
+      postalCode: "2589 CH"
+
+    },
+
+    tracking: {
+
+      number: "",
+
+      carrier: "",
+
+      status: "incoming",
+
+      estimatedDelivery: "",
+
+      updatedAt: ""
+
+    },
+
+    items: [
+
+      {
+
+        id: "Slim Fit Blue Jeans",
+
+        name: "Slim Fit Blue Jeans",
+
+        qty: 1,
+
+        price: 49,
+
+        image:
+          "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+
+      }
+
+    ]
+
+  },
+
+
+  /* =======================================================
+     ORDER 2
+  ======================================================= */
+
+  {
+
+    orderId: "order_1721670000002",
+
+    status: "new",
+
+    paymentStatus: "paid",
+
+    paymentMethod: "Stripe",
+
+    fulfillmentStatus: "shipped",
+
+    total: 45,
+
+    subtotal: 45,
+
+    shippingCost: 0,
+
+    currency: "EUR",
+
+    createdAt: "2026-08-05",
+
+    shippedAt: "2026-08-11",
+
+    customer: {
+
+      firstName: "Molly",
+
+      lastName: "Barbie",
+
+      name: "Molly Barbie",
+
+      email: "ti.a.eduardo24@gmail.com",
+
+      phone: "31698765432",
+
+      street: "Klarden",
+
+      houseNumber: "88",
+
+      address: "Klarden 88",
+
+      city: "Arnhem",
+
+      country: "Netherlands",
+
+      postalCode: "2589 CH"
+
+    },
+
+    tracking: {
+
+      number: "3S123456789",
+
+      carrier: "PostNL",
+
+      status: "updated",
+
+      estimatedDelivery: "2026-08-13",
+
+      updatedAt: "2026-08-11"
+
+    },
+
+    items: [
+
+      {
+
+        id: "Classic White T-Shirt",
+
+        name: "Classic White T-Shirt",
+
+        qty: 1,
+
+        price: 45,
+
+        image:
+          "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=600&q=80"
+
+      }
+
+    ]
+
+  },
+
+
+  /* =======================================================
+     ORDER 3
+  ======================================================= */
+
+  {
+
+    orderId: "order_1721670000003",
+
+    status: "new",
+
+    paymentStatus: "paid",
+
+    paymentMethod: "Stripe",
+
+    fulfillmentStatus: "delivered",
+
+    total: 39,
+
+    subtotal: 39,
+
+    shippingCost: 0,
+
+    currency: "EUR",
+
+    createdAt: "2026-08-05",
+
+    deliveredAt: "2026-08-08",
+
+    customer: {
+
+      firstName: "Molly",
+
+      lastName: "Barbie",
+
+      name: "Molly Barbie",
+
+      email: "ti.a.eduardo24@gmail.com",
+
+      phone: "31698765432",
+
+      street: "Klarden",
+
+      houseNumber: "88",
+
+      address: "Klarden 88",
+
+      city: "Arnhem",
+
+      country: "Netherlands",
+
+      postalCode: "2589 CH"
+
+    },
+
+    tracking: {
+
+      number: "JVGL123456789",
+
+      carrier: "DHL",
+
+      status: "updated",
+
+      estimatedDelivery: "2026-08-08",
+
+      updatedAt: "2026-08-08"
+
+    },
+
+    items: [
+
+      {
+
+        id: "Black Oversized Hoodie",
+
+        name: "Black Oversized Hoodie",
+
+        qty: 1,
+
+        price: 39,
+
+        image:
+          "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80"
+
+      }
+
+    ]
+
+  }
+
+];
+
+
+/* =========================================================
+   FIND ORDER
+========================================================= */
+
+function findOrder(orderId) {
+
+  if (!orderId) {
+    return null;
+  }
+
+  return exampleOrders.find(
+    function (order) {
+
+      return (
+        String(order.orderId).trim() ===
+        String(orderId).trim()
+      );
+
+    }
+  ) || null;
+
+}
+
+
+/* =========================================================
+   TRACKING STORAGE KEY
+========================================================= */
+
+function getTrackingStorageKey(orderId) {
+
+  return (
+    "aravon_tracking_" +
+    String(orderId)
+  );
+
+}
+
+
+/* =========================================================
+   GET STORED TRACKING
+========================================================= */
+
+function getStoredTracking(orderId) {
+
+  try {
+
+    const stored =
+      localStorage.getItem(
+        getTrackingStorageKey(orderId)
+      );
+
+    if (!stored) {
+      return null;
+    }
+
+    const parsed =
+      JSON.parse(stored);
+
+    if (
+      !parsed ||
+      typeof parsed !== "object"
+    ) {
+
+      return null;
+
+    }
+
+    return parsed;
+
+  } catch (error) {
+
+    console.error(
+      "Tracking storage read error:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE TRACKING
+========================================================= */
+
+function saveTracking(
+  orderId,
+  tracking
+) {
+
+  try {
+
+    localStorage.setItem(
+      getTrackingStorageKey(orderId),
+      JSON.stringify(tracking)
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Tracking storage save error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   NORMALIZE TRACKING
+========================================================= */
+
+function normalizeTracking(tracking) {
+
+  if (
+    !tracking ||
+    typeof tracking !== "object"
+  ) {
+
+    return {
+
+      number: "",
+
+      carrier: "",
+
+      status: "incoming",
+
+      estimatedDelivery: "",
+
+      updatedAt: ""
+
+    };
+
+  }
+
+  return {
+
+    number: String(
+      tracking.number ||
+      tracking.trackingNumber ||
+      ""
+    ).trim(),
+
+    carrier: String(
+      tracking.carrier ||
+      ""
+    ).trim(),
+
+    status: String(
+      tracking.status ||
+      "incoming"
+    ).trim().toLowerCase(),
+
+    estimatedDelivery:
+      tracking.estimatedDelivery ||
+      tracking.deliveryDate ||
+      "",
+
+    updatedAt:
+      tracking.updatedAt ||
+      ""
+
+  };
+
+}
+
+
+/* =========================================================
+   GET ORDER TRACKING
+========================================================= */
+
+function getOrderTracking(order) {
+
+  const original =
+    normalizeTracking(
+      order.tracking
+    );
+
+  const stored =
+    getStoredTracking(
+      order.orderId
+    );
+
+  if (stored) {
+
+    return normalizeTracking({
+
+      ...original,
+
+      ...stored
+
+    });
+
+  }
+
+  saveTracking(
+    order.orderId,
+    original
+  );
+
+  return original;
+
+}
+
+
+/* =========================================================
+   TRACKING URL
+========================================================= */
+
+function buildTrackingURL(
+  carrier,
+  trackingNumberValue
+) {
+
+  const number =
+    String(
+      trackingNumberValue || ""
+    ).trim();
+
+  const carrierName =
+    String(
+      carrier || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  if (!number) {
+    return "";
+  }
+
+
+  if (
+    carrierName === "postnl" ||
+    carrierName === "post nl"
+  ) {
+
+    return (
+      "https://www.postnl.nl/track-and-trace/" +
+      encodeURIComponent(number)
+    );
+
+  }
+
+
+  if (
+    carrierName === "dhl"
+  ) {
+
+    return (
+      "https://www.dhl.com/global-en/home/tracking.html?tracking-id=" +
+      encodeURIComponent(number)
+    );
+
+  }
+
+
+  if (
+    carrierName === "ups"
+  ) {
+
+    return (
+      "https://www.ups.com/track?loc=en_US&tracknum=" +
+      encodeURIComponent(number)
+    );
+
+  }
+
+
+  if (
+    carrierName === "fedex" ||
+    carrierName === "fed ex"
+  ) {
+
+    return (
+      "https://www.fedex.com/fedextrack/?trknbr=" +
+      encodeURIComponent(number)
+    );
+
+  }
+
+
+  if (
+    carrierName === "dpd"
+  ) {
+
+    return (
+      "https://www.dpd.com/nl/nl/ontvangen/track-and-trace/" +
+      encodeURIComponent(number)
+    );
+
+  }
+
+
+  return "";
+
+}
+
+
+/* =========================================================
+   ORDER DISPLAY STATUS
+========================================================= */
+
+function getDisplayStatus(order) {
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase();
+
+  const status =
+    String(
+      order.status || ""
+    ).toLowerCase();
+
+  const payment =
+    String(
+      order.paymentStatus || ""
+    ).toLowerCase();
+
+
+  if (
+    fulfillment === "cancelled" ||
+    status === "cancelled"
+  ) {
+
+    return "Cancelled";
+
+  }
+
+
+  if (
+    fulfillment === "delivered"
+  ) {
+
+    return "Delivered";
+
+  }
+
+
+  if (
+    fulfillment === "shipped"
+  ) {
+
+    return "Shipped";
+
+  }
+
+
+  if (
+    fulfillment === "processing"
+  ) {
+
+    return "Processing";
+
+  }
+
+
+  if (
+    payment === "paid"
+  ) {
+
+    return "Paid";
+
+  }
+
+
+  return "Pending";
+
+}
+
+
+/* =========================================================
+   ORDER STATUS CLASS
+========================================================= */
+
+function getOrderStatusClass(order) {
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase();
+
+  const status =
+    String(
+      order.status || ""
+    ).toLowerCase();
+
+  const payment =
+    String(
+      order.paymentStatus || ""
+    ).toLowerCase();
+
+
+  if (
+    fulfillment === "cancelled" ||
+    status === "cancelled"
+  ) {
+
+    return "status-cancelled";
+
+  }
+
+
+  if (
+    fulfillment === "delivered"
+  ) {
+
+    return "status-delivered";
+
+  }
+
+
+  if (
+    fulfillment === "shipped"
+  ) {
+
+    return "status-shipped";
+
+  }
+
+
+  if (
+    fulfillment === "processing"
+  ) {
+
+    return "status-processing";
+
+  }
+
+
+  if (
+    payment === "paid"
+  ) {
+
+    return "status-paid";
+
+  }
+
+
+  return "status-pending";
+
+}
+
+
+/* =========================================================
+   RENDER CUSTOMER
+========================================================= */
+
+function renderCustomer(order) {
+
+  const customer =
+    order.customer || {};
+
+  const fullName =
+    customer.name ||
+    [
+      customer.firstName,
+      customer.lastName
+    ]
+      .filter(Boolean)
+      .join(" ") ||
+    "-";
+
+
+  customerName.textContent =
+    fullName;
+
+  customerEmail.textContent =
+    customer.email || "-";
+
+  customerPhone.textContent =
+    customer.phone || "-";
+
+  customerCity.textContent =
+    customer.city || "-";
+
+  customerCountry.textContent =
+    customer.country || "-";
+
+  customerPostalCode.textContent =
+    customer.postalCode ||
+    customer.zip ||
+    "-";
+
+
+  const street =
+    customer.street || "";
+
+  const houseNumber =
+    customer.houseNumber || "";
+
+  const address =
+    customer.address ||
+    [
+      street,
+      houseNumber
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+
+  const fullAddress = [
+
+    address,
+
+    customer.city,
+
+    customer.postalCode ||
+    customer.zip,
+
+    customer.country
+
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+
+  customerAddress.textContent =
+    fullAddress || "-";
+
+  shippingAddress.textContent =
+    fullAddress ||
+    "No shipping address available.";
+
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+function getProductImage(item) {
+
+  return (
+    item.image ||
+    item.imageUrl ||
+    item.productImage ||
+    item.thumbnail ||
+    item.img ||
+    ""
+  );
+
+}
+
+
+function createProductImage(item) {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "item-image-wrapper";
+
+
+  const imageURL =
+    getProductImage(item);
+
+
+  if (!imageURL) {
+
+    const fallback =
+      document.createElement("div");
+
+    fallback.className =
+      "item-image-fallback";
+
+    fallback.textContent =
+      "No image";
+
+    wrapper.appendChild(
+      fallback
+    );
+
+    return wrapper;
+
+  }
+
+
+  const image =
+    document.createElement("img");
+
+  image.className =
+    "item-image";
+
+  image.src =
+    imageURL;
+
+  image.alt =
+    item.name ||
+    item.title ||
+    "Product";
+
+  image.loading =
+    "lazy";
+
+
+  image.onerror =
+    function () {
+
+      wrapper.innerHTML = "";
+
+      const fallback =
+        document.createElement("div");
+
+      fallback.className =
+        "item-image-fallback";
+
+      fallback.textContent =
+        "Image unavailable";
+
+      wrapper.appendChild(
+        fallback
+      );
+
+    };
+
+
+  wrapper.appendChild(
+    image
+  );
+
+  return wrapper;
+
+}
+
+
+/* =========================================================
+   RENDER ITEMS
+========================================================= */
+
+function renderItems(order) {
+
+  const items =
+    Array.isArray(order.items)
+      ? order.items
+      : [];
+
+
+  itemsList.innerHTML =
+    "";
+
+
+  if (!items.length) {
+
+    itemsList.innerHTML = `
+
+      <div class="item-row">
+
+        <div class="item-image-wrapper">
+
+          <div class="item-image-fallback">
+            No image
+          </div>
+
+        </div>
+
+        <div class="item-details">
+
+          <div class="item-name">
+            No item information available.
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  items.forEach(
+    function (item) {
+
+      const name =
+        item.name ||
+        item.title ||
+        "Product";
+
+
+      const productId =
+        item.id ||
+        item.productId ||
+        "";
+
+
+      const qty =
+        Number(
+          item.qty ??
+          item.quantity ??
+          1
+        ) || 1;
+
+
+      const price =
+        Number(
+          item.price
+        ) || 0;
+
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "item-row";
+
+
+      row.appendChild(
+        createProductImage(item)
+      );
+
+
+      const details =
+        document.createElement("div");
+
+      details.className =
+        "item-details";
+
+
+      const nameElement =
+        document.createElement("div");
+
+      nameElement.className =
+        "item-name";
+
+      nameElement.textContent =
+        name;
+
+
+      details.appendChild(
+        nameElement
+      );
+
+
+      if (productId) {
+
+        const idElement =
+          document.createElement("div");
+
+        idElement.className =
+          "item-id";
+
+        idElement.textContent =
+          "Product ID: " +
+          productId;
+
+        details.appendChild(
+          idElement
+        );
+
+      }
+
+
+      row.appendChild(
+        details
+      );
+
+
+      const quantity =
+        document.createElement("div");
+
+      quantity.className =
+        "item-quantity";
+
+      quantity.textContent =
+        "x" + qty;
+
+
+      row.appendChild(
+        quantity
+      );
+
+
+      const priceElement =
+        document.createElement("div");
+
+      priceElement.className =
+        "item-price";
+
+      priceElement.textContent =
+        formatMoney(
+          price * qty,
+          order.currency || "EUR"
+        );
+
+
+      row.appendChild(
+        priceElement
+      );
+
+
+      itemsList.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RENDER PAYMENT
+========================================================= */
+
+function renderPayment(order) {
+
+  const currency =
+    order.currency || "EUR";
+
+
+  const calculatedSubtotal =
+    Number(order.subtotal) ||
+    (
+      Array.isArray(order.items)
+        ? order.items.reduce(
+            function (
+              total,
+              item
+            ) {
+
+              const price =
+                Number(
+                  item.price
+                ) || 0;
+
+              const quantity =
+                Number(
+                  item.qty ??
+                  item.quantity ??
+                  1
+                ) || 1;
+
+              return (
+                total +
+                price * quantity
+              );
+
+            },
+            0
+          )
+        : 0
+    );
+
+
+  const shipping =
+    Number(
+      order.shippingCost
+    ) || 0;
+
+
+  const total =
+    Number(order.total) ||
+    (
+      calculatedSubtotal +
+      shipping
+    );
+
+
+  paymentStatus.textContent =
+    capitalize(
+      order.paymentStatus ||
+      "pending"
+    );
+
+
+  paymentMethod.textContent =
+    order.paymentMethod ||
+    "-";
+
+
+  subtotal.textContent =
+    formatMoney(
+      calculatedSubtotal,
+      currency
+    );
+
+
+  shippingCost.textContent =
+    formatMoney(
+      shipping,
+      currency
+    );
+
+
+  orderTotal.textContent =
+    formatMoney(
+      total,
+      currency
+    );
+
+}
+
+
+/* =========================================================
+   TRACKING STATUS
+========================================================= */
+
+function getTrackingStatus(
+  tracking,
+  order
+) {
+
+  const number =
+    String(
+      tracking.number || ""
+    ).trim();
+
+  const storedStatus =
+    String(
+      tracking.status || ""
+    ).toLowerCase();
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase();
+
+
+  if (!number) {
+
+    return "Tracking Incoming";
+
+  }
+
+
+  if (
+    fulfillment === "delivered"
+  ) {
+
+    return "Tracking Updated";
+
+  }
+
+
+  if (
+    fulfillment === "shipped"
+  ) {
+
+    if (
+      storedStatus === "updated"
+    ) {
+
+      return "Tracking Updated";
+
+    }
+
+    return "Tracking Added";
+
+  }
+
+
+  if (
+    storedStatus === "updated"
+  ) {
+
+    return "Tracking Updated";
+
+  }
+
+
+  return "Tracking Added";
+
+}
+
+
+/* =========================================================
+   TRACKING STATUS CLASS
+========================================================= */
+
+function getTrackingStatusClass(status) {
+
+  const text =
+    String(
+      status || ""
+    ).toLowerCase();
+
+
+  if (
+    text.includes("incoming")
+  ) {
+
+    return "tracking-status-incoming";
+
+  }
+
+
+  if (
+    text.includes("added")
+  ) {
+
+    return "tracking-status-added";
+
+  }
+
+
+  if (
+    text.includes("updated")
+  ) {
+
+    return "tracking-status-updated";
+
+  }
+
+
+  return "";
+
+}
+
+
+/* =========================================================
+   RENDER TRACKING
+========================================================= */
+
+function renderTracking(order) {
+
+  const tracking =
+    getOrderTracking(order);
+
+
+  const number =
+    String(
+      tracking.number || ""
+    ).trim();
+
+
+  const carrier =
+    String(
+      tracking.carrier || ""
+    ).trim();
+
+
+  trackingNumber.textContent =
+    number ||
+    "Tracking Incoming";
+
+
+  trackingCarrier.textContent =
+    carrier ||
+    "Tracking Incoming";
+
+
+  const status =
+    getTrackingStatus(
+      tracking,
+      order
+    );
+
+
+  trackingStatus.textContent =
+    status;
+
+
+  trackingStatus.className =
+    getTrackingStatusClass(
+      status
+    );
+
+
+  const trackingURL =
+    buildTrackingURL(
+      carrier,
+      number
+    );
+
+
+  if (trackingURL) {
+
+    trackingLink.href =
+      trackingURL;
+
+    trackingLink.classList.remove(
+      "disabled"
+    );
+
+    trackingLink.textContent =
+      "Track Package";
+
+    trackingLink.removeAttribute(
+      "aria-disabled"
+    );
+
+  } else {
+
+    trackingLink.href =
+      "#";
+
+    trackingLink.classList.add(
+      "disabled"
+    );
+
+    trackingLink.textContent =
+      "Tracking Not Available";
+
+    trackingLink.setAttribute(
+      "aria-disabled",
+      "true"
+    );
+
+  }
+
+
+  if (
+    tracking.estimatedDelivery
+  ) {
+
+    estimatedDelivery.textContent =
+      formatDate(
+        tracking.estimatedDelivery
+      );
+
+  } else if (
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase() === "delivered"
+  ) {
+
+    estimatedDelivery.textContent =
+      "Delivered";
+
+  } else if (
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase() === "shipped"
+  ) {
+
+    estimatedDelivery.textContent =
+      "Delivery date will be updated by the carrier.";
+
+  } else {
+
+    estimatedDelivery.textContent =
+      "Estimated delivery will appear after shipment.";
+
+  }
+
+}
+
+
+/* =========================================================
+   ADD DAYS
+========================================================= */
+
+function addDays(
+  dateValue,
+  days
+) {
+
+  const date =
+    toDate(dateValue);
+
+  if (!date) {
+    return null;
+  }
+
+
+  date.setDate(
+    date.getDate() + days
+  );
+
+
+  return date;
+
+}
+
+
+/* =========================================================
+   RENDER SHIPMENT TRACKER
+========================================================= */
+
+function renderShipmentTracker(order) {
+
+  const fulfillment =
+    String(
+      order.fulfillmentStatus || ""
+    ).toLowerCase();
+
+
+  const tracking =
+    getOrderTracking(order);
+
+
+  trackerProcessing.classList.remove(
+    "active",
+    "completed"
+  );
+
+  trackerShipped.classList.remove(
+    "active",
+    "completed"
+  );
+
+  trackerDelivered.classList.remove(
+    "active",
+    "completed"
+  );
+
+
+  processingDate.textContent =
+    "-";
+
+  shippedDate.textContent =
+    "-";
+
+  deliveredDate.textContent =
+    "-";
+
+
+  const created =
+    order.createdAt ||
+    new Date();
+
+
+  /* PROCESSING */
+
+  trackerProcessing.classList.add(
+    "completed"
+  );
+
+
+  processingDate.textContent =
+    formatShortDate(
+      created
+    );
+
+
+  /* SHIPPED */
+
+  const hasTracking =
+    Boolean(
+      String(
+        tracking.number || ""
+      ).trim()
+    );
+
+
+  const shipped =
+    fulfillment === "shipped" ||
+    fulfillment === "delivered" ||
+    hasTracking;
+
+
+  if (shipped) {
+
+    trackerShipped.classList.add(
+
+      fulfillment === "delivered"
+        ? "completed"
+        : "active"
+
+    );
+
+
+    const shippedDateValue =
+      order.shippedAt ||
+      tracking.updatedAt ||
+      addDays(
+        created,
+        1
+      );
+
+
+    shippedDate.textContent =
+      formatShortDate(
+        shippedDateValue
+      );
+
+  }
+
+
+  /* DELIVERED */
+
+  if (
+    fulfillment === "delivered"
+  ) {
+
+    trackerDelivered.classList.add(
+      "completed"
+    );
+
+
+    const deliveredDateValue =
+      order.deliveredAt ||
+      tracking.estimatedDelivery ||
+      tracking.updatedAt ||
+      addDays(
+        created,
+        3
+      );
+
+
+    deliveredDate.textContent =
+      formatShortDate(
+        deliveredDateValue
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER COMPLETE ORDER
+========================================================= */
+
+function renderOrder(order) {
+
+  const id =
+    order.orderId ||
+    order.id ||
+    "unknown";
+
+
+  const status =
+    getDisplayStatus(
+      order
+    );
+
+
+  const statusClass =
+    getOrderStatusClass(
+      order
+    );
+
+
+  orderIdElement.textContent =
+    "Order #" + id;
+
+
+  orderDateElement.textContent =
+    "Placed on " +
+    formatDate(
+      order.createdAt ||
+      order.date
+    );
+
+
+  orderStatusElement.textContent =
+    status;
+
+
+  orderStatusElement.className =
+    "order-status " +
+    statusClass;
+
+
+  renderCustomer(order);
+
+  renderItems(order);
+
+  renderPayment(order);
+
+  renderTracking(order);
+
+  renderShipmentTracker(order);
+
+}
+
+
+/* =========================================================
+   LOAD ORDER
+========================================================= */
+
+function loadOrder() {
+
+  loadingMessage.classList.remove(
+    "hidden"
+  );
+
+  errorMessage.classList.add(
+    "hidden"
+  );
+
+  orderContent.classList.add(
+    "hidden"
+  );
+
+
+  try {
+
+    const requestedOrderId =
+      getOrderIdFromURL();
+
+
+    /*
+      IMPORTANT:
+      Do NOT silently open order #1.
+    */
+
+    if (!requestedOrderId) {
+
+      throw new Error(
+        "No order ID was supplied in the URL."
+      );
+
+    }
+
+
+    const order =
+      findOrder(
+        requestedOrderId
+      );
+
+
+    if (!order) {
+
+      throw new Error(
+        "Order not found: " +
+        requestedOrderId
+      );
+
+    }
+
+
+    /*
+      Keep the three-order demo count.
+    */
+
+    if (orderCountBadge) {
+
+      orderCountBadge.textContent =
+        "3";
+
+    }
+
+
+    renderOrder(order);
+
+
+    loadingMessage.classList.add(
+      "hidden"
+    );
+
+    orderContent.classList.remove(
+      "hidden"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Order details error:",
+      error
+    );
+
+
+    loadingMessage.classList.add(
+      "hidden"
+    );
+
+    orderContent.classList.add(
+      "hidden"
+    );
+
+
+    errorMessage.innerHTML = `
+
+      Unable to load this order.
+
+      <br><br>
+
+      Please return to
+      <a href="orders.html">
+        All Orders
+      </a>
+      and select the order again.
+
+    `;
+
+
+    errorMessage.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   INBOX MESSAGE COUNT
+========================================================= */
+
+function updateMessageCount() {
+
+  if (!messageCountBadge) {
+    return;
+  }
+
+
+  let unreadCount =
+    0;
+
+
+  try {
+
+    const storedMessages =
+      localStorage.getItem(
+        "adminMessages"
+      );
+
+
+    if (!storedMessages) {
+
+      unreadCount = 0;
+
+    } else {
+
+      const messages =
+        JSON.parse(
+          storedMessages
+        );
+
+
+      if (
+        Array.isArray(messages)
+      ) {
+
+        unreadCount =
+          messages.filter(
+            function (message) {
+
+              if (
+                !message ||
+                typeof message !== "object"
+              ) {
+
+                return false;
+
+              }
+
+
+              if (
+                message.read === true
+              ) {
+
+                return false;
+
+              }
+
+
+              if (
+                message.unread === false
+              ) {
+
+                return false;
+
+              }
+
+
+              if (
+                String(
+                  message.status || ""
+                ).toLowerCase() ===
+                "read"
+              ) {
+
+                return false;
+
+              }
+
+
+              return true;
+
+            }
+          ).length;
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read adminMessages:",
+      error
+    );
+
+    unreadCount = 0;
+
+  }
+
+
+  messageCountBadge.textContent =
+    String(
+      unreadCount
+    );
+
+}
+
+
+/* =========================================================
+   LIVE STORAGE UPDATE
+========================================================= */
+
+window.addEventListener(
+  "storage",
+  function (event) {
+
+    if (
+      event.key === "adminMessages"
+    ) {
+
+      updateMessageCount();
+
+    }
+
+
+    if (
+      event.key &&
+      event.key.startsWith(
+        "aravon_tracking_"
+      )
+    ) {
+
+      loadOrder();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   TRACKING AUTO REFRESH
+========================================================= */
+
+setInterval(
+  function () {
+
+    const orderId =
+      getOrderIdFromURL();
+
+
+    if (!orderId) {
+      return;
+    }
+
+
+    const order =
+      findOrder(
+        orderId
+      );
+
+
+    if (!order) {
+      return;
+    }
+
+
+    renderTracking(order);
+
+    renderShipmentTracker(order);
+
+  },
+  5000
+);
+
+
+/* =========================================================
+   INITIAL MESSAGE COUNT
+========================================================= */
+
+updateMessageCount();
+
+
+/* =========================================================
+   START PAGE
+========================================================= */
+
+loadOrder();
+
+</script>
+
+<script type="module">
+  import { loadTracking } from "../../admin/shared/tracking-storage.js";
+
+const orderID = new URLSearchParams(window.location.search).get("orderID");
+const tracking = loadTracking(orderID);
+
+if (tracking) {
+  trackingNumber.textContent = tracking.number;
+  trackingCarrier.textContent = tracking.carrier;
+  trackingLink.href = tracking.url;
+  trackingStatus.textContent = tracking.status;
+
+  trackingLink.classList.remove("disabled");
+
+  estimatedDelivery.textContent = "2–3 business days";
+
+  trackerProcessing.classList.add("completed");
+  processingDate.textContent = tracking.savedAt;
+
+  trackerShipped.classList.add("completed");
+  shippedDate.textContent = tracking.savedAt;
+
+  if (tracking.status === "Delivered") {
+    trackerDelivered.classList.add("completed");
+    deliveredDate.textContent = new Date().toLocaleDateString();
+  }
+}
+
+</script>
+
+
+</body>
+
+</html>

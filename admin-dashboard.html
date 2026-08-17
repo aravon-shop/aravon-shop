@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Dashboard – Aravon Shop</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      height: 100vh;
+    }
+
+
+    /* =====================================================
+       SIDEBAR
+    ====================================================== */
+
+    .sidebar {
+
+      width: 250px;
+
+      background: #fff;
+
+      padding: 20px;
+
+      border-right: 1px solid #ddd;
+
+      box-sizing: border-box;
+
+      flex-shrink: 0;
+
+      overflow-y: auto;
+
+    }
+
+
+    .sidebar h2 {
+
+      margin-top: 0;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .sidebar a {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      padding: 10px 12px;
+
+      margin-bottom: 8px;
+
+      text-decoration: none;
+
+      color: #333;
+
+      border-radius: 20px;
+
+      transition: 0.2s;
+
+      font-size: 14px;
+
+    }
+
+
+    .sidebar a:hover {
+
+      background: #f1f3f4;
+
+    }
+
+
+    .sidebar a.active {
+
+      background: #d2e3fc;
+
+      color: #174ea6;
+
+    }
+
+
+    .badge {
+
+      background: #ea4335;
+
+      color: #fff;
+
+      padding: 2px 8px;
+
+      border-radius: 12px;
+
+      font-size: 11px;
+
+      min-width: 20px;
+
+      text-align: center;
+
+      line-height: 16px;
+
+      display: inline-block;
+
+    }
+
+
+    .badge.zero {
+
+      background: #9aa0a6;
+
+    }
+
+
+    .logout-btn {
+
+      background: #333;
+
+      color: #fff;
+
+      padding: 10px;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      width: 100%;
+
+      font-size: 14px;
+
+      margin-top: 20px;
+
+      display: block;
+
+      text-align: center;
+
+    }
+
+
+    .logout-btn:hover {
+
+      background: #111;
+
+    }
+
+
+    .logout-btn:disabled {
+
+      opacity: 0.6;
+
+      cursor: not-allowed;
+
+    }
+
+
+    /* =====================================================
+       MAIN
+    ====================================================== */
+
+    .main {
+
+      flex: 1;
+
+      padding: 30px;
+
+      overflow-y: auto;
+
+      min-width: 0;
+
+    }
+
+
+    .main h2 {
+
+      margin-top: 0;
+
+      font-size: 24px;
+
+      font-weight: 600;
+
+    }
+
+
+    /* =====================================================
+       CARDS
+    ====================================================== */
+
+    .card {
+
+      background: #fff;
+
+      padding: 20px;
+
+      border-radius: 12px;
+
+      border: 1px solid #ddd;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    /* =====================================================
+       ANALYTICS
+    ====================================================== */
+
+    .analytics-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 20px;
+
+      margin-top: 20px;
+
+    }
+
+
+    .stat-box {
+
+      background: #fff;
+
+      padding: 20px;
+
+      border-radius: 12px;
+
+      border: 1px solid #ddd;
+
+      text-align: center;
+
+    }
+
+
+    .stat-box h3 {
+
+      margin: 0;
+
+      font-size: 18px;
+
+      color: #174ea6;
+
+    }
+
+
+    .stat-box p {
+
+      font-size: 22px;
+
+      margin: 10px 0 0;
+
+      font-weight: bold;
+
+    }
+
+
+    /* =====================================================
+       PROGRESS
+    ====================================================== */
+
+    .progress-bar {
+
+      width: 100%;
+
+      background: #eee;
+
+      height: 10px;
+
+      border-radius: 10px;
+
+      margin-top: 10px;
+
+      overflow: hidden;
+
+    }
+
+
+    .progress-fill {
+
+      height: 10px;
+
+      background: #174ea6;
+
+      border-radius: 10px;
+
+      width: 0%;
+
+      transition: width 0.3s ease;
+
+    }
+
+
+    /* =====================================================
+       SYNC BUTTON
+    ====================================================== */
+
+    .sync-btn {
+
+      padding: 12px 18px;
+
+      background: #174ea6;
+
+      color: #fff;
+
+      border: none;
+
+      border-radius: 20px;
+
+      cursor: pointer;
+
+      font-size: 15px;
+
+      margin-top: 20px;
+
+    }
+
+
+    .sync-btn:hover {
+
+      background: #0f3c85;
+
+    }
+
+
+    /* =====================================================
+       ADMIN STATUS
+    ====================================================== */
+
+    .admin-status {
+
+      display: inline-block;
+
+      padding: 5px 10px;
+
+      border-radius: 20px;
+
+      background: #e7f7ed;
+
+      color: #137333;
+
+      font-size: 12px;
+
+      font-weight: 600;
+
+    }
+
+
+    .perm-box {
+
+      margin-top: 20px;
+
+      padding: 15px;
+
+      background: #f8f8f8;
+
+      border: 1px solid #eee;
+
+      border-radius: 10px;
+
+    }
+
+
+    .perm-box h3 {
+
+      margin-top: 0;
+
+    }
+
+
+    .perm-box ul {
+
+      margin-bottom: 0;
+
+      padding-left: 20px;
+
+    }
+
+
+    .dashboard-message {
+
+      display: none;
+
+      padding: 12px 14px;
+
+      margin-bottom: 20px;
+
+      border-radius: 8px;
+
+      font-size: 14px;
+
+      line-height: 1.5;
+
+    }
+
+
+    .dashboard-message.show {
+
+      display: block;
+
+    }
+
+
+    .dashboard-message.error {
+
+      background: #ffe5e5;
+
+      color: #b00000;
+
+      border: 1px solid #ffbcbc;
+
+    }
+
+
+    .dashboard-message.info {
+
+      background: #e7f2ff;
+
+      color: #1769aa;
+
+      border: 1px solid #bddcff;
+
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 900px) {
+
+      body {
+
+        display: block;
+
+        height: auto;
+
+        min-height: 100vh;
+
+      }
+
+
+      .sidebar {
+
+        width: 100%;
+
+        border-right: none;
+
+        border-bottom: 1px solid #ddd;
+
+      }
+
+
+      .main {
+
+        padding: 20px 15px;
+
+      }
+
+
+      .analytics-grid {
+
+        grid-template-columns:
+          repeat(2, 1fr);
+
+      }
+
+    }
+
+
+    @media (max-width: 550px) {
+
+      .analytics-grid {
+
+        grid-template-columns: 1fr;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
+
+<div class="sidebar">
+
+  <h2>
+    Admin Panel
+  </h2>
+
+
+  <a
+    href="../dashboard/admin-dashboard.html"
+    class="active"
+  >
+
+    <span>
+      Dashboard
+    </span>
+
+  </a>
+
+
+  <a href="../orders/admin-orders.html">
+
+    <span>
+      Orders
+    </span>
+
+    <span
+      id="orderCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+
+  <a href="../users/users-list.html">
+
+    <span>
+      Users
+    </span>
+
+    <span
+      id="usersCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+
+  <a href="../inventory/admin-inventory.html">
+
+    <span>
+      Inventory
+    </span>
+
+    <span
+      id="productCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+
+  <a href="../website-builder/product-page-editor.html">
+
+    <span>
+      Website Builder
+    </span>
+
+  </a>
+
+
+  <a href="../settings/admin-settings.html">
+
+    <span>
+      Settings
+    </span>
+
+  </a>
+
+
+  <a href="../payment/payment-setting.html">
+
+    <span>
+      Payment
+    </span>
+
+    <span
+      id="paymentCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+
+  <a href="../messages/admin-messages.html">
+
+    <span>
+      Messages
+    </span>
+
+    <span
+      id="messageCountBadge"
+      class="badge"
+    >
+      0
+    </span>
+
+  </a>
+
+
+  <button
+    class="logout-btn"
+    id="logoutBtn"
+    type="button"
+  >
+    Logout
+  </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<div class="main">
+
+
+  <div
+    id="dashboardMessage"
+    class="dashboard-message"
+  ></div>
+
+
+
+  <!-- ===================================================
+       MONTHLY SALES
+  ==================================================== -->
+
+  <div class="card">
+
+    <h3>
+      Monthly Sales Analytics
+    </h3>
+
+
+    <div class="progress-bar">
+
+      <div
+        id="monthProgress"
+        class="progress-fill"
+      ></div>
+
+    </div>
+
+
+    <p
+      id="monthlySalesText"
+      style="margin-bottom:0;color:#777;font-size:13px;"
+    >
+      €0.00 this month
+    </p>
+
+  </div>
+
+
+
+  <!-- ===================================================
+       REAL-TIME ANALYTICS
+  ==================================================== -->
+
+  <div class="analytics-grid">
+
+
+    <div class="stat-box">
+
+      <h3>
+        Total Sales
+      </h3>
+
+      <p id="totalSales">
+        €0.00
+      </p>
+
+    </div>
+
+
+    <div class="stat-box">
+
+      <h3>
+        Revenue Today
+      </h3>
+
+      <p id="revenueToday">
+        €0.00
+      </p>
+
+    </div>
+
+
+    <div class="stat-box">
+
+      <h3>
+        Total Orders
+      </h3>
+
+      <p id="totalOrders">
+        0
+      </p>
+
+    </div>
+
+
+    <div class="stat-box">
+
+      <h3>
+        Customer Count
+      </h3>
+
+      <p id="customerCount">
+        0
+      </p>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- ===================================================
+       ADMIN INFORMATION
+  ==================================================== -->
+
+  <div class="card">
+
+
+    <h2>
+      Welcome, Admin
+    </h2>
+
+
+    <p>
+
+      <strong>
+        Admin UID:
+      </strong>
+
+      <span id="adminUID">
+        Loading...
+      </span>
+
+    </p>
+
+
+    <p>
+
+      <strong>
+        Email:
+      </strong>
+
+      <span id="adminEmail">
+        Loading...
+      </span>
+
+    </p>
+
+
+    <p>
+
+      <strong>
+        Last Login:
+      </strong>
+
+      <span id="adminLastLogin">
+        Loading...
+      </span>
+
+    </p>
+
+
+    <p>
+
+      <strong>
+        Account Status:
+      </strong>
+
+      <span class="admin-status">
+        Authorized
+      </span>
+
+    </p>
+
+
+
+    <div class="perm-box">
+
+      <h3>
+        Admin Permissions
+      </h3>
+
+      <ul id="permList">
+
+        <li>
+          Loading permissions...
+        </li>
+
+      </ul>
+
+    </div>
+
+
+
+    <button
+      class="sync-btn"
+      id="syncBtn"
+      type="button"
+    >
+      Firestore Sync
+    </button>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     FIREBASE
+====================================================== -->
+
+<script type="module">
+
+  import {
+    auth,
+    db
+  } from "/js/firebase.js";
+
+
+  import {
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+  import {
+    doc,
+    getDoc,
+    collection,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+  /* =====================================================
+     ELEMENTS
+  ====================================================== */
+
+  const orderCountBadge =
+    document.getElementById(
+      "orderCountBadge"
+    );
+
+
+  const usersCountBadge =
+    document.getElementById(
+      "usersCountBadge"
+    );
+
+
+  const productCountBadge =
+    document.getElementById(
+      "productCountBadge"
+    );
+
+
+  const paymentCountBadge =
+    document.getElementById(
+      "paymentCountBadge"
+    );
+
+
+  const messageCountBadge =
+    document.getElementById(
+      "messageCountBadge"
+    );
+
+
+  const totalSalesElement =
+    document.getElementById(
+      "totalSales"
+    );
+
+
+  const revenueTodayElement =
+    document.getElementById(
+      "revenueToday"
+    );
+
+
+  const totalOrdersElement =
+    document.getElementById(
+      "totalOrders"
+    );
+
+
+  const customerCountElement =
+    document.getElementById(
+      "customerCount"
+    );
+
+
+  const monthProgress =
+    document.getElementById(
+      "monthProgress"
+    );
+
+
+  const monthlySalesText =
+    document.getElementById(
+      "monthlySalesText"
+    );
+
+
+  const dashboardMessage =
+    document.getElementById(
+      "dashboardMessage"
+    );
+
+
+  const logoutBtn =
+    document.getElementById(
+      "logoutBtn"
+    );
+
+
+  const syncBtn =
+    document.getElementById(
+      "syncBtn"
+    );
+
+
+
+  /* =====================================================
+     MESSAGE
+  ====================================================== */
+
+  function showDashboardMessage(
+    message,
+    type = "info"
+  ) {
+
+    dashboardMessage.textContent =
+      message;
+
+    dashboardMessage.className =
+      "dashboard-message show " +
+      type;
+
+  }
+
+
+
+  /* =====================================================
+     BADGE
+  ====================================================== */
+
+  function setBadge(
+    element,
+    count
+  ) {
+
+    if (!element) {
+      return;
+    }
+
+
+    const safeCount =
+      Number.isFinite(Number(count))
+        ? Number(count)
+        : 0;
+
+
+    element.textContent =
+      safeCount;
+
+
+    element.classList.toggle(
+      "zero",
+      safeCount === 0
+    );
+
+  }
+
+
+
+  /* =====================================================
+     DATE HELPERS
+  ====================================================== */
+
+  function getDateFromValue(
+    value
+  ) {
+
+    if (!value) {
+      return null;
+    }
+
+
+    try {
+
+      if (
+        value &&
+        typeof value.toDate === "function"
+      ) {
+
+        return value.toDate();
+
+      }
+
+
+      if (
+        value instanceof Date
+      ) {
+
+        return value;
+
+      }
+
+
+      const date =
+        new Date(value);
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return null;
+
+      }
+
+
+      return date;
+
+    } catch {
+
+      return null;
+
+    }
+
+  }
+
+
+
+  /* =====================================================
+     ORDER DATE
+  ====================================================== */
+
+  function getOrderDate(
+    order
+  ) {
+
+    return (
+
+      getDateFromValue(
+        order.createdAt
+      ) ||
+
+      getDateFromValue(
+        order.created
+      ) ||
+
+      getDateFromValue(
+        order.date
+      ) ||
+
+      getDateFromValue(
+        order.timestamp
+      ) ||
+
+      null
+
+    );
+
+  }
+
+
+
+  /* =====================================================
+     ORDER TOTAL
+  ====================================================== */
+
+  function getOrderTotal(
+    order
+  ) {
+
+    const values = [
+
+      order.total,
+
+      order.totalAmount,
+
+      order.grandTotal,
+
+      order.amount,
+
+      order.price
+
+    ];
+
+
+    for (
+      const value of values
+    ) {
+
+      const number =
+        Number(value);
+
+
+      if (
+        Number.isFinite(number)
+      ) {
+
+        return number;
+
+      }
+
+    }
+
+
+    if (
+      Array.isArray(order.items)
+    ) {
+
+      return order.items.reduce(
+        (
+          total,
+          item
+        ) => {
+
+          const price =
+            Number(
+              item.price ||
+              item.unitPrice ||
+              item.amount ||
+              0
+            );
+
+
+          const quantity =
+            Number(
+              item.quantity ||
+              item.qty ||
+              1
+            );
+
+
+          if (
+            !Number.isFinite(price) ||
+            !Number.isFinite(quantity)
+          ) {
+
+            return total;
+
+          }
+
+
+          return (
+            total +
+            price * quantity
+          );
+
+        },
+        0
+      );
+
+    }
+
+
+    return 0;
+
+  }
+
+
+
+  /* =====================================================
+     ORDER COUNTS
+  ====================================================== */
+
+  function isCancelledOrder(
+    order
+  ) {
+
+    const status =
+      String(
+        order.status ||
+        order.orderStatus ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    return [
+
+      "cancelled",
+      "canceled",
+      "refunded",
+      "payment_failed"
+
+    ].includes(
+      status
+    );
+
+  }
+
+
+
+  function isPaymentAttentionRequired(
+    order
+  ) {
+
+    const paymentStatus =
+      String(
+        order.paymentStatus ||
+        order.payment_status ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    const orderStatus =
+      String(
+        order.status ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    return (
+
+      paymentStatus === "pending" ||
+
+      paymentStatus === "failed" ||
+
+      paymentStatus === "requires_action" ||
+
+      paymentStatus === "unpaid" ||
+
+      orderStatus === "payment_pending" ||
+
+      orderStatus === "payment_failed"
+
+    );
+
+  }
+
+
+
+  /* =====================================================
+     AUTHORIZATION
+  ====================================================== */
+
+  let dashboardAuthorized =
+    false;
+
+
+  let unsubscribeOrders =
+    null;
+
+  let unsubscribeUsers =
+    null;
+
+  let unsubscribeProducts =
+    null;
+
+  let unsubscribePayments =
+    null;
+
+  let unsubscribeConversations =
+    null;
+
+
+
+  /* =====================================================
+     STOP LISTENERS
+  ====================================================== */
+
+  function stopFirestoreListeners() {
+
+    if (unsubscribeOrders) {
+      unsubscribeOrders();
+      unsubscribeOrders = null;
+    }
+
+
+    if (unsubscribeUsers) {
+      unsubscribeUsers();
+      unsubscribeUsers = null;
+    }
+
+
+    if (unsubscribeProducts) {
+      unsubscribeProducts();
+      unsubscribeProducts = null;
+    }
+
+
+    if (unsubscribePayments) {
+      unsubscribePayments();
+      unsubscribePayments = null;
+    }
+
+
+    if (unsubscribeConversations) {
+      unsubscribeConversations();
+      unsubscribeConversations = null;
+    }
+
+  }
+
+
+
+  /* =====================================================
+     START REAL-TIME FIRESTORE DATA
+  ====================================================== */
+
+  function startFirestoreListeners() {
+
+    if (!dashboardAuthorized) {
+      return;
+    }
+
+
+    stopFirestoreListeners();
+
+
+
+    /* ===================================================
+       ORDERS
+    ================================================== */
+
+    unsubscribeOrders =
+      onSnapshot(
+
+        collection(
+          db,
+          "orders"
+        ),
+
+        snapshot => {
+
+          let totalSales =
+            0;
+
+
+          let revenueToday =
+            0;
+
+
+          let monthlyTotal =
+            0;
+
+
+          const now =
+            new Date();
+
+
+          const currentYear =
+            now.getFullYear();
+
+
+          const currentMonth =
+            now.getMonth();
+
+
+          const todayYear =
+            now.getFullYear();
+
+
+          const todayMonth =
+            now.getMonth();
+
+
+          const todayDate =
+            now.getDate();
+
+
+          snapshot.forEach(
+            orderSnapshot => {
+
+              const order =
+                orderSnapshot.data();
+
+
+              const total =
+                getOrderTotal(
+                  order
+                );
+
+
+              const orderDate =
+                getOrderDate(
+                  order
+                );
+
+
+              /*
+                 Do not count cancelled,
+                 refunded or failed orders
+                 as sales.
+              */
+
+              if (
+                !isCancelledOrder(
+                  order
+                )
+              ) {
+
+                totalSales +=
+                  total;
+
+
+                if (
+                  orderDate &&
+                  orderDate.getFullYear() ===
+                    currentYear &&
+                  orderDate.getMonth() ===
+                    currentMonth
+                ) {
+
+                  monthlyTotal +=
+                    total;
+
+                }
+
+
+                if (
+                  orderDate &&
+                  orderDate.getFullYear() ===
+                    todayYear &&
+                  orderDate.getMonth() ===
+                    todayMonth &&
+                  orderDate.getDate() ===
+                    todayDate
+                ) {
+
+                  revenueToday +=
+                    total;
+
+                }
+
+              }
+
+            }
+          );
+
+
+          totalSalesElement.textContent =
+            "€" +
+            totalSales.toFixed(2);
+
+
+          revenueTodayElement.textContent =
+            "€" +
+            revenueToday.toFixed(2);
+
+
+          totalOrdersElement.textContent =
+            snapshot.size;
+
+
+          /*
+             Monthly target:
+             €50,000
+          */
+
+          const monthlyTarget =
+            50000;
+
+
+          const percent =
+            Math.min(
+              100,
+              Math.max(
+                0,
+                (
+                  monthlyTotal /
+                  monthlyTarget
+                ) *
+                100
+              )
+            );
+
+
+          monthProgress.style.width =
+            percent + "%";
+
+
+          monthlySalesText.textContent =
+            "€" +
+            monthlyTotal.toFixed(2) +
+            " this month";
+
+
+          /*
+             Orders badge = total real
+             Firestore orders.
+          */
+
+          setBadge(
+            orderCountBadge,
+            snapshot.size
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Orders listener error:",
+            error
+          );
+
+
+          setBadge(
+            orderCountBadge,
+            0
+          );
+
+        }
+
+      );
+
+
+
+    /* ===================================================
+       USERS
+    ================================================== */
+
+    unsubscribeUsers =
+      onSnapshot(
+
+        collection(
+          db,
+          "users"
+        ),
+
+        snapshot => {
+
+          const count =
+            snapshot.size;
+
+
+          customerCountElement.textContent =
+            count;
+
+
+          setBadge(
+            usersCountBadge,
+            count
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Users listener error:",
+            error
+          );
+
+
+          customerCountElement.textContent =
+            "0";
+
+
+          setBadge(
+            usersCountBadge,
+            0
+          );
+
+        }
+
+      );
+
+
+
+    /* ===================================================
+       PRODUCTS
+    ================================================== */
+
+    unsubscribeProducts =
+      onSnapshot(
+
+        collection(
+          db,
+          "products"
+        ),
+
+        snapshot => {
+
+          setBadge(
+            productCountBadge,
+            snapshot.size
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Products listener error:",
+            error
+          );
+
+
+          setBadge(
+            productCountBadge,
+            0
+          );
+
+        }
+
+      );
+
+
+
+    /* ===================================================
+       PAYMENTS
+    ================================================== */
+
+    unsubscribePayments =
+      onSnapshot(
+
+        collection(
+          db,
+          "payments"
+        ),
+
+        snapshot => {
+
+          let attentionCount =
+            0;
+
+
+          snapshot.forEach(
+            paymentSnapshot => {
+
+              const payment =
+                paymentSnapshot.data();
+
+
+              const status =
+                String(
+                  payment.status ||
+                  payment.paymentStatus ||
+                  ""
+                )
+                  .trim()
+                  .toLowerCase();
+
+
+              if (
+
+                status === "pending" ||
+
+                status === "failed" ||
+
+                status === "requires_action" ||
+
+                status === "unpaid"
+
+              ) {
+
+                attentionCount++;
+
+              }
+
+            }
+          );
+
+
+          /*
+             If your payments collection
+             contains no status requiring
+             attention, the badge is 0.
+          */
+
+          setBadge(
+            paymentCountBadge,
+            attentionCount
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Payments listener error:",
+            error
+          );
+
+
+          setBadge(
+            paymentCountBadge,
+            0
+          );
+
+        }
+
+      );
+
+
+
+    /* ===================================================
+       CONVERSATIONS / MESSAGES
+    ================================================== */
+
+    unsubscribeConversations =
+      onSnapshot(
+
+        collection(
+          db,
+          "conversations"
+        ),
+
+        snapshot => {
+
+          let unreadCount =
+            0;
+
+
+          snapshot.forEach(
+            conversationSnapshot => {
+
+              const conversation =
+                conversationSnapshot.data();
+
+
+              /*
+                 Supports common
+                 unread fields.
+              */
+
+              if (
+                conversation.adminUnread === true
+              ) {
+
+                unreadCount++;
+
+                return;
+
+              }
+
+
+              if (
+                conversation.unreadByAdmin === true
+              ) {
+
+                unreadCount++;
+
+                return;
+
+              }
+
+
+              const unread =
+                Number(
+                  conversation.adminUnreadCount ||
+                  conversation.unreadCount ||
+                  0
+                );
+
+
+              if (
+                Number.isFinite(unread) &&
+                unread > 0
+              ) {
+
+                unreadCount +=
+                  unread;
+
+              }
+
+            }
+          );
+
+
+          setBadge(
+            messageCountBadge,
+            unreadCount
+          );
+
+        },
+
+        error => {
+
+          console.error(
+            "Messages listener error:",
+            error
+          );
+
+
+          setBadge(
+            messageCountBadge,
+            0
+          );
+
+        }
+
+      );
+
+  }
+
+
+
+  /* =====================================================
+     ADMIN AUTHENTICATION
+  ====================================================== */
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      /*
+         User logged out.
+      */
+
+      if (!user) {
+
+        dashboardAuthorized =
+          false;
+
+
+        stopFirestoreListeners();
+
+
+        window.location.href =
+          "../auth/admin-login.html";
+
+
+        return;
+
+      }
+
+
+      try {
+
+        /*
+           Check admin document.
+        */
+
+        const adminRef =
+          doc(
+            db,
+            "admins",
+            user.uid
+          );
+
+
+        const adminSnapshot =
+          await getDoc(
+            adminRef
+          );
+
+
+        if (
+          !adminSnapshot.exists()
+        ) {
+
+          dashboardAuthorized =
+            false;
+
+
+          stopFirestoreListeners();
+
+
+          alert(
+            "Access denied. Admin privileges required."
+          );
+
+
+          await signOut(
+            auth
+          );
+
+
+          window.location.href =
+            "../auth/admin-login.html";
+
+
+          return;
+
+        }
+
+
+        const adminData =
+          adminSnapshot.data();
+
+
+        /*
+           Required admin flags.
+        */
+
+        const validRole =
+          adminData.role ===
+          "admin";
+
+
+        const enabled =
+          adminData.enabled ===
+          true;
+
+
+        const canLogin =
+          adminData.canLogin ===
+          true;
+
+
+        if (
+          !validRole ||
+          !enabled ||
+          !canLogin
+        ) {
+
+          dashboardAuthorized =
+            false;
+
+
+          stopFirestoreListeners();
+
+
+          alert(
+            "Access denied. Admin privileges required."
+          );
+
+
+          await signOut(
+            auth
+          );
+
+
+          window.location.href =
+            "../auth/admin-login.html";
+
+
+          return;
+
+        }
+
+
+        /*
+           Authorization successful.
+        */
+
+        dashboardAuthorized =
+          true;
+
+
+        document.getElementById(
+          "adminUID"
+        ).textContent =
+          user.uid;
+
+
+        document.getElementById(
+          "adminEmail"
+        ).textContent =
+          adminData.email ||
+          user.email ||
+          "Unavailable";
+
+
+        const lastLogin =
+          getDateFromValue(
+            adminData.lastLogin
+          );
+
+
+        document.getElementById(
+          "adminLastLogin"
+        ).textContent =
+          lastLogin
+            ? lastLogin.toLocaleString()
+            : "Unknown";
+
+
+
+        /* ===============================================
+           PERMISSIONS
+        ================================================ */
+
+        const perms =
+          adminData.permission ||
+          adminData.permissions ||
+          {};
+
+
+        const permList =
+          document.getElementById(
+            "permList"
+          );
+
+
+        permList.innerHTML =
+          "";
+
+
+        const permissionKeys =
+          Object.keys(
+            perms
+          );
+
+
+        if (
+          permissionKeys.length ===
+          0
+        ) {
+
+          const li =
+            document.createElement(
+              "li"
+            );
+
+
+          li.textContent =
+            "No permission details configured.";
+
+
+          permList.appendChild(
+            li
+          );
+
+        } else {
+
+          permissionKeys.forEach(
+            key => {
+
+              const li =
+                document.createElement(
+                  "li"
+                );
+
+
+              li.textContent =
+                `${key}: ${perms[key]}`;
+
+
+              permList.appendChild(
+                li
+              );
+
+            }
+          );
+
+        }
+
+
+        /*
+           NOW — and only now —
+           start Firestore listeners.
+        */
+
+        startFirestoreListeners();
+
+
+        console.log(
+          "Admin dashboard authorized:",
+          user.uid
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Admin authorization error:",
+          error
+        );
+
+
+        dashboardAuthorized =
+          false;
+
+
+        stopFirestoreListeners();
+
+
+        showDashboardMessage(
+          "Unable to verify admin access. Please sign in again.",
+          "error"
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /* =====================================================
+     LOGOUT
+  ====================================================== */
+
+  logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+      logoutBtn.disabled =
+        true;
+
+
+      logoutBtn.textContent =
+        "Logging out...";
+
+
+      try {
+
+        stopFirestoreListeners();
+
+
+        await signOut(
+          auth
+        );
+
+
+        window.location.href =
+          "../auth/admin-login.html";
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+
+        logoutBtn.disabled =
+          false;
+
+
+        logoutBtn.textContent =
+          "Logout";
+
+
+        showDashboardMessage(
+          "Logout failed. Please try again.",
+          "error"
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /* =====================================================
+     FIRESTORE SYNC BUTTON
+  ====================================================== */
+
+  syncBtn.addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "../firestore/admin-firestore-sync.html";
+
+    }
+  );
+
+</script>
+
+
+</body>
+
+</html>
